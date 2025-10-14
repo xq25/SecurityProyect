@@ -3,9 +3,5 @@ export interface User {
     name?: string;
     email?: string;
     password?:string;
-    age?: number;
-    city?: string;
-    phone?: string;
-    is_active?: boolean;
     token?:string;
 } // Basicamente esto es una clase.
