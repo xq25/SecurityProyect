@@ -18,8 +18,8 @@ const UIContext = createContext<UIContextType | null>(null);  //Asignamos que el
 //El UIProvider es la fuente de verdad global que guarda cuál librería de estilos está activa, y la comparte con todos los componentes hijos que usen el contexto.
 export const UIProvider = ({ children }: { children: ReactNode }) => {  //Declaramos y exportamos el provedor de librerias. recibe un hijo que es a lo que se le van a generar los respectivos cambios dependinedo de la libreria (componentes).
   //Variable atomica library
-    const [library, setLibrary] = useState<UILibrary>("tailwind");
-  // ^ Tambien indicamos que el useState es de tipo UILibrary y que su valor inicial o por defecto es tailwind. Basicamente inicializamos la librearia general como tailwind.
+    const [library, setLibrary] = useState<UILibrary>("material");
+  // ^ Tambien indicamos que el useState es de tipo UILibrary y que su valor inicial o por defecto es material. Basicamente inicializamos la librearia general como tailwind.
   
   return ( // Generamos un estado local library y usamos setLibrary para generar el cambio de la libreria.
     //.provider permite hacer accesible el valor de la libreria a todos los hijos (children).

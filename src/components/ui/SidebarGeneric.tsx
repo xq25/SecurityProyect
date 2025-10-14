@@ -1,6 +1,6 @@
 // src/components/SideBar/AppSideBar.tsx
 import { useUI } from '../../context/UIProvider';  //Aqui esta almacenado el estado de libreria actual.
-// Aqui esta la carga de el estilos de SideBar
+// Aqui esta la carga de el estilos de SideBar.
 import { MaterialSideBar } from '../ui/materialUI/MaterialSideBar' 
 
 
@@ -13,12 +13,14 @@ export interface SideBarItem {
 }
 
 // Esta es la interface que define todo el SideBar
-interface Props {
-  items: SideBarItem[];   // Nuestro SideBar recibe un arreglo de varios items de SideBar (SideBarItem).
+export interface Props {
+  items?: SideBarItem[];   // Nuestro SideBar puede recibir un arreglo de varios items de SideBar (SideBarItem). En este caso no lo usaremos ya que por defecto vamos a pasar los defualtItems
+  sidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
 }
 
 //Aqui esta definido todo nuestro componente
-export const AppSideBar = ({ items }: Props) => { //Recibimos los items del sideBar de tipo Props
+export const AppSideBar = ({ items = [], sidebarOpen, setSidebarOpen }: Props) => { //Recibimos los items del sideBar de tipo Props
     const { library } = useUI(); //Accedemos a la libreria usada.
 
     const defaultItems: SideBarItem[] = [ //Definimos las opciones predeterminadas dentro de nuestro programa.
@@ -29,7 +31,7 @@ export const AppSideBar = ({ items }: Props) => { //Recibimos los items del side
     ];
 
     const combinedItems = [...defaultItems, ...items];
-    if (library === "material") return <MaterialSideBar items={combinedItems} />;  //Cargamos el sideBar respectivo usando la libreria seleccionada y los items previamente pasados
+    if (library === "material") return <MaterialSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;  //Cargamos el sideBar respectivo usando la libreria seleccionada y los items previamente pasados
 //   if (library === "bootstrap") return <BootstrapSideBar items={items} />;
 //   return <TailwindSideBar items={items} />;
 };

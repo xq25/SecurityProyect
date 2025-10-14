@@ -1,0 +1,82 @@
+/* === Material UI Sidebar === */
+
+/* Botón flotante para abrir el sidebar */
+.sidebar-toggle-btn {
+  position: fixed !important;
+  top: 12px;
+  left: 12px;
+  z-index: 1300;
+  color: #ffffff !important;
+  background-color: rgba(25, 118, 210, 0.85) !important;
+  transition: all 0.3s ease !important;
+}
+
+.sidebar-toggle-btn:hover {
+  background-color: rgba(25, 118, 210, 1) !important;
+}
+
+/* Drawer principal */
+.material-sidebar .MuiDrawer-paper {
+  width: 260px !important;
+  background-color: #121212 !important;
+  color: #e0e0e0 !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-sizing: border-box !important;
+}
+
+/* Encabezado del menú */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 18px;
+  background: linear-gradient(145deg, #1f1f1f, #171717);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-title {
+  font-weight: 600 !important;
+  color: #e3f2fd !important;
+}
+
+.close-btn {
+  color: #90caf9 !important;
+  transition: 0.3s;
+}
+
+.close-btn:hover {
+  color: #42a5f5 !important;
+}
+
+/* Lista */
+.sidebar-list {
+  margin-top: 8px !important;
+}
+
+/* Elementos del sidebar */
+.sidebar-item {
+  color: #e0e0e0 !important;
+  border-radius: 8px !important;
+  margin: 4px 8px !important;
+  transition: all 0.25s ease !important;
+}
+
+.sidebar-item:hover {
+  background-color: rgba(33, 150, 243, 0.1) !important;
+}
+
+.sidebar-icon {
+  color: #90caf9 !important;
+  min-width: 40px !important;
+}
+
+.sidebar-text span {
+  font-size: 15px !important;
+  font-weight: 500 !important;
+}
+
+/* Divider */
+.sidebar-divider {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  margin: 8px 0 !important;
+}

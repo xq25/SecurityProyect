@@ -1,36 +1,33 @@
-import { useState } from 'react';
-import Header from '../components/Header';
-import Sidebar from '../components/Sidebar';
-import { Outlet } from 'react-router-dom';
+import React, { useState } from "react";
+
+import { AppHeader } from "../components/ui/HeaderGeneric"; 
+import { AppSideBar } from "../components/ui/SidebarGeneric";
+import { Outlet } from "react-router-dom";
+import { useUI } from "../context/UIProvider";
 
 const DefaultLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { library } = useUI(); // ← obtenemos la librería actual
 
   return (
-    <div className="dark:bg-boxdark-2 dark:text-bodydark">
-      {/* <!-- ===== Page Wrapper Start ===== --> */}
-      <div className="flex h-screen overflow-hidden">
-        {/* <!-- ===== Sidebar Start ===== --> */}
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-        {/* <!-- ===== Sidebar End ===== --> */}
+    <div
+      className={`h-screen w-full flex flex-col ${
+        library === "tailwind" ? "dark:bg-boxdark-2 dark:text-bodydark" : ""
+      }`}
+    >
+      {/* ===== Header ===== */}
+      <AppHeader />
 
-        {/* <!-- ===== Content Area Start ===== --> */}
-        <div className="relative flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
-          {/* <!-- ===== Header Start ===== --> */}
-          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-          {/* <!-- ===== Header End ===== --> */}
+      {/* ===== Main layout ===== */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* ===== Sidebar ===== */}
+        <AppSideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-          {/* <!-- ===== Main Content Start ===== --> */}
-          <main>
-            <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
-              <Outlet />
-            </div>
-          </main>
-          {/* <!-- ===== Main Content End ===== --> */}
-        </div>
-        {/* <!-- ===== Content Area End ===== --> */}
+        {/* ===== Main content ===== */}
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 2xl:p-10">
+          <Outlet />
+        </main>
       </div>
-      {/* <!-- ===== Page Wrapper End ===== --> */}
     </div>
   );
 };
