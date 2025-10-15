@@ -1,10 +1,8 @@
 .tailwind-header {
-    position: sticky;
+  position: sticky;
   top: 0;
   z-index: 50;
   width: 100%;
-  background-color: indigo;
-  box-shadow: 0 1px 6px rgba(59,21,96,0.12);
 }
 
 /* Si aún no ves el cambio, fuerza el color en el header (prueba rápida) */
