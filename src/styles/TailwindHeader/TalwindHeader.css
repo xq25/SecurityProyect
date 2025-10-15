@@ -1,50 +1,138 @@
 .tailwind-header {
   position: sticky;
   top: 0;
-  z-index: 10;
-  transition: box-shadow 0.3s ease;
+  z-index: 50;
+  background-color: #1f2937; /* gray-800 */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.tailwind-header-container {
+  max-width: 1120px; /* approx max-w-7xl */
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+}
+
+.tailwind-header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .tailwind-header-title {
+  color:    #ffffff;
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 600;
   letter-spacing: 0.5px;
-  color: rgb(255, 0, 0);
+}
+
+.tailwind-button-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.tailwind-button-wrap {
+  position: relative;
 }
 
 .tailwind-button {
-  position: relative;
-  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem; /* w-10 */
+  height: 2.5rem; /* h-10 */
+  border-radius: 9999px;
+  background-color: #374151; /* gray-700 */
+  color: #d1d5db; /* gray-300 */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.08s ease;
 }
 
-.tailwind-button:after {
+.tailwind-button:hover {
+  background-color: #4b5563; /* gray-600 */
+  color: #ffffff;
+}
+
+/* ripple effect */
+.tailwind-button::after {
   content: '';
   position: absolute;
   top: 50%;
   left: 50%;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255,255,255,0.06);
   border-radius: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  transition: transform 0.3s ease;
+  transform: translate(-50%,-50%) scale(0);
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  pointer-events: none;
 }
 
-.tailwind-button:active:after {
-  transform: translate(-50%, -50%) scale(1.5);
+.tailwind-button:active::after {
+  transform: translate(-50%,-50%) scale(1.6);
   opacity: 0;
 }
 
-.tailwind-tooltip {
-  transform: translateY(5px);
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+.tailwind-button-icon {
+  font-size: 1.125rem; /* text-xl */
+  display: inline-flex;
 }
 
-.tailwind-button-group {
-  display: flex;
+/* Active states */
+.tailwind-button.active {
+  background-color: #2563eb; /* blue-600 */
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(37,99,235,0.2);
+}
+
+/* When the active button is Tailwind we add a modifier class to make it green */
+.tailwind-button.is-tailwind.active {
+  background-color: #16a34a; /* green-600 */
+  box-shadow: 0 4px 10px rgba(22,163,74,0.18);
+}
+
+/* focus rings */
+.tailwind-button:focus {
+  outline: 2px solid rgba(59,130,246,0.25); /* blue-400 */
+  outline-offset: 2px;
+}
+.tailwind-button.is-tailwind:focus {
+  outline: 2px solid rgba(16,185,129,0.25); /* green-400 */
+}
+
+.tailwind-tooltip {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.tailwind-button-wrap:hover .tailwind-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.tailwind-tooltip > div,
+.tailwind-tooltip {
+  background-color: #111827; /* black-ish */
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 @media (max-width: 640px) {
   .tailwind-header-title {
     font-size: 1rem;
+  }
+  .tailwind-button {
+    width: 2.25rem;
+    height: 2.25rem;
   }
 }

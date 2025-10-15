@@ -11,40 +11,33 @@ export const TailwindHeader: React.FC<TailwindHeaderProps> = ({ items }) => {
   const { library } = useUI();
 
   return (
-    <header className="bg-gray-800 shadow-md tailwind-header" role="banner">
-      <div className="max-w-7xl mx-auto px-4 py-2">
-        <div className="flex justify-between items-center">
+    <header className="tailwind-header" role="banner">
+      <div className="tailwind-header-container">
+        <div className="tailwind-header-inner">
           {/* 🏷️ Título */}
-          <h1 className="text-white text-xl font-medium tailwind-header-title">
-            Security Project
-          </h1>
+          <h1 className="tailwind-header-title">Security Project</h1>
 
           {/* 🎨 Botones de librerías */}
-          <div className="flex space-x-2 tailwind-button-group">
-            {items.map((item) => (
-              <div key={item.name} className="relative group">
-                <button
-                  onClick={item.onClick}
-                  className={`p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors duration-200 tailwind-button ${
-                    library === item.name
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-700 text-gray-300 hover:bg-gray-600 hover:text-white"
-                  }`}
-                  aria-label={`Cambiar a ${item.label}`}
-                  aria-pressed={library === item.name}
-                >
-                  <span className="text-xl">{item.icon}</span>
-                </button>
-                
-                {/* Tooltip */}
-                <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 
-                             opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                  <div className="bg-black text-white text-xs py-1 px-2 rounded whitespace-nowrap tailwind-tooltip">
-                    Cambiar a {item.label}
-                  </div>
+          <div className="tailwind-button-group">
+            {items.map((item) => {
+              const isActive = library === item.name;
+              const isTailwind = item.name === "tailwind";
+              return (
+                <div key={item.name} className="tailwind-button-wrap">
+                  <button
+                    onClick={item.onClick}
+                    className={`tailwind-button ${isActive ? "active" : ""} ${isTailwind ? "is-tailwind" : ""}`}
+                    aria-label={`Cambiar a ${item.label}`}
+                    aria-pressed={isActive}
+                  >
+                    <span className="tailwind-button-icon">{item.icon}</span>
+                  </button>
+
+                  {/* Tooltip */}
+                  <div className="tailwind-tooltip">Cambiar a {item.label}</div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
