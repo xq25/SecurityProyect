@@ -34,7 +34,6 @@ const ListUsers: React.FC = () => {
   return (
     <div>
       <h2>User List</h2>
-      <p>dhjnabdfaubnfubadfbun</p>
     </div>
   );
 };

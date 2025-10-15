@@ -1,22 +1,23 @@
-// import React from "react";
-// import { userService } from '../../services/userService';
-// import {useUI} from '../../context/UIProvider';
-// // Carga de estilos por cada libreria
-// // import {MaterialTable} from './materialUI';
+import React from "react";
+import { useUI } from "../../context/UIProvider";
+import { MaterialTable } from "./materialUI/MaterialTable";
 
 
-// interface TableItem{
-//     contentRow : any[];
-// }
-// interface Props{
-//     header?: string[];
-//     items?: TableItem;
-// }
 
-// export const AppTable = () => {
-//     const {library} = useUI()
+interface TableItem {
+  contentRow: any[];
+}
 
-//     if library == 'material' return 
+export interface Props {
+  name?: string;
+  header?: string[];
+  items?: TableItem[]; // Para cada contenido dentro de nuestras filas esta divido por un contentRow en el cual esta la lista con los datos de la fila
+}
 
-    
-// }
+export const AppTable: React.FC<Props> = ({name ,header, items}) => {
+  const { library } = useUI();
+
+  if (library === 'material') return <MaterialTable name={name} header={header} items={items} />;
+
+  return null;
+};

@@ -1,31 +1,31 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
+import { useMediaQuery } from "@mui/material";
 import { AppHeader } from "../components/ui/HeaderGeneric"; 
 import { AppSideBar } from "../components/ui/SidebarGeneric";
 import { Outlet } from "react-router-dom";
-import { useUI } from "../context/UIProvider";
 
 const DefaultLayout = () => {
-  // Generamos la variable reactiva para cerrar o abrir el SideBar
-  const [sidebarOpen, setSidebarOpen] = useState(true); // Por defecto activamos el sideBar
-  const { library } = useUI(); // <- obtenemos la librería actual
+  const isLargeScreen = useMediaQuery("(min-width: 1024px)");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  useEffect(() => {
+    // Si la pantalla es grande, mantenlo abierto; si no, ciérralo.
+    setSidebarOpen(isLargeScreen);
+  }, [isLargeScreen]);
 
   return (
-    <div
-      className={`h-screen w-full flex flex-col ${
-        library === "tailwind" ? "dark:bg-boxdark-2 dark:text-bodydark" : ""
-      }`}
-    >
-      {/* ===== Header ===== */}
+    <div>
       <AppHeader />
 
-      {/* ===== Main layout ===== */}
       <div className="flex flex-1 overflow-hidden">
-        {/* ===== Sidebar ===== */}
         <AppSideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-        {/* ===== Main content ===== */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 2xl:p-10">
+        {/* Ajuste del margen dinámico según si el sidebar está visible */}
+        <main
+          className={`flex-1 overflow-y-auto p-4 md:p-6 2xl:p-10 transition-all duration-300 ${
+            sidebarOpen && isLargeScreen ? "ml-[260px]" : "ml-0"
+          }`}
+        >
           <Outlet />
         </main>
       </div>
