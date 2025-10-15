@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import GenericTable from "../../components/GenericTable";
 import { Role } from "../../models/Roles";
 
 const RolesList: React.FC = () => {
@@ -17,12 +16,6 @@ const RolesList: React.FC = () => {
   return (
     <div>
       <h2>Role List</h2>
-      <GenericTable
-        data={roles}
-        columns={["id", "name"]}
-        actions={[{ name: "assignPermissions", label: "Assign Permissions" }]}
-        onAction={handleAction}
-      />
     </div>
   );
 };

@@ -3,11 +3,10 @@ import { useUI } from '../../context/UIProvider';  //Aqui esta almacenado el est
 // Aqui esta la carga de el estilos de SideBar.
 import { MaterialSideBar } from '../ui/materialUI/MaterialSideBar' 
 
-
 //Esta interfaz marca las pautas de como deben ser los elementos del sideBar.
 export interface SideBarItem {
   label: string; // Debe tener obligatoriamente un campo o nombre de la opcion.
-  path?: string; // Puede tener una ruta (endpoint) al cual este ligado dicha opcion.
+  path: string; // Puede tener una ruta (endpoint) al cual este ligado dicha opcion.
   icon?: React.ReactNode; // Puede tener un icono que acompañe el label
   onClick?: () => void; // Puede tener la opcion de al recibir un click hacer algo.
 }
@@ -25,8 +24,8 @@ export const AppSideBar = ({ items = [], sidebarOpen, setSidebarOpen }: Props) =
 
     const defaultItems: SideBarItem[] = [ //Definimos las opciones predeterminadas dentro de nuestro programa.
         { label: "Inicio", path: "/" },
-        { label: "Usuarios", path: "/users" },
-        { label: "Roles", path: "/roles" },
+        { label: "Usuarios", path: "/users/list"},
+        { label: "Roles", path: "/roles/list" },
         { label: "Permisos", path: "/permissions" },
     ];
 

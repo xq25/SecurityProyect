@@ -6,8 +6,9 @@ import { Outlet } from "react-router-dom";
 import { useUI } from "../context/UIProvider";
 
 const DefaultLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { library } = useUI(); // ← obtenemos la librería actual
+  // Generamos la variable reactiva para cerrar o abrir el SideBar
+  const [sidebarOpen, setSidebarOpen] = useState(true); // Por defecto activamos el sideBar
+  const { library } = useUI(); // <- obtenemos la librería actual
 
   return (
     <div

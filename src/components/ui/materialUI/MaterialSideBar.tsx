@@ -8,6 +8,8 @@ import SecurityIcon from "@mui/icons-material/Security";
 import LockIcon from "@mui/icons-material/Lock";
 import { Props } from "../SidebarGeneric";
 import "../../../styles/MaterialUI/MaterialSidebar.css";
+import { useNavigate } from "react-router-dom"; // 👈 importa el hook aquí
+
 
 export const MaterialSideBar: React.FC<Props> = ({
   items = [],
@@ -20,7 +22,7 @@ export const MaterialSideBar: React.FC<Props> = ({
     Roles: <SecurityIcon />,
     Permisos: <LockIcon />,
   };
-
+  const navegate = useNavigate();
   return (
     <>
       {/* Botón para abrir el sidebar */}
@@ -55,7 +57,7 @@ export const MaterialSideBar: React.FC<Props> = ({
         <List className="sidebar-list">
           {items.map((item) => (
             <ListItem disablePadding key={item.label}>
-              <ListItemButton onClick={item.onClick} className="sidebar-item">
+              <ListItemButton onClick={()=>navegate(item.path)} className="sidebar-item">
                 <ListItemIcon className="sidebar-icon">
                   {item.icon ?? iconMap[item.label]}
                 </ListItemIcon>

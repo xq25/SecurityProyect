@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import GenericTable from "../../components/GenericTable";
 import {User} from '../../models/User'
 import { userService } from "../../services/userService";
 import Swal from "sweetalert2";
@@ -35,15 +34,7 @@ const ListUsers: React.FC = () => {
   return (
     <div>
       <h2>User List</h2>
-      <GenericTable
-        data={users}
-        columns={["id", "name", "email"]}
-        actions={[
-          { name: "edit", label: "Edit" },
-          { name: "delete", label: "Delete" },
-        ]}
-        onAction={handleAction}
-      />
+      <p>dhjnabdfaubnfubadfbun</p>
     </div>
   );
 };
