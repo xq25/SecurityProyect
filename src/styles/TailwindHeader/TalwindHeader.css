@@ -1,25 +1,33 @@
 .tailwind-header {
-  position: sticky;
+    position: sticky;
   top: 0;
   z-index: 50;
-  background-color: #1f2937; /* gray-800 */
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  width: 100%;
+  background-color: indigo;
+  box-shadow: 0 1px 6px rgba(59,21,96,0.12);
+}
+
+/* Si aún no ves el cambio, fuerza el color en el header (prueba rápida) */
+header.tailwind-header {
+  background-color: indigo !important;
 }
 
 .tailwind-header-container {
   max-width: 1120px; /* approx max-w-7xl */
   margin: 0 auto;
   padding: 0.5rem 1rem;
+  
 }
 
 .tailwind-header-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
+ 
 }
 
 .tailwind-header-title {
-  color:    #ffffff;
+  color: #ffffff;
   font-size: 1.125rem; /* text-lg */
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -88,18 +96,11 @@
 
 /* When the active button is Tailwind we add a modifier class to make it green */
 .tailwind-button.is-tailwind.active {
-  background-color: #16a34a; /* green-600 */
+  background-color: #CB9DF0; /* green-600 */
   box-shadow: 0 4px 10px rgba(22,163,74,0.18);
 }
 
-/* focus rings */
-.tailwind-button:focus {
-  outline: 2px solid rgba(59,130,246,0.25); /* blue-400 */
-  outline-offset: 2px;
-}
-.tailwind-button.is-tailwind:focus {
-  outline: 2px solid rgba(16,185,129,0.25); /* green-400 */
-}
+
 
 .tailwind-tooltip {
   position: absolute;
