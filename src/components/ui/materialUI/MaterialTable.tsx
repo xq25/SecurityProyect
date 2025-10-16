@@ -12,11 +12,19 @@ import {
 import "../../../styles/MaterialUI/MaterialTable.css";
 import { Props } from "../TableGeneric";
 
+
+// Este componente nos permite diseñar una tabla siguiendo en siguiente formato ( header: puede no tener nada o asignarlo manualmente, items : es una lista de objetos, esto nos permite definir automaticamente loss keys )
 export const MaterialTable: React.FC<Props> = ({
-  name = '',
+  name = "",
   header = [],
   items = [],
 }) => {
+  // Si no se pasan headers, los obtiene automáticamente del primer objeto
+  const autoHeader =
+    header.length === 0 && items.length > 0
+      ? Object.keys(items[0])
+      : header;
+
   return (
     <TableContainer component={Paper} className="material-table-container">
       <Typography variant="h6" className="table-title">
@@ -26,7 +34,7 @@ export const MaterialTable: React.FC<Props> = ({
       <Table className="material-table">
         <TableHead className="table-head">
           <TableRow>
-            {header.map((col, idx) => (
+            {autoHeader.map((col, idx) => (
               <TableCell key={idx} className="table-header-cell">
                 {col}
               </TableCell>
@@ -36,11 +44,11 @@ export const MaterialTable: React.FC<Props> = ({
 
         <TableBody>
           {items.length > 0 ? (
-            items.map((item, rowIdx) => (
+            items.map((item: Record<string, any>, rowIdx: number) => (
               <TableRow key={rowIdx} hover>
-                {item.contentRow.map((cell: any, colIdx: number) => (
+                {autoHeader.map((key, colIdx) => (
                   <TableCell key={colIdx} className="table-cell">
-                    {cell}
+                    {String(item[key])}
                   </TableCell>
                 ))}
               </TableRow>
@@ -48,7 +56,7 @@ export const MaterialTable: React.FC<Props> = ({
           ) : (
             <TableRow>
               <TableCell
-                colSpan={header.length || 1}
+                colSpan={autoHeader.length || 1}
                 className="empty-message"
               >
                 No hay datos proporcionados

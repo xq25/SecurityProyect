@@ -1,7 +1,7 @@
 import React from "react";
 import { headerItem } from '../HeaderGeneric';
 import { useUI } from "../../../context/UIProvider";
-import "../../../styles/TailwindHeader/TalwindHeader.css";
+import "../../../styles/Tailwind/TalwindHeader.css";
 
 interface TailwindHeaderProps {
   items: headerItem[];

@@ -1,7 +1,7 @@
 import React from "react";
 import { Props } from "../SidebarGeneric";
 import { useNavigate } from "react-router-dom";
-import "../../../styles/TailwindHeader/TailwindSidebar.css";
+import "../../../styles/Tailwind/TailwindSidebar.css";
 
 // Iconos para el menú
 import { 

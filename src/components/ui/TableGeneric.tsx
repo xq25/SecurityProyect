@@ -4,14 +4,10 @@ import { MaterialTable } from "./materialUI/MaterialTable";
 
 
 
-interface TableItem {
-  contentRow: any[];
-}
-
 export interface Props {
   name?: string;
   header?: string[];
-  items?: TableItem[]; // Para cada contenido dentro de nuestras filas esta divido por un contentRow en el cual esta la lista con los datos de la fila
+  items?: Object[] | []; // Para cada contenido dentro de nuestras filas esta divido por un contentRow en el cual esta la lista con los datos de la fila
 }
 
 export const AppTable: React.FC<Props> = ({name ,header, items}) => {

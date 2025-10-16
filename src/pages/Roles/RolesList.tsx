@@ -20,7 +20,7 @@ const RolesList: React.FC = () => {
   return (
     <div>
       <h2>Role List</h2>
-      <AppTable name={'Roles'} header={['ID', 'Nombre']} items={[{ contentRow: ["valor1", "valor2", <AppButton name="update" action={()=>console.log('actualice')}/>] },
+      <AppTable name={'Roles'} header={['ID', 'Name', 'Actions']} items={[{ contentRow: ["valor1", "valor2", [<AppButton name="update" action={()=>console.log('actualice')}/>, <AppButton name="delete" action={()=>console.log('borre')}/> ]] },
   { contentRow: ["valorA", "valorB",] }]}/>
     </div>
   );
