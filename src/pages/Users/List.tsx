@@ -1,54 +1,73 @@
 import React, { useState, useEffect } from "react";
-import {User} from '../../models/User'
+import { User } from "../../models/User";
 import { userService } from "../../services/userService";
 import Swal from "sweetalert2";
-import { AppTable } from '../../components/ui/TableGeneric';
+import { AppTable } from "../../components/ui/TableGeneric";
+import { AppButton } from "../../components/ui/ButtonCRUDGeneric";
+import { useNavigate } from "react-router-dom";
 
 const ListUsers: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]); //Variable reactiva
+  const [users, setUsers] = useState<User[]>([]); // Variable reactiva con la lista de usuarios
+  const navigate = useNavigate();
 
-    useEffect(() => { //Cuando la pagina se carga obtiene los datos de todos los usuarioss.
-        fetchData();
-    },[]);
+  // 🔹 Al cargar el componente, obtenemos los usuarios desde el backend
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-    // 🔹 Obtiene los datos de los usuarios
-    const fetchData = async () => {
-        const users = await userService.getUsers(); //LLamamos al metodo el service.
-        setUsers(users);  //Asignamos la informacion a nuestra variable reactiva
-        console.log(users)
-    };
+  // 🔹 Método que obtiene los usuarios desde el servicio
+  const fetchData = async () => {
+    const users = await userService.getUsers();
+    setUsers(users); // Asignamos la data obtenida a la variable reactiva
+  };
 
-  const handleAction = async(action: string, item: User) => {
-    if (action === "edit") {
-    } else if (action === "delete") {
-      const succes = await userService.deleteUser(item.id!)
-      if (succes){
+  // 🔹 Define las acciones que pueden realizarse sobre cada usuario
+  const handleAction = async (action: string, user: User) => {
+    if (action === "delete") {
+      const success = await userService.deleteUser(user.id!);
+      if (success) {
         Swal.fire({
-          title: 'Eliminado',
-          text: 'Usuario Eliminado',
-          icon: 'success'
-        })
-        fetchData();
+          title: "Eliminado",
+          text: "Usuario eliminado correctamente",
+          icon: "success",
+        });
+        fetchData(); // Refresca la tabla después de eliminar
       }
+    } else if (action === "view") {
+      console.log(user)
+      navigate(`/users/${user.id}/view`);
+    } else if (action === "update") {
+      navigate(`/users/${user.id}/update`);
     }
   };
 
-  
-  if (users){
-    return (
-      <div>
-        <h2>User List</h2>
-        <AppTable name={'Usuarios'} header={[]} items={users}/>
-      </div>
-    );
-  }
-  else{
-    return (
-      <div>
-        <h2> Error al Cargar Usuarios</h2>
-      </div>
-    );
-  }
+  // 🔹 Configuración base de botones (se aplicará dinámicamente a cada fila)
+  const baseOptions = [
+    { name: "view" },
+    { name: "update" },
+    { name: "delete" },
+  ];
+
+  // 🔹 Render principal de la pagina.
+  return (
+    <div>
+      <h2>Listado de Usuarios</h2>
+      <AppTable
+        name="Usuarios"
+        header={["id", "name", "email"]}
+        items={users}
+        // Generamos los botones a partir de las opciones
+        options={baseOptions.map((opt) => (
+          <AppButton
+            key={opt.name}
+            name={opt.name}
+            // Pasamos la acción con el usuario que corresponde
+            action={(user) => handleAction(opt.name, user)}
+          />
+        ))}
+      />
+    </div>
+  );
 };
 
 export default ListUsers;

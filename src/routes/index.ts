@@ -2,6 +2,7 @@ import { lazy } from 'react';
 
 import ListUsers from '../pages/Users/List';
 import RolesList from '../pages/Roles/RolesList';
+import Permissions from '../pages/Permissions/List';
 // const Calendar = lazy(() => import('../pages/Calendar'));
 // const Chart = lazy(() => import('../pages/Chart'));
 // const FormElements = lazy(() => import('../pages/Form/FormElements'));
@@ -29,11 +30,11 @@ const coreRoutes = [
     title: 'List Role',
     component: RolesList,
   },
-  // {
-  //   path: '/calendar',
-  //   title: 'Calender',
-  //   component: Calendar,
-  // },
+  {
+    path: '/permissions',
+    title: 'Permisions',
+    component: Permissions,
+  },
   // {
   //   path: '/profile',
   //   title: 'Profile',

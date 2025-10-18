@@ -2,18 +2,21 @@ import React from "react";
 import { useUI } from "../../context/UIProvider";
 import { MaterialTable } from "./materialUI/MaterialTable";
 
-
-
+// 🔹 Interfaz que define la estructura esperada de los props
 export interface Props {
-  name?: string;
-  header?: string[];
-  items?: Object[] | []; // Para cada contenido dentro de nuestras filas esta divido por un contentRow en el cual esta la lista con los datos de la fila
+  name?: string;               // Nombre descriptivo de la tabla
+  header?: string[];           // Cabecera con nombres de columnas
+  items?: Object[] | [];       // Lista de objetos que representan las filas
+  options?: React.ReactElement[] | []; // Componentes React (botones, íconos, etc.) para cada fila
 }
 
-export const AppTable: React.FC<Props> = ({name ,header, items}) => {
+// 🔹 Este componente actúa como puente genérico entre la UI y las tablas específicas
+export const AppTable: React.FC<Props> = ({ name, header, items, options }) => {
   const { library } = useUI();
 
-  if (library === 'material') return <MaterialTable name={name} header={header} items={items} />;
+  // Por ahora solo usamos la versión Material Design
+  if (library === "material")
+    return <MaterialTable name={name} header={header} items={items} options={options} />;
 
   return null;
 };

@@ -1,16 +1,21 @@
-// src/components/ui/ButtonGeneric.tsx
 import React from "react";
 import { useUI } from "../../context/UIProvider";
 import { MaterialButton } from "./materialUI/MaterialButtonCRUD";
 
+// 🔹 Estructura de un botón reutilizable
 export interface ButtonItem {
-  name?: string;
-  action?: () => void;
+  name: string;                // Nombre visible del botón
+  item?: any;                  // Objeto (ej: usuario) sobre el cual actúa
+  action?: (item: any) => void; // Acción ejecutada al hacer clic
 }
 
-export const AppButton: React.FC<ButtonItem> = ({ name, action }) => {
+// 🔹 Botón genérico que adapta su diseño según la librería actual (Material, Bootstrap, etc.)
+export const AppButton: React.FC<ButtonItem> = ({ name, action, item }) => {
   const { library } = useUI();
 
-  if (library == "material") return <MaterialButton name={name} action={action}/>;
+  // Solo usamos Material por ahora
+  if (library === "material")
+    return <MaterialButton name={name} action={() => action?.(item)} />;
 
+  return null;
 };
