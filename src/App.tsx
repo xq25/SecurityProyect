@@ -46,11 +46,8 @@ function App() {
           </Route>
         
       </Routes>
-    </UIProvider>
-      
+    </UIProvider> 
     </>
-
-      
   );
 }
 

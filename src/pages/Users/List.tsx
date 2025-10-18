@@ -34,7 +34,7 @@ const ListUsers: React.FC = () => {
         fetchData(); // Refresca la tabla después de eliminar
       }
     } else if (action === "view") {
-      console.log(user)
+      navigate('/users/create')
       navigate(`/users/${user.id}/view`);
     } else if (action === "update") {
       navigate(`/users/${user.id}/update`);

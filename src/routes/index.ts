@@ -3,6 +3,7 @@ import { lazy } from 'react';
 import ListUsers from '../pages/Users/List';
 import RolesList from '../pages/Roles/RolesList';
 import Permissions from '../pages/Permissions/List';
+import CreateUser from '../pages/Users/Create';
 // const Calendar = lazy(() => import('../pages/Calendar'));
 // const Chart = lazy(() => import('../pages/Chart'));
 // const FormElements = lazy(() => import('../pages/Form/FormElements'));
@@ -25,6 +26,16 @@ const coreRoutes = [
     title: 'List Users',
     component: ListUsers,
   },
+  {
+    path: '/users/create',
+    title: 'Create Users',
+    component: CreateUser,
+  },
+  // {
+  //   path: '/users/update/:id',
+  //   title: 'Update Users',
+  //   component: UpdateUser,
+  // },
   {
     path: '/roles/list',
     title: 'List Role',
