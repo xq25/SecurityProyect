@@ -1,6 +1,7 @@
 import React from "react";
 import { useUI } from "../../context/UIProvider";
 import { MaterialButton } from "./materialUI/MaterialButtonCRUD";
+import { TailwindButton } from "./tailwind/TailwindButtonCRUD";
 
 // 🔹 Estructura de un botón reutilizable
 export interface ButtonItem {
@@ -16,6 +17,9 @@ export const AppButton: React.FC<ButtonItem> = ({ name, action, item }) => {
   // Solo usamos Material por ahora
   if (library === "material")
     return <MaterialButton name={name} action={() => action?.(item)} />;
+
+  if (library === "tailwind")
+    return <TailwindButton name={name} action={() => action?.(item)} />;
 
   return null;
 };
