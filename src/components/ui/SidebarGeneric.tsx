@@ -27,7 +27,7 @@ export const AppSideBar = ({ items = [], sidebarOpen, setSidebarOpen }: Props) =
         { label: "Inicio", path: "/" },
         { label: "Usuarios", path: "/users/list"},
         { label: "Roles", path: "/roles/list" },
-        { label: "Permisos", path: "/permissions" },
+        { label: "Permissions", path: "/permissions" },
     ];
 
     const combinedItems = [...defaultItems, ...items];
