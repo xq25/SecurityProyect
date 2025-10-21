@@ -1,90 +1,9 @@
-/* === Bootstrap Header === */
-/* Estilo coherente con tema verde */
-
-.bootstrap-header {
-  background: linear-gradient(145deg, #1b5e20, #2e7d32) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.bootstrap-header .container-fluid {
-  padding: 0.75rem 1.5rem;
-}
-
-/* Título del header */
-.bootstrap-header .navbar-brand {
-  font-weight: 600;
+/* Personalizaciones adicionales para el header */
+.navbar-brand {
   letter-spacing: 0.5px;
-  color: #e8f5e9 !important;
-  text-transform: uppercase;
-  font-size: 1.1rem;
-  transition: all 0.3s ease;
-  margin-left: 50px; /* Espacio para el botón del sidebar */
 }
 
-/* Contenedor de botones */
-.bootstrap-header .d-flex {
-  gap: 0.5rem;
-}
-
-/* === Botones de librerías === */
-.bootstrap-header .btn-outline-light {
-  color: #a5d6a7 !important;
-  border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  background-color: transparent !important;
-  border-radius: 8px !important;
-  padding: 6px 12px !important;
-  transition: all 0.25s ease-in-out !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bootstrap-header .btn-outline-light:hover {
-  background-color: rgba(255, 255, 255, 0.15) !important;
-  border-color: rgba(255, 255, 255, 0.5) !important;
+.btn-outline-light:hover {
   transform: translateY(-2px);
-  color: #ffffff !important;
-}
-
-.bootstrap-header .btn-outline-light.active {
-  background-color: #ffffff !important;
-  color: #2e7d32 !important;
-  border-color: #ffffff !important;
-  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.4);
-  font-weight: 600;
-}
-
-.bootstrap-header .btn-outline-light.active:hover {
-  background-color: #f1f1f1 !important;
-  color: #1b5e20 !important;
-}
-
-/* Íconos dentro de los botones */
-.bootstrap-header .btn-outline-light svg {
-  width: 22px;
-  height: 22px;
-  transition: transform 0.3s ease;
-}
-
-.bootstrap-header .btn-outline-light:hover svg {
-  transform: scale(1.1);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .bootstrap-header .navbar-brand {
-    margin-left: 0;
-    font-size: 1rem;
-  }
-
-  .bootstrap-header .btn-outline-light {
-    padding: 4px 8px !important;
-  }
-
-  .bootstrap-header .btn-outline-light svg {
-    width: 18px;
-    height: 18px;
-  }
+  transition: all 0.2s ease;
 }

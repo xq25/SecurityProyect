@@ -11,10 +11,10 @@ export const BootstrapHeader: React.FC<BootstrapHeaderProps> = ({ items }) => {
   const { library } = useUI();
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-success bootstrap-header">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
       <div className="container-fluid">
         {/* Título */}
-        <span className="navbar-brand">Security Project</span>
+        <span className="navbar-brand fw-bold text-uppercase ms-5">Security Project</span>
 
         {/* Botones de librerías */}
         <div className="d-flex gap-2">
@@ -22,8 +22,8 @@ export const BootstrapHeader: React.FC<BootstrapHeaderProps> = ({ items }) => {
             <button
               key={item.name}
               onClick={item.onClick}
-              className={`btn btn-outline-light ${
-                library === item.name ? "active" : ""
+              className={`btn btn-sm ${
+                library === item.name ? "btn-light text-success" : "btn-outline-light"
               }`}
               title={`Cambiar a ${item.label}`}
             >

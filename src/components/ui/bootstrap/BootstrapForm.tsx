@@ -1,7 +1,6 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import "../../../styles/Bootstrap/BootstrapForm.css";
 
 export interface FormItems<T = any> {
   mode?: number;
@@ -18,7 +17,6 @@ export const BootstrapForm = <T extends Record<string, any>>({
   handleAction,
   validationSchema,
 }: FormItems<T>) => {
-  // Generamos los valores iniciales
   const initialValues = labels.reduce((acc, label) => {
     const key = label.toLowerCase();
     acc[key] = info ? info[key] ?? "" : "";
@@ -26,15 +24,15 @@ export const BootstrapForm = <T extends Record<string, any>>({
   }, {} as Record<string, any>);
 
   return (
-    <div className="card bootstrap-form-container">
+    <div className="card shadow-sm mt-4 border-success">
       {/* Título */}
       <div className="card-header bg-success text-white">
-        <h5 className="mb-0">
+        <h5 className="mb-0 fw-bold">
           {mode === 1 ? "Crear Nuevo Registro" : mode === 2 ? "Editar Registro" : "Registro"}
         </h5>
       </div>
 
-      <div className="card-body">
+      <div className="card-body bg-light">
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -48,7 +46,7 @@ export const BootstrapForm = <T extends Record<string, any>>({
                 const key = label.toLowerCase();
                 return (
                   <div className="mb-3" key={idx}>
-                    <label htmlFor={key} className="form-label">
+                    <label htmlFor={key} className="form-label fw-semibold text-success">
                       {label}
                     </label>
                     <Field
@@ -66,7 +64,7 @@ export const BootstrapForm = <T extends Record<string, any>>({
                 );
               })}
 
-              <button type="submit" className="btn btn-success w-100">
+              <button type="submit" className="btn btn-success w-100 fw-bold text-uppercase">
                 {mode === 1 ? "Crear" : mode === 2 ? "Actualizar" : "Enviar"}
               </button>
             </Form>

@@ -24,53 +24,58 @@ export const BootstrapSideBar: React.FC<Props> = ({
       {!sidebarOpen && (
         <button
           onClick={() => setSidebarOpen(true)}
-          className="btn btn-success bootstrap-sidebar-toggle"
+          className="btn btn-success position-fixed top-0 start-0 m-3 shadow"
+          style={{ zIndex: 1030 }}
         >
           <FaBars />
         </button>
       )}
 
-      {/* Sidebar */}
-      <div className={`bootstrap-sidebar bg-success ${sidebarOpen ? "open" : ""}`}>
-        {/* Encabezado */}
-        <div className="sidebar-header d-flex justify-content-between align-items-center p-3 bg-dark text-white">
-          <h5 className="m-0">Menú Principal</h5>
+      {/* Sidebar con Offcanvas de Bootstrap */}
+      <div 
+        className={`offcanvas offcanvas-start bg-success text-white ${sidebarOpen ? 'show' : ''}`}
+        tabIndex={-1}
+        style={{ visibility: sidebarOpen ? 'visible' : 'hidden', width: '260px' }}
+      >
+        {/* ✅ Encabezado con mejor espaciado */}
+        <div className="offcanvas-header bg-dark border-bottom border-secondary">
+          <h5 className="offcanvas-title fw-bold m-0">Menú Principal</h5>
           <button
+            type="button"
+            className="btn btn-sm btn-outline-light d-flex align-items-center justify-content-center"
             onClick={() => setSidebarOpen(false)}
-            className="btn btn-sm btn-outline-light"
+            style={{ 
+              padding: '0.4rem 0.6rem',
+              minWidth: '32px',
+              marginLeft: 'auto' // ✅ Empuja el botón a la derecha
+            }}
           >
-            <FaChevronLeft />
+            <FaChevronLeft size={14} />
           </button>
         </div>
 
-        <hr className="bg-light" />
-
-        {/* Lista de opciones */}
-        <ul className="list-group list-group-flush">
-          {items.map((item) => (
-            <li
-              key={item.label}
-              className="list-group-item list-group-item-success border-0"
-            >
-              <button
-                onClick={() => navigate(item.path)}
-                className="btn btn-link text-white text-decoration-none w-100 text-start"
+        {/* Cuerpo */}
+        <div className="offcanvas-body p-0">
+          <ul className="list-group list-group-flush">
+            {items.map((item) => (
+              <li
+                key={item.label}
+                className="list-group-item list-group-item-success border-0"
               >
-                {item.icon ?? iconMap[item.label]}
-                {item.label}
-              </button>
-            </li>
-          ))}
-        </ul>
+                <button
+                  onClick={() => {
+                    navigate(item.path);
+                  }}
+                  className="btn btn-link text-white text-decoration-none w-100 text-start d-flex align-items-center"
+                >
+                  {item.icon ?? iconMap[item.label]}
+                  {item.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-
-      {/* Overlay cuando está abierto */}
-      {sidebarOpen && (
-        <div
-          className="bootstrap-sidebar-overlay"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
     </>
   );
 };

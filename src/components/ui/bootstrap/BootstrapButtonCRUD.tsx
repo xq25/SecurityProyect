@@ -1,5 +1,4 @@
 import React from "react";
-import "../../../styles/Bootstrap/BootstrapButtonCRUD.css";
 import { ButtonItem } from "../ButtonCRUDGeneric";
 
 export const BootstrapButton: React.FC<ButtonItem> = ({
@@ -10,9 +9,9 @@ export const BootstrapButton: React.FC<ButtonItem> = ({
   // Mapeo de nombres a clases de Bootstrap
   const buttonClassMap: Record<string, string> = {
     crear: "btn-success",
-    editar: "btn-warning",
+    editar: "btn-warning text-white",
     eliminar: "btn-danger",
-    ver: "btn-info",
+    ver: "btn-info text-white",
     actualizar: "btn-primary",
   };
 
@@ -22,9 +21,9 @@ export const BootstrapButton: React.FC<ButtonItem> = ({
   return (
     <button
       onClick={action}
-      className={`btn ${bootstrapClass} bootstrap-button`}
+      className={`btn btn-sm ${bootstrapClass} d-flex align-items-center gap-1`}
     >
-      {icon && <span className="me-1">{icon}</span>}
+      {icon && <span>{icon}</span>}
       {name}
     </button>
   );
