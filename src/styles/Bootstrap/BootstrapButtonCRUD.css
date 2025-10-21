@@ -1,0 +1,116 @@
+/* === Bootstrap Button CRUD === */
+
+.bootstrap-button {
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  padding: 8px 16px !important;
+  border: none !important;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.25s ease !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: capitalize;
+}
+
+.bootstrap-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25) !important;
+}
+
+.bootstrap-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* === Botón SUCCESS (Crear, Guardar) === */
+.bootstrap-button.btn-success {
+  background-color: #2e7d32 !important;
+  color: #ffffff !important;
+}
+
+.bootstrap-button.btn-success:hover {
+  background-color: #1b5e20 !important;
+}
+
+.bootstrap-button.btn-success:active {
+  background-color: #144d16 !important;
+}
+
+/* === Botón WARNING (Editar, Actualizar) === */
+.bootstrap-button.btn-warning {
+  background-color: #f57c00 !important;
+  color: #ffffff !important;
+}
+
+.bootstrap-button.btn-warning:hover {
+  background-color: #e65100 !important;
+}
+
+.bootstrap-button.btn-warning:active {
+  background-color: #bf360c !important;
+}
+
+/* === Botón DANGER (Eliminar) === */
+.bootstrap-button.btn-danger {
+  background-color: #c62828 !important;
+  color: #ffffff !important;
+}
+
+.bootstrap-button.btn-danger:hover {
+  background-color: #b71c1c !important;
+}
+
+.bootstrap-button.btn-danger:active {
+  background-color: #7f0000 !important;
+}
+
+/* === Botón INFO (Ver, Detalles) === */
+.bootstrap-button.btn-info {
+  background-color: #00838f !important;
+  color: #ffffff !important;
+}
+
+.bootstrap-button.btn-info:hover {
+  background-color: #006064 !important;
+}
+
+.bootstrap-button.btn-info:active {
+  background-color: #004d40 !important;
+}
+
+/* === Botón PRIMARY (Acción principal) === */
+.bootstrap-button.btn-primary {
+  background-color: #1976d2 !important;
+  color: #ffffff !important;
+}
+
+.bootstrap-button.btn-primary:hover {
+  background-color: #1565c0 !important;
+}
+
+.bootstrap-button.btn-primary:active {
+  background-color: #0d47a1 !important;
+}
+
+/* Íconos dentro de los botones */
+.bootstrap-button svg {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}
+
+.bootstrap-button:hover svg {
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bootstrap-button {
+    padding: 6px 12px !important;
+    font-size: 0.875rem !important;
+  }
+
+  .bootstrap-button svg {
+    font-size: 14px;
+  }
+}

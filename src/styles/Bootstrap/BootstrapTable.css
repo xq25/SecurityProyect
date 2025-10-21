@@ -1,0 +1,133 @@
+/* === Bootstrap Table === */
+
+.bootstrap-table-container {
+  margin-top: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  border: 1px solid rgba(46, 125, 50, 0.2);
+}
+
+/* Encabezado de la tabla */
+.bootstrap-table-container .card-header {
+  background: linear-gradient(145deg, #2e7d32, #388e3c) !important;
+  color: #ffffff !important;
+  padding: 16px 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.bootstrap-table-container .card-header h5 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-size: 1.1rem;
+}
+
+/* Cuerpo de la tabla */
+.bootstrap-table-container .card-body {
+  padding: 0;
+}
+
+/* Tabla */
+.bootstrap-table-container .table {
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Encabezado de columnas */
+.bootstrap-table-container .table-success {
+  background-color: #4caf50 !important;
+}
+
+.bootstrap-table-container .table-success th {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  letter-spacing: 0.5px;
+  padding: 14px 16px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.bootstrap-table-container .table-success th:last-child {
+  border-right: none;
+}
+
+/* Filas */
+.bootstrap-table-container .table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(76, 175, 80, 0.05);
+}
+
+.bootstrap-table-container .table-hover tbody tr {
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.bootstrap-table-container .table-hover tbody tr:hover {
+  background-color: rgba(76, 175, 80, 0.12) !important;
+  cursor: pointer;
+}
+
+/* Celdas */
+.bootstrap-table-container tbody td {
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  color: #333;
+  vertical-align: middle;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Mensaje de tabla vacía */
+.bootstrap-table-container .text-center {
+  padding: 40px 20px !important;
+  color: #666;
+  font-style: italic;
+  font-size: 1rem;
+}
+
+/* Contenedor de botones de acción */
+.bootstrap-table-container .d-flex.gap-2 {
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+/* Hover en columnas */
+.bootstrap-table-container tbody td:hover {
+  background-color: rgba(76, 175, 80, 0.08);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bootstrap-table-container .card-header h5 {
+    font-size: 1rem;
+  }
+
+  .bootstrap-table-container tbody td,
+  .bootstrap-table-container .table-success th {
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Scrollbar horizontal si la tabla es muy ancha */
+.bootstrap-table-container .card-body {
+  overflow-x: auto;
+}
+
+.bootstrap-table-container .card-body::-webkit-scrollbar {
+  height: 8px;
+}
+
+.bootstrap-table-container .card-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.bootstrap-table-container .card-body::-webkit-scrollbar-thumb {
+  background: #4caf50;
+  border-radius: 4px;
+}
+
+.bootstrap-table-container .card-body::-webkit-scrollbar-thumb:hover {
+  background: #388e3c;
+}

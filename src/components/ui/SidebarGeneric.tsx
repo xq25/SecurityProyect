@@ -3,6 +3,7 @@ import { useUI } from '../../context/UIProvider';  //Aqui esta almacenado el est
 // Aqui esta la carga de el estilos de SideBar.
 import { MaterialSideBar } from '../ui/materialUI/MaterialSideBar' 
 import { TailwindSideBar } from '../ui/tailwind/TailwindSideBar'
+import { BootstrapSideBar } from '../ui/bootstrap/BootstrapSideBar';
 
 //Esta interfaz marca las pautas de como deben ser los elementos del sideBar.
 export interface SideBarItem {
@@ -33,7 +34,7 @@ export const AppSideBar = ({ items = [], sidebarOpen, setSidebarOpen }: Props) =
     const combinedItems = [...defaultItems, ...items];
     if (library === "material") return <MaterialSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;  //Cargamos el sideBar respectivo usando la libreria seleccionada y los items previamente pasados
     if (library === "tailwind") return <TailwindSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;
-//   if (library === "bootstrap") return <BootstrapSideBar items={items} />;
+    if (library === "bootstrap") return <BootstrapSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;
 //   return <TailwindSideBar items={items} />;
 // Por defecto, usar Material UI si no hay coincidencia
     return <MaterialSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;

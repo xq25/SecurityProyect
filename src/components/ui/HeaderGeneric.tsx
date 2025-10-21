@@ -5,6 +5,7 @@ import { SiMui, SiTailwindcss, SiBootstrap } from "react-icons/si"; //cargamos l
 
 import { MaterialHeader } from "../ui/materialUI/MaterialHeader";
 import { TailwindHeader } from "../ui/tailwind/TailwindHeader"; // Importamos el componente TailwindHeader
+import { BootstrapHeader } from "../ui/bootstrap/BootstrapHeader"; // Importamos el componente BootstrapHeader
 
 //Definimos que debe contener los items dentro de nuestro header
 export interface headerItem{ 
@@ -25,7 +26,7 @@ export const AppHeader = () => { //Esta vez lo vamos a usar unicamente con los d
 
 
     if (library === "material") return <MaterialHeader items={defaultItems}/>    
-//     if (library === "bootstrap") return <BootstrapHeader {defaultItems} />;
+     if (library === "bootstrap") return <BootstrapHeader items={defaultItems} />;
 //     return <TailwindHeader {defaultItems} />;
     if (library === "tailwind") return <TailwindHeader items={defaultItems}/>;
     // Por defecto, si ninguna librería coincide o está implementada

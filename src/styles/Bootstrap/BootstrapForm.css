@@ -1,0 +1,161 @@
+/* === Bootstrap Form === */
+
+.bootstrap-form-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  border: 1px solid rgba(46, 125, 50, 0.2);
+}
+
+/* Encabezado del formulario */
+.bootstrap-form-container .card-header {
+  background: linear-gradient(145deg, #2e7d32, #388e3c) !important;
+  color: #ffffff !important;
+  padding: 16px 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.bootstrap-form-container .card-header h5 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-size: 1.1rem;
+}
+
+/* Cuerpo del formulario */
+.bootstrap-form-container .card-body {
+  padding: 24px;
+  background-color: #fafafa;
+}
+
+/* Labels */
+.bootstrap-form-container .form-label {
+  font-weight: 600;
+  color: #2e7d32;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
+}
+
+/* Inputs */
+.bootstrap-form-container .form-control {
+  border: 1px solid #c8e6c9;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+  background-color: #ffffff;
+}
+
+.bootstrap-form-container .form-control:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+  outline: none;
+  background-color: #ffffff;
+}
+
+.bootstrap-form-container .form-control::placeholder {
+  color: #a5d6a7;
+  font-style: italic;
+}
+
+/* Input con error */
+.bootstrap-form-container .form-control.is-invalid {
+  border-color: #c62828 !important;
+  background-color: #ffebee;
+}
+
+.bootstrap-form-container .form-control.is-invalid:focus {
+  box-shadow: 0 0 0 0.2rem rgba(198, 40, 40, 0.25) !important;
+}
+
+/* Mensaje de error */
+.bootstrap-form-container .invalid-feedback {
+  color: #c62828;
+  font-size: 0.875rem;
+  margin-top: 4px;
+  font-weight: 500;
+  display: block;
+}
+
+/* Grupo de campos */
+.bootstrap-form-container .mb-3 {
+  margin-bottom: 1.5rem !important;
+}
+
+/* Botón de envío */
+.bootstrap-form-container .btn-success {
+  background-color: #2e7d32 !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  padding: 12px 24px !important;
+  border-radius: 8px !important;
+  box-shadow: 0px 4px 8px rgba(46, 125, 50, 0.3) !important;
+  transition: all 0.25s ease !important;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bootstrap-form-container .btn-success:hover {
+  background-color: #1b5e20 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(27, 94, 32, 0.4) !important;
+}
+
+.bootstrap-form-container .btn-success:active {
+  background-color: #144d16 !important;
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(20, 77, 22, 0.3) !important;
+}
+
+/* Botón deshabilitado */
+.bootstrap-form-container .btn-success:disabled {
+  background-color: #81c784 !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Grid responsive para múltiples campos */
+.bootstrap-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bootstrap-form-container {
+    margin: 1rem;
+  }
+
+  .bootstrap-form-container .card-body {
+    padding: 16px;
+  }
+
+  .bootstrap-form-container .btn-success {
+    width: 100%;
+  }
+
+  .bootstrap-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Animación de entrada */
+.bootstrap-form-container {
+  animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

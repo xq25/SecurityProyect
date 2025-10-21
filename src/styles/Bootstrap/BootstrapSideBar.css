@@ -1,0 +1,179 @@
+/* === Bootstrap Sidebar === */
+
+/* Sidebar principal */
+.bootstrap-sidebar {
+  position: fixed;
+  left: -260px;
+  top: 0;
+  width: 260px;
+  height: 100vh;
+  background: linear-gradient(180deg, #1b5e20, #2e7d32) !important;
+  color: #e8f5e9;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.3);
+  transition: left 0.3s ease-in-out;
+  z-index: 1040;
+  overflow-y: auto;
+}
+
+.bootstrap-sidebar.open {
+  left: 0;
+}
+
+/* Scrollbar personalizado */
+.bootstrap-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.bootstrap-sidebar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.bootstrap-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.bootstrap-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Encabezado del sidebar */
+.bootstrap-sidebar .sidebar-header {
+  padding: 16px 18px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.bootstrap-sidebar .sidebar-header h5 {
+  font-weight: 600;
+  color: #e8f5e9;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+/* Botón de cerrar */
+.bootstrap-sidebar .btn-outline-light {
+  color: #a5d6a7 !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  padding: 4px 8px !important;
+  transition: all 0.25s ease;
+}
+
+.bootstrap-sidebar .btn-outline-light:hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  color: #ffffff !important;
+}
+
+/* Separador */
+.bootstrap-sidebar hr {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  margin: 0.5rem 0 !important;
+  opacity: 0.5;
+}
+
+/* Lista de opciones */
+.bootstrap-sidebar .list-group-item {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 4px 8px !important;
+  border-radius: 8px !important;
+  transition: background-color 0.25s ease !important;
+}
+
+.bootstrap-sidebar .list-group-item:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Botones de navegación */
+.bootstrap-sidebar .btn-link {
+  color: #e8f5e9 !important;
+  text-decoration: none !important;
+  padding: 12px 16px !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  display: flex !important;
+  align-items: center !important;
+  border-radius: 8px !important;
+  transition: all 0.25s ease !important;
+}
+
+.bootstrap-sidebar .btn-link:hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+}
+
+.bootstrap-sidebar .btn-link:active {
+  background-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Íconos en los botones */
+.bootstrap-sidebar .btn-link svg {
+  margin-right: 8px;
+  color: #a5d6a7;
+  font-size: 18px;
+  transition: color 0.25s ease;
+}
+
+.bootstrap-sidebar .btn-link:hover svg {
+  color: #ffffff;
+}
+
+/* Botón flotante para abrir sidebar */
+.bootstrap-sidebar-toggle {
+  position: fixed !important;
+  top: 12px;
+  left: 12px;
+  z-index: 1030;
+  background-color: rgba(46, 125, 50, 0.9) !important;
+  border: none !important;
+  color: #ffffff !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.bootstrap-sidebar-toggle:hover {
+  background-color: rgba(27, 94, 32, 1) !important;
+  transform: scale(1.05);
+}
+
+.bootstrap-sidebar-toggle svg {
+  font-size: 20px;
+}
+
+/* Overlay oscuro cuando está abierto */
+.bootstrap-sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1035;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bootstrap-sidebar {
+    width: 220px;
+    left: -220px;
+  }
+
+  .bootstrap-sidebar .btn-link {
+    font-size: 14px !important;
+    padding: 10px 12px !important;
+  }
+}

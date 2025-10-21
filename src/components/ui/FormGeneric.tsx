@@ -5,6 +5,8 @@ import { useUI } from "../../context/UIProvider";
 
 import { MaterialForm } from './materialUI/MaterialForm';
 
+import { BootstrapForm } from './bootstrap/BootstrapForm';
+
 
 export interface FormItems<T = any> {
   mode?: number;
@@ -19,4 +21,6 @@ export const AppForm:  React.FC<FormItems>  = ({mode, labels, info, handleAction
     const {library} = useUI();
 
     if (library === 'material') return <MaterialForm mode={mode} labels={labels} info={info} handleAction={handleAction}/>
+
+    if (library === 'bootstrap') return <BootstrapForm mode={mode} labels={labels} info={info} handleAction={handleAction}/>
 } 

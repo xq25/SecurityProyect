@@ -1,6 +1,7 @@
 import React from "react";
 import { useUI } from "../../context/UIProvider";
 import { MaterialButton } from "./materialUI/MaterialButtonCRUD";
+import { BootstrapButton } from "./bootstrap/BootstrapButtonCRUD";
 
 // 🔹 Estructura de un botón reutilizable
 export interface ButtonItem {
@@ -17,6 +18,8 @@ export const AppButton: React.FC<ButtonItem> = ({ name, action, item, icon }) =>
   // Solo usamos Material por ahora
   if (library === "material")
     return <MaterialButton name={name} action={() => action?.(item)} icon = {icon} />;
+  if (library === "bootstrap")
+    return <BootstrapButton name={name} action={() => action?.(item)} icon = {icon} />;
 
   return null;
 };

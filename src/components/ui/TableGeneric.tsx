@@ -1,6 +1,7 @@
 import React from "react";
 import { useUI } from "../../context/UIProvider";
 import { MaterialTable } from "./materialUI/MaterialTable";
+import { BootstrapTable } from "./bootstrap/BootstrapTable";
 
 // 🔹 Interfaz que define la estructura esperada de los props
 export interface Props {
@@ -17,6 +18,7 @@ export const AppTable: React.FC<Props> = ({ name, header, items, options }) => {
   // Por ahora solo usamos la versión Material Design
   if (library === "material")
     return <MaterialTable name={name} header={header} items={items} options={options} />;
-
+  if (library === "bootstrap")
+    return <BootstrapTable name={name} header={header} items={items} options={options} />;
   return null;
 };
