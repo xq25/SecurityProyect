@@ -4,6 +4,7 @@ import ListUsers from '../pages/Users/List';
 import RolesList from '../pages/Roles/RolesList';
 import Permissions from '../pages/Permissions/List';
 import CreateUser from '../pages/Users/Create';
+const SingIn = lazy(() => import('../pages/Authentication/SignIn'));
 // const Calendar = lazy(() => import('../pages/Calendar'));
 // const Chart = lazy(() => import('../pages/Chart'));
 // const FormElements = lazy(() => import('../pages/Form/FormElements'));
@@ -16,11 +17,11 @@ import CreateUser from '../pages/Users/Create';
 // const Demo= lazy(() => import('../pages/Demo'));
 
 const coreRoutes = [
-  // {
-  //   path: '/demo',  //Ecritura en el navegador
-  //   title: 'Demo',    //
-  //   component: Demo, //Componente a renderizar
-  // },
+  {
+    path: '/auth/singin',
+    title: 'Sing In',
+    component : SingIn,
+  },
   {
     path: '/users/list',
     title: 'List Users',

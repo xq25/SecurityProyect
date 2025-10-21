@@ -24,7 +24,7 @@ export interface FormItems<T = any> {
  * Usa tipado genérico <T> para adaptar el formulario a cualquier modelo (User, Roles, etc.)
  */
 export const MaterialForm = <T extends Record<string, any>>({
-  mode = 1,
+  mode = 0,
   labels,
   info = null,
   handleAction,
@@ -41,7 +41,7 @@ export const MaterialForm = <T extends Record<string, any>>({
     <Paper elevation={3} className="material-form-container">
       {/* 🔹 Título dinámico según modo */}
       <Typography variant="h6" gutterBottom>
-        {mode === 1 ? "Crear Nuevo Registro" : "Editar Registro"}
+        {mode === 1 ? "Crear Nuevo Registro" : mode === 2? "Editar Registro" : 'Regristro'}
       </Typography>
 
       {/* 🔹 Formik controla estado, validaciones y envío */}
@@ -79,7 +79,7 @@ export const MaterialForm = <T extends Record<string, any>>({
               color="primary"
               sx={{ marginTop: 2 }}
             >
-              {mode === 1 ?"Crear" : "Actualizar"}
+              {mode === 1 ?"Crear" :  mode === 2? 'Actualizar' : 'Enviar'}
             </Button>
           </Form>
         )}

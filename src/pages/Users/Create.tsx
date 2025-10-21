@@ -49,7 +49,7 @@ const CreateUser: React.FC = () => {
         <div>
             {/* Formulario para crear un nuevo usuario */}
             <h2>Create User</h2>
-            <Breadcrumb pageName="Crear Usuario" />
+            <Breadcrumb pageName="Users / Crear Usuario" />
             <AppForm mode={1} labels={['name', 'email']} handleAction={handleCreateUser}/>
         </div>
     );

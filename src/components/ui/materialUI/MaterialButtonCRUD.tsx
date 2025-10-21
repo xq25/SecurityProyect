@@ -5,7 +5,8 @@ import { ButtonItem } from "../ButtonCRUDGeneric";
 
 export const MaterialButton: React.FC<ButtonItem> = ({
   name = "Acción",
-  action,
+  action = () => {},
+  icon,
 }) => {
   // Clase dinámica basada en el nombre (en minúsculas y sin espacios)
   const buttonClass = `material-button-${name}`;
@@ -16,7 +17,7 @@ export const MaterialButton: React.FC<ButtonItem> = ({
       onClick={action}
       className={buttonClass}
     >
-      {name}
+      {icon}{name}
     </Button>
   );
 };

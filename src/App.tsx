@@ -6,6 +6,8 @@ import { Route, Routes } from "react-router-dom";
 // import SignIn from './pages/Authentication/SignIn';
 // import SignUp from './pages/Authentication/SignUp';
 import routes from './routes';
+// import { Navigate } from "react-router-dom"; // ✅ Asegúrate de importar Navigate
+
 
 
 const DefaultLayout = lazy(() => import("./layout/DefaultLayout"));
@@ -24,6 +26,8 @@ function App() {
     <Toaster position="top-right" reverseOrder={false} containerClassName="overflow-auto" /> 
     <UIProvider> {/* 👈 Envolvemos todo dentro del provider */}
       <Routes>
+        {/* <Route path="/" element={<Navigate to="/auth/signin" replace />} />  👈 Redirige al login */}
+
         {/* <Route path="/auth/signin" element={<SignIn />} />
         <Route path="/auth/signup" element={<SignUp />} /> */}
         

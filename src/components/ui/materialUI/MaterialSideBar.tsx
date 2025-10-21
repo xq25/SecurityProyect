@@ -20,7 +20,7 @@ export const MaterialSideBar: React.FC<Props> = ({
     Inicio: <HomeIcon />,
     Usuarios: <PeopleIcon />,
     Roles: <SecurityIcon />,
-    Permisos: <LockIcon />,
+    Permissions: <LockIcon />,
   };
   const navegate = useNavigate();
   return (
