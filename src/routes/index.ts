@@ -18,7 +18,7 @@ const SingIn = lazy(() => import('../pages/Authentication/SignIn'));
 
 const coreRoutes = [
   {
-    path: '/auth/singin',
+    path: '/auth/signin',
     title: 'Sing In',
     component : SingIn,
   },

@@ -3,7 +3,7 @@ import { User } from "../../models/User";
 import { userService } from "../../services/userService";
 import Swal from "sweetalert2";
 import { AppTable } from "../../components/ui/TableGeneric";
-import { AppButton } from "../../components/ui/ButtonCRUDGeneric";
+import { AppButton } from "../../components/ui/ButtonGeneric";
 import { useNavigate } from "react-router-dom";
 
 const ListUsers: React.FC = () => {

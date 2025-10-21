@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Roles } from "../../models/Roles";
 import {AppTable} from '../../components/ui/TableGeneric';
-import {AppButton} from '../../components/ui/ButtonCRUDGeneric'
+import {AppButton} from '../../components/ui/ButtonGeneric'
 
 const RolesList: React.FC = () => {
   const [roles, setRoles] = useState<Roles[]>([
