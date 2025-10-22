@@ -6,6 +6,8 @@ import { RootState } from "../../store/store";
 
 import "../../styles/MaterialUI/MaterialDropDownUser.css";
 
+
+
 export const AppDropdownUser: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -22,7 +24,7 @@ export const AppDropdownUser: React.FC = () => {
   };
 
   return (
-    <Box className="material-dropdown-container">
+    <Box className="material-dropdown-container"  sx={{ marginLeft: 'auto' }}>
       <IconButton
         className="material-dropdown-trigger"
         onClick={handleClick}
