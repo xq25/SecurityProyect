@@ -1,11 +1,12 @@
 import React from "react";
-
-
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+
+//importacion de clases
 import { User } from "../../models/User";
 import SecurityService from '../../services/securityService';
 
+//Importacion de componentes
 import Breadcrumb from "../../components/Breadcrumb";
 import {GoogleIcon} from '../../components/icons/GoogleIcon';
 import { AppButton } from '../../components/ui/ButtonGeneric';
@@ -14,22 +15,42 @@ import { useNavigate } from "react-router-dom";
 import { MicrosoftIcon } from "../../components/icons/MicrosoftIcon";
 import { GithubIcon } from "../../components/icons/GitHubIcon";
 
-
+//Importaciones del provedor
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import { setUser } from "../../store/userSlice";
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+  
   const handleLogin = async (user: User) => {
-    console.log(user);
-    console.log("aqui " + JSON.stringify(user))
+
+    console.log("aqui " + JSON.stringify(user));
     try {
       const response = await SecurityService.login(user);
       console.log('Usuario autenticado:', response);
+
+      // Normaliza la respuesta según tu service (data | user | response)
+      const responseUser = (response as any)?.data ?? (response as any)?.user ?? response;
+
+      // Actualiza el store
+      dispatch(setUser(responseUser));
+
+      // Persiste en localStorage si lo necesitas
+      try {
+        localStorage.setItem("user", JSON.stringify(responseUser));
+        const token = (response as any)?.token ?? (responseUser as any)?.token;
+        if (token) localStorage.setItem("session", token);
+      } catch (e) {
+        console.warn("No se pudo guardar en localStorage", e);
+      }
+
       navigate("/");
     } catch (error) {
       console.error('Error al iniciar sesión', error);
     }
   }
-
   const schemas = Yup.object({
     email: Yup.string()
       .email("El correo no es válido")
