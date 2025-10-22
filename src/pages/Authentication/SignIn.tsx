@@ -1,5 +1,4 @@
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 //importacion de clases
@@ -20,9 +19,14 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
 import { setUser } from "../../store/userSlice";
 
+//Importacion de la funciones de inicio de sesion 
+// import { useGoogleLoginHandler } from './loginFunctions';
+
 const SignIn: React.FC = () => {
+  //Llamado a los Hooks
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  // const googleLogin = useGoogleLoginHandler(); // ✅ usamos el hook aquí
   
   const handleLogin = async (user: User) => {
 
@@ -78,5 +82,5 @@ const SignIn: React.FC = () => {
     </>
   );
 };
-
+// action={() => googleLogin()}
 export default SignIn;

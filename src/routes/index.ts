@@ -4,6 +4,7 @@ import ListUsers from '../pages/Users/List';
 import RolesList from '../pages/Roles/RolesList';
 import Permissions from '../pages/Permissions/List';
 import CreateUser from '../pages/Users/Create';
+import UpdateUser from '../pages/Users/Update';
 const SingIn = lazy(() => import('../pages/Authentication/SignIn'));
 // const Calendar = lazy(() => import('../pages/Calendar'));
 // const Chart = lazy(() => import('../pages/Chart'));
@@ -32,11 +33,11 @@ const coreRoutes = [
     title: 'Create Users',
     component: CreateUser,
   },
-  // {
-  //   path: '/users/update/:id',
-  //   title: 'Update Users',
-  //   component: UpdateUser,
-  // },
+  {
+    path: '/users/update/:id',
+    title: 'Update Users',
+    component: UpdateUser,
+  },
   {
     path: '/roles/list',
     title: 'List Role',
