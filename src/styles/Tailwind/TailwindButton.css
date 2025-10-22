@@ -1,0 +1,62 @@
+/* Base para todos los botones CRUD (nombre distinto para evitar conflictos) */
+.tailwind-crud-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: .35rem .5rem !important;
+  border: 0 !important;
+  border-radius: .375rem !important;
+  font: 600 .8125rem/1.05 system-ui, -apple-system, Segoe UI, Roboto, sans-serif !important;
+  color: #6d28d9 !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  letter-spacing: 0.3px !important;
+  margin-right: 8px !important;
+  transition: color .15s ease, background-color .15s ease !important;
+  white-space: nowrap !important;
+}
+
+.tailwind-crud-button:hover {
+  color: #5b21b6 !important;
+  background-color: rgba(109, 40, 217, 0.05) !important;
+}
+
+/* === BOTÓN DE EDITAR === */
+.tailwind-crud-button-edit,
+.tailwind-crud-button-editar,
+.tailwind-crud-button-actualizar,
+.tailwind-crud-button-update {
+  width: 3.75rem !important; /* Más ancho para mostrar texto */
+  height: 2.5rem !important;
+  padding: 0 !important;
+  justify-content: center !important;
+  color: #fff !important;
+  border-radius: .375rem !important;
+  background: #ff9100 !important;
+  letter-spacing: normal !important;
+  margin-right: 6px !important;
+}
+
+/* === BOTÓN DE ELIMINAR === */
+.tailwind-crud-button-delete,
+.tailwind-crud-button-eliminar,
+.tailwind-crud-button-remove,
+.tailwind-crud-button-borrar {
+  width: 3.75rem !important; /* Más ancho para mostrar texto */
+  height: 2.5rem !important;
+  padding: 0 !important;
+  justify-content: center !important;
+  color: #fff !important;
+  border-radius: .375rem !important;
+  background: #dc2626 !important;
+  letter-spacing: normal !important;
+  margin-right: 6px !important;
+}
+
+/* Mejoras para la celda de acciones */
+.tailwind-table-actions-cell {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: .5rem !important;
+  padding: .375rem 0 !important;
+}

@@ -1,0 +1,108 @@
+.material-button {
+  background-color: #1976d2 !important; /* Azul Material */
+  color: #fff !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  padding: 8px 16px !important;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2) !important;
+  transition: background-color 0.25s ease, transform 0.2s ease !important;
+}
+
+.material-button:hover {
+  background-color: #1565c01f !important;
+  transform: translateY(-1px);
+}
+
+.material-button:active {
+  background-color: #0d48a109 !important;
+  transform: translateY(0);
+}
+
+.material-button-update {
+  background-color: #2e7d32 !important; /* Verde Material */
+  color: #fff !important;
+}
+
+.material-button-update:hover {
+  background-color: #1b5e20 !important;
+  transform: translateY(-1px);
+}
+
+.material-button-update:active {
+  background-color: #144d16 !important;
+  transform: translateY(0);
+}
+
+/* === BOTÓN DE ELIMINAR === */
+.material-button-delete {
+  background-color: #d32f2f !important; /* Rojo Material */
+  color: #fff !important;
+}
+
+.material-button-delete:hover {
+  background-color: #b71c1c !important;
+  transform: translateY(-1px);
+}
+
+.material-button-delete:active {
+  background-color: #7f0000 !important;
+  transform: translateY(0);
+}
+.material-button-google,
+.material-button-microsoft,
+.material-button-github {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-family: "Roboto", sans-serif;
+}
+
+/* Google */
+.material-button-google {
+  background-color: #ffffff;
+  color: #202124;
+  border: 1px solid #dadce0;
+}
+
+.material-button-google:hover {
+  background-color: #f8f9fa;
+}
+
+/* Microsoft */
+.material-button-microsoft {
+  background-color: #f3f2f1;
+  border: 1px solid #d1d1d1;
+  color: #000000;
+}
+
+.material-button-microsoft:hover {
+  background-color: #e1e1e1;
+}
+
+/* GitHub */
+.material-button-github {
+  background-color: #24292e;
+  color: #ffffff;
+}
+
+.material-button-github:hover {
+  background-color: #3b434a;
+}
+
+.material-button-google svg,
+.material-button-microsoft svg,
+.material-button-github svg {
+  flex-shrink: 0;
+}
+
+
+

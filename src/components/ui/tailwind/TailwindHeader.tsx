@@ -5,9 +5,10 @@ import "../../../styles/Tailwind/TalwindHeader.css";
 
 interface TailwindHeaderProps {
   items: headerItem[];
+  userDropdown?: React.ReactNode,
 }
 
-export const TailwindHeader: React.FC<TailwindHeaderProps> = ({ items }) => {
+export const TailwindHeader: React.FC<TailwindHeaderProps> = ({ items, userDropdown}) => {
   const { library } = useUI();
 
   return (
@@ -39,6 +40,8 @@ export const TailwindHeader: React.FC<TailwindHeaderProps> = ({ items }) => {
               );
             })}
           </div>
+          {/* User Dropdown - Reemplazando Box con div */}
+          {userDropdown && <div className="tailwind-user-dropdown">{userDropdown}</div>}
         </div>
       </div>
     </header>
