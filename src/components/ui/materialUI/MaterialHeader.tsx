@@ -15,9 +15,10 @@ import { useUI } from "../../../context/UIProvider";
 
 interface MaterialHeaderProps {
   items: headerItem[];
+  userDropdown?:   React.ReactNode,
 }
 
-export const MaterialHeader: React.FC<MaterialHeaderProps> = ({ items }) => {
+export const MaterialHeader: React.FC<MaterialHeaderProps> = ({ items, userDropdown }) => {
   const { library } = useUI();
 
   return (
@@ -43,6 +44,7 @@ export const MaterialHeader: React.FC<MaterialHeaderProps> = ({ items }) => {
             </Tooltip>
           ))}
         </Box>
+        {userDropdown && <Box className="material-user-dropdown">{userDropdown}</Box>}
       </Toolbar>
     </AppBar>
   );

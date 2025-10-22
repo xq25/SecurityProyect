@@ -1,7 +1,7 @@
 import React from "react";
 import { useUI } from "../../context/UIProvider";
-import { MaterialButton } from "./materialUI/MaterialButtonCRUD";
-import { BootstrapButton } from "./bootstrap/BootstrapButtonCRUD";
+import { BootstrapButton } from "./bootstrap/BootstrapButton";
+import { MaterialButton } from "./materialUI/MaterialButton";
 
 // 🔹 Estructura de un botón reutilizable
 export interface ButtonItem {

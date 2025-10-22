@@ -1,5 +1,5 @@
 import React from "react";
-import { ButtonItem } from "../ButtonCRUDGeneric";
+import { ButtonItem } from "../ButtonGeneric";
 
 export const BootstrapButton: React.FC<ButtonItem> = ({
   name = "Acción",

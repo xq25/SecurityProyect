@@ -1,58 +1,70 @@
-import React, { useState } from 'react'; // Asegúrate de importar useState
-import { User } from '../../models/User';
-import {AppForm} from '../../components/ui/FormGeneric';
-
-import Swal from 'sweetalert2';
+import React from "react";
+import { AppForm } from "../../components/ui/FormGeneric";
+import * as Yup from "yup";
+import Swal from "sweetalert2";
 import { userService } from "../../services/userService";
-import Breadcrumb from '../../components/Breadcrumb';
+import Breadcrumb from "../../components/Breadcrumb";
 import { useNavigate } from "react-router-dom";
+import { User } from "../../models/User";
 
 const CreateUser: React.FC = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    //const shema = Aqui va a ir todas las restricciones posibles sobre los campos del formulario.
-    // Estado para almacenar el usuario a editar
+  const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
 
-    // Lógica de creación
-    const handleCreateUser = async (user: User) => {
+  const userValidationSchema = Yup.object({
+    name: Yup.string()
+      .required("El nombre es obligatorio")
+      .max(25, "El nombre no puede tener más de 25 caracteres")
+      .matches(nameRegex, "El nombre no puede contener caracteres especiales ni números"),
 
-        try {
-            const createdUser = await userService.createUser(user);
-            
-            if (createdUser) {
-                Swal.fire({
-                    title: "Completado",
-                    text: "Se ha creado correctamente el registro",
-                    icon: "success",
-                    timer: 3000
-                })
-                console.log("Usuario creado con éxito:", createdUser);
-                navigate("/users/list");
-            } else {
-                Swal.fire({
-                    title: "Error",
-                    text: "Existe un problema al momento de crear el registro",
-                    icon: "error",
-                    timer: 3000
-                })
-            }
-        } catch (error) {
-            Swal.fire({
-                title: "Error",
-                text: "Existe un problema al momento de crear el registro",
-                icon: "error",
-                timer: 3000
-            })
-        }
-    };
-    return (
-        <div>
-            {/* Formulario para crear un nuevo usuario */}
-            <h2>Create User</h2>
-            <Breadcrumb pageName="Users / Crear Usuario" />
-            <AppForm mode={1} labels={['name', 'email']} handleAction={handleCreateUser}/>
-        </div>
-    );
+    email: Yup.string()
+      .required("El correo electrónico es obligatorio")
+      .email("Debe ser un correo electrónico válido"),
+  });
+
+  const handleCreateUser = async (user: User) => {
+    try {
+      const createdUser = await userService.createUser(user);
+
+      if (createdUser) {
+        Swal.fire({
+          title: "Completado",
+          text: "Se ha creado correctamente el registro",
+          icon: "success",
+          timer: 3000,
+        });
+        navigate("/users/list");
+      } else {
+        Swal.fire({
+          title: "Error",
+          text: "Existe un problema al momento de crear el registro",
+          icon: "error",
+          timer: 3000,
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "Existe un problema al momento de crear el registro",
+        icon: "error",
+        timer: 3000,
+      });
+    }
+  };
+
+  return (
+    <div>
+      <h2>Create User</h2>
+      <Breadcrumb pageName="Users / Crear Usuario" />
+      <AppForm
+        mode={1}
+        labels={["name", "email"]}
+        handleAction={handleCreateUser}
+        validationSchema={userValidationSchema}
+      />
+    </div>
+  );
 };
 
 export default CreateUser;

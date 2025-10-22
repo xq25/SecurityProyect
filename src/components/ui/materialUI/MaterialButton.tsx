@@ -1,7 +1,7 @@
 import React from "react";
 import { Button } from "@mui/material";
-import "../../../styles/MaterialUI/MaterialButtonCRUD.css";
-import { ButtonItem } from "../ButtonCRUDGeneric";
+import "../../../styles/MaterialUI/MaterialButton.css";
+import { ButtonItem } from "../ButtonGeneric";
 
 export const MaterialButton: React.FC<ButtonItem> = ({
   name = "Acción",
@@ -13,7 +13,6 @@ export const MaterialButton: React.FC<ButtonItem> = ({
 
   return (
     <Button
-      variant="contained"
       onClick={action}
       className={buttonClass}
     >

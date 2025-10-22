@@ -1,34 +1,67 @@
 import React from "react";
-import { useUI } from "../../context/UIProvider";  // Importamos el contexto de la librearia a utilizar.
-import { SiMui, SiTailwindcss, SiBootstrap } from "react-icons/si"; //cargamos los iconos proporcionados por react-icons para colocarlos en el header
-//Carga de los estilos especificos de los headers segun la libreria
+import { useUI } from "../../context/UIProvider";
+import { SiMui, SiTailwindcss, SiBootstrap } from "react-icons/si";
 
 import { MaterialHeader } from "../ui/materialUI/MaterialHeader";
-import { TailwindHeader } from "../ui/tailwind/TailwindHeader"; // Importamos el componente TailwindHeader
 import { BootstrapHeader } from "../ui/bootstrap/BootstrapHeader"; // Importamos el componente BootstrapHeader
+import { TailwindHeader } from "../ui/tailwind/TailwindHeader";
+import { AppDropdownUser} from './userDropDown';
 
-//Definimos que debe contener los items dentro de nuestro header
-export interface headerItem{ 
-    name : string;
-    label? : string;
-    icon?: React.ReactNode; //Aqui debe estar el icono de las librerias de estilos.
-    onClick : () => void;  //onClick para cada libreria debe cambiar es tema general de estilos de libreria 
+// 🔹 Interfaz para cada ítem del header (botones de librería)
+export interface headerItem {
+  name: string;
+  label?: string;
+  icon?: React.ReactNode;
+  onClick: () => void;
 }
 
-export const AppHeader = () => { //Esta vez lo vamos a usar unicamente con los defaultItems, por lo tanto no recibimos Props.
-    const { library, setLibrary } = useUI(); //Extraemos la variable reactiva de useIU() para modificar en general.
+// 🔹 Interfaz del dropdown de usuario
+export interface UserDropdownProps {
+  username: string;
+  avatarUrl?: string;
+  onProfile?: () => void;
+  onSettings?: () => void;
+  onLogout?: () => void;
+}
 
-    const defaultItems : headerItem[] = [
-        { name: "tailwind", label: "Tailwind", icon: <SiTailwindcss />, onClick : () => setLibrary('tailwind') },
-        { name: "material", label: "Material UI", icon: <SiMui />, onClick : () => setLibrary('material') },
-        { name: "bootstrap", label: "Bootstrap", icon: <SiBootstrap />, onClick : () => setLibrary('bootstrap')},
-    ]
+// 🔹 Props generales del AppHeader
+interface AppHeaderProps {
+  userDropdown?: React.ReactNode; // Aquí se pasa el componente UserDropdown
+}
 
+export const AppHeader: React.FC<AppHeaderProps> = () => {
+  const { library, setLibrary } = useUI();
 
-    if (library === "material") return <MaterialHeader items={defaultItems}/>    
-     if (library === "bootstrap") return <BootstrapHeader items={defaultItems} />;
-//     return <TailwindHeader {defaultItems} />;
-    if (library === "tailwind") return <TailwindHeader items={defaultItems}/>;
-    // Por defecto, si ninguna librería coincide o está implementada
-    return <MaterialHeader items={defaultItems} />
+  const defaultItems: headerItem[] = [
+    {
+      name: "tailwind",
+      label: "Tailwind",
+      icon: <SiTailwindcss />,
+      onClick: () => setLibrary("tailwind"),
+    },
+    {
+      name: "material",
+      label: "Material UI",
+      icon: <SiMui />,
+      onClick: () => setLibrary("material"),
+    },
+    {
+      name: "bootstrap",
+      label: "Bootstrap",
+      icon: <SiBootstrap />,
+      onClick: () => setLibrary("bootstrap"),
+    },
+  ];
+
+  // 🔹 Pasamos el userDropdown como prop al header de la librería activa
+  if (library === "material")
+    return <MaterialHeader items={defaultItems} userDropdown={<AppDropdownUser/>} />;
+
+  if (library === "tailwind")
+    return <TailwindHeader items={defaultItems} userDropdown={<AppDropdownUser/>} />;
+
+  if (library === "bootstrap") 
+    return <BootstrapHeader items={defaultItems} userDropdown={<AppDropdownUser/>} />;
+
+  return <MaterialHeader items={defaultItems} userDropdown={<AppDropdownUser/>} />;
 };

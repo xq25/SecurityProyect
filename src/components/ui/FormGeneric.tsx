@@ -16,11 +16,11 @@ export interface FormItems<T = any> {
   validationSchema?: Yup.ObjectSchema<any>;
 }
 
-export const AppForm:  React.FC<FormItems>  = ({mode, labels, info, handleAction}) => {
+export const AppForm:  React.FC<FormItems>  = ({mode, labels, info, handleAction, validationSchema}) => {
 
     const {library} = useUI();
 
-    if (library === 'material') return <MaterialForm mode={mode} labels={labels} info={info} handleAction={handleAction}/>
 
     if (library === 'bootstrap') return <BootstrapForm mode={mode} labels={labels} info={info} handleAction={handleAction}/>
+    if (library === 'material') return <MaterialForm mode={mode} labels={labels} info={info} handleAction={handleAction} validationSchema={validationSchema}/>
 } 
