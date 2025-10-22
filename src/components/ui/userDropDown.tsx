@@ -1,19 +1,24 @@
 import React, { useState } from "react";
 import { Menu, MenuItem, IconButton, Avatar, Divider, Typography, Box } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store/store";
+import { setUser } from "../../store/userSlice";
 
 import "../../styles/MaterialUI/MaterialDropDownUser.css";
+import { useNavigate } from "react-router-dom";
+
 
 
 
 export const AppDropdownUser: React.FC = () => {
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const Navegate = useNavigate()
 
-  // 👤 Obtenemos el usuario del store global
-//   const user = useSelector((state: RootState) => state.user.user);
+  const user = useSelector((state: RootState) => state.user.user);
+  const dispatch = useDispatch();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -23,6 +28,20 @@ export const AppDropdownUser: React.FC = () => {
     setAnchorEl(null);
   };
 
+  const handleLogout = () => {
+    // limpia store y localStorage
+    dispatch(setUser(null));
+    localStorage.removeItem("user");
+    localStorage.removeItem("session"); // si usas esta key para token
+    handleClose();
+    Navegate('/auth/signin');
+    
+  };
+
+  // Evitar console.log repetidos; mostrar nombre o email por fallback
+  const displayName = user?.name ?? user?.email ?? "Guest";
+  const avatarSrc = (user as any)?.avatar || (user as any)?.photo || undefined;
+
   return (
     <Box className="material-dropdown-container"  sx={{ marginLeft: 'auto' }}>
       <IconButton
@@ -31,8 +50,8 @@ export const AppDropdownUser: React.FC = () => {
         size="large"
       >
         <Avatar
-        //   alt={user?.name || "User"}
-          src={"/default-avatar.png"}
+          alt={displayName}
+          src={avatarSrc}
           className="material-dropdown-avatar"
         />
         <ArrowDropDownIcon className="material-dropdown-icon" />
@@ -47,9 +66,9 @@ export const AppDropdownUser: React.FC = () => {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <Box className="material-dropdown-header">
-          <Typography variant="subtitle1">{"Guest"}</Typography>
+          <Typography variant="subtitle1">{displayName}</Typography>
           <Typography variant="body2" color="textSecondary">
-            UX Designer
+            Login User
           </Typography>
         </Box>
         <Divider />
@@ -58,7 +77,7 @@ export const AppDropdownUser: React.FC = () => {
         <MenuItem onClick={handleClose}>My Contacts</MenuItem>
         <MenuItem onClick={handleClose}>Account Settings</MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose} className="logout-item">
+        <MenuItem onClick={handleLogout} className="logout-item">
           Log Out
         </MenuItem>
       </Menu>

@@ -36,7 +36,7 @@ const ListUsers: React.FC = () => {
     } else if (action === "view") {
       navigate('/users/create')
     } else if (action === "update") {
-      navigate(`/users/${user.id}/update`);
+      navigate(`/users/update/${user.id}`);
     }
   };
 
