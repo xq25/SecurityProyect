@@ -40,7 +40,7 @@ const UpdateUser: React.FC = () => {
   const handleUpdateUser = async (id: number, user: User) => {
     try {
       const success = await userService.updateUser( id, user);
-
+      console.log(user)
       if (success) {
         Swal.fire({
           title: "Completado",
@@ -76,7 +76,13 @@ const UpdateUser: React.FC = () => {
           mode={2}
           labels={["name", "email"]}
           info={user}
-          handleAction={() => handleUpdateUser(Number(id), user!)}
+          handleAction= {(values: User) => {
+            if (!id) {
+              console.error("No se encontró id para actualizar");
+              return;
+            }
+            handleUpdateUser(Number(id), values);
+          }}
           validationSchema={userValidationSchema}
         />
       ) : (
