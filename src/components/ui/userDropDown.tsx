@@ -32,7 +32,8 @@ export const AppDropdownUser: React.FC = () => {
     // limpia store y localStorage
     dispatch(setUser(null));
     localStorage.removeItem("user");
-    localStorage.removeItem("session"); // si usas esta key para token
+    localStorage.removeItem("token"); // si usas esta key para token
+    localStorage.removeItem('session');
     handleClose();
     Navegate('/auth/signin');
     

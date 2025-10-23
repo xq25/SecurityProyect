@@ -1,6 +1,7 @@
-export interface Password{
-    id : string;
-    content : string;
-    // startAt : datetime;
-    // endAt : datetime;
+export interface Password {
+  id?: number;
+  content: string;
+  startAt?: string;
+  endAt?: string;
+  userId?: number;
 }

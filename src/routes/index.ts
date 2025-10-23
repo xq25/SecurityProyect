@@ -1,10 +1,18 @@
 import { lazy } from 'react';
 
-import ListUsers from '../pages/Users/List';
+
 import RolesList from '../pages/Roles/RolesList';
 import Permissions from '../pages/Permissions/List';
+
+//Usuarios
+import ListUsers from '../pages/Users/List';
 import CreateUser from '../pages/Users/Create';
 import UpdateUser from '../pages/Users/Update';
+
+//Passwords-Users
+import ListPasswordsUser from '../pages/Passwords/List';
+
+//Otras paginas
 const SingIn = lazy(() => import('../pages/Authentication/SignIn'));
 // const Calendar = lazy(() => import('../pages/Calendar'));
 // const Chart = lazy(() => import('../pages/Chart'));
@@ -48,6 +56,11 @@ const coreRoutes = [
     title: 'Permisions',
     component: Permissions,
   },
+  {
+    path: '/passwords/user/:id', // Este id hace referencia al id del usuario 
+    title: 'List Passwords User',
+    component: ListPasswordsUser,
+  }
   // {
   //   path: '/profile',
   //   title: 'Profile',

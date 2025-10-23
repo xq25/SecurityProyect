@@ -42,14 +42,14 @@ const ListUsers: React.FC = () => {
 
   // 🔹 Configuración base de botones (se aplicará dinámicamente a cada fila)
   const baseOptions = [
-    { name: "view" },
-    { name: "update" },
-    { name: "delete" },
-    {name: 'profile'},
-    {name: 'address'},
-    {name: 'devices'},
-    {name: 'passwords'},
-    {name: 'sessions'}
+    { name: "view", action: () => {} },
+    { name: "update", action: () => {} },
+    { name: "delete", action: () => {} },
+    {name: 'profile', action: () => {} },
+    {name: 'address', action: () => {} },
+    {name: 'devices', action: () => {} },
+    {name: 'passwords', action: () => {} },
+    {name: 'sessions', action: () => {} }
   ];
 
   // 🔹 Render principal de la pagina.

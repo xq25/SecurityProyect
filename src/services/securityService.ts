@@ -12,7 +12,7 @@ class SecurityService extends EventTarget {
     constructor() {
         super();
 
-        this.keySession = 'session';
+        this.keySession = 'token';
         this.API_URL = import.meta.env.VITE_API_URL || ""; // Reemplaza con la URL real
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
@@ -34,6 +34,7 @@ class SecurityService extends EventTarget {
             const data = response.data;
             //localStorage.setItem("user", JSON.stringify(data));
             store.dispatch(setUser(data));  // Aqui modificamos la varibke reactiva de nuestro store
+            //Generamos automatiocamente la variable dentro del localStorage Token.
             localStorage.setItem(this.keySession, data['token']);
             return data;
         } catch (error) {

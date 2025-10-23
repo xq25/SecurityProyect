@@ -20,7 +20,7 @@ import { AppDispatch } from "../../store/store";
 import { setUser } from "../../store/userSlice";
 
 //Importacion de la funciones de inicio de sesion 
-// import { useGoogleLoginHandler } from './loginFunctions';
+import {loginWithGoogle} from './loginFunctions';
 
 const SignIn: React.FC = () => {
   //Llamado a los Hooks
@@ -38,14 +38,14 @@ const SignIn: React.FC = () => {
       // Normaliza la respuesta según tu service (data | user | response)
       const responseUser = (response as any)?.data ?? (response as any)?.user ?? response;
 
-      // Actualiza el store
+      // Actualiza el store con el usuario que nos devolvio el backend
       dispatch(setUser(responseUser));
 
-      // Persiste en localStorage si lo necesitas
+      //Guardamos los datos en el localStorage para mantener la sesion despues de recargar la pagina
       try {
         localStorage.setItem("user", JSON.stringify(responseUser));
         const token = (response as any)?.token ?? (responseUser as any)?.token;
-        if (token) localStorage.setItem("session", token);
+        if (token) localStorage.setItem("token", token);
       } catch (e) {
         console.warn("No se pudo guardar en localStorage", e);
       }
@@ -75,7 +75,9 @@ const SignIn: React.FC = () => {
         <AppForm labels={['email', 'password']} validationSchema={schemas} handleAction={handleLogin}  />
       </div>
       <div>
-        <AppButton name={'google'} icon={<GoogleIcon/>}/>
+        <AppButton name={'google'} icon={<GoogleIcon/>} action={() => loginWithGoogle().then((data) => {
+          console.log("Usuario autenticado con Google:", data);
+        })}/>
         <AppButton name={'microsoft'} icon={<MicrosoftIcon/>}/> 
         <AppButton name={'github'} icon={<GithubIcon/>}/>
       </div>
