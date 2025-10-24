@@ -1,0 +1,33 @@
+.map-container-wrapper {
+  width: 100%;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+}
+
+.map-container {
+  height: 400px;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  transition: box-shadow 0.3s ease;
+}
+
+.map-container:hover {
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.25);
+}
+
+.map-coordinates {
+  margin-top: 14px;
+  padding: 10px 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  display: inline-block;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.map-coordinates strong {
+  color: #1976d2;
+}
