@@ -1,36 +1,26 @@
 import React from "react";
-import {
-  TextField,
-  Button,
-  Typography,
-  Paper,
-} from "@mui/material";
+import { TextField, Button, Typography, Paper } from "@mui/material";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import "../../../styles/MaterialUI/MaterialForm.css";
 
-// 🔹 Interfaz base genérica para los props del formulario
 export interface FormItems<T = any> {
   mode?: number;
   labels: string[];
   info?: T | null;
-  handleAction?: (data: T) => void; 
+  handleAction?: (data: T) => void;
   validationSchema?: Yup.ObjectSchema<any>;
+  disabledFields?: string[]; // 🆕
 }
 
-/**
- * 🔹 MaterialForm genérico con Formik + Yup
- * Genera formularios dinámicos y aplica validaciones automáticas.
- * Usa tipado genérico <T> para adaptar el formulario a cualquier modelo (User, Roles, etc.)
- */
 export const MaterialForm = <T extends Record<string, any>>({
   mode = 0,
   labels,
   info = null,
   handleAction,
   validationSchema,
+  disabledFields = [], 
 }: FormItems<T>) => {
-  // 🔸 Generamos los valores iniciales basados en los labels y la info pasada
   const initialValues = labels.reduce((acc, label) => {
     const key = label.toLowerCase();
     acc[key] = info ? info[key] ?? "" : "";
@@ -39,7 +29,6 @@ export const MaterialForm = <T extends Record<string, any>>({
 
   return (
     <Paper elevation={3} className="material-form-container">
-      {/* 🔹 Título dinámico según modo */}
       <Typography variant="h6" gutterBottom>
         {mode === 1
           ? "Crear Nuevo Registro"
@@ -48,7 +37,6 @@ export const MaterialForm = <T extends Record<string, any>>({
           : "Registro"}
       </Typography>
 
-      {/* 🔹 Formik controla estado, validaciones y envío */}
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -61,9 +49,9 @@ export const MaterialForm = <T extends Record<string, any>>({
       >
         {({ isValid, dirty }) => (
           <Form className="material-form">
-            {/* 🔹 Generamos campos dinámicamente según labels */}
             {labels.map((label, idx) => {
               const key = label.toLowerCase();
+              const isDisabled = disabledFields.includes(key); // 🆕 Verifica si está deshabilitado
               return (
                 <div className="material-form-field" key={idx}>
                   <Field name={key}>
@@ -75,6 +63,7 @@ export const MaterialForm = <T extends Record<string, any>>({
                         variant="outlined"
                         error={meta.touched && Boolean(meta.error)}
                         helperText={meta.touched && meta.error}
+                        disabled={isDisabled} // 🆕 Campo bloqueado si corresponde
                       />
                     )}
                   </Field>
@@ -82,13 +71,12 @@ export const MaterialForm = <T extends Record<string, any>>({
               );
             })}
 
-            {/* 🔹 Botón de envío */}
             <Button
               type="submit"
               variant="contained"
               color="primary"
               sx={{ marginTop: 2 }}
-              disabled={!isValid || !dirty} // 🔹 Bloquea si el formulario no es válido
+              disabled={!isValid || !dirty}
             >
               {mode === 1
                 ? "Crear"

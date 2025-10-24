@@ -47,17 +47,20 @@ const ListUsers: React.FC = () => {
     { name: "view" },
     { name: "update" },
     { name: "delete" },
-    {name: 'profile' },
-    {name: 'address' },
-    {name: 'devices' },
-    {name: 'passwords'},
-    {name: 'sessions' }
+    { name: 'profile' },
+    { name: 'address' },
+    { name: 'devices' },
+    { name: 'passwords'},
+    { name: 'sessions' }
   ];
 
   // 🔹 Render principal de la pagina.
   return (
     <div>
       <h2>Listado de Usuarios</h2>
+      <AppButton name={'create'} action={()=> {
+        navigate('/users/create');
+      }}/>
       <AppTable
         name="Usuarios"
         header={["id", "name", "email"]}

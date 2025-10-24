@@ -18,9 +18,24 @@
   background-color: #0d48a109 !important;
   transform: translateY(0);
 }
+/* === BOTÓN DE CREAR === */
+.material-button-create {
+  background-color: #2e7d32 !important; 
+  color: #fff !important;
+}
+
+.material-button-create:hover {
+  background-color: #1b5e20 !important; 
+  transform: translateY(-1px);
+}
+
+.material-button-create:active {
+  background-color: #174f1b !important; 
+  transform: translateY(0);
+}
 
 .material-button-update {
-  background-color: #d07915 !important; /* Verde Material */
+  background-color: #d07915 !important;
   color: #fff !important;
 }
 
@@ -36,7 +51,7 @@
 
 /* === BOTÓN DE ELIMINAR === */
 .material-button-delete {
-  background-color: #d32f2f !important; /* Rojo Material */
+  background-color: #d32f2f !important;
   color: #fff !important;
 }
 

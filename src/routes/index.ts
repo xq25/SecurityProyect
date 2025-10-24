@@ -11,6 +11,8 @@ import UpdateUser from '../pages/Users/Update';
 
 //Passwords-Users
 import ListPasswordsUser from '../pages/Passwords/List';
+import UpdatePassword from '../pages/Passwords/Update';
+
 
 //Otras paginas
 const SingIn = lazy(() => import('../pages/Authentication/SignIn'));
@@ -60,6 +62,11 @@ const coreRoutes = [
     path: '/passwords/user/:id', // Este id hace referencia al id del usuario 
     title: 'List Passwords User',
     component: ListPasswordsUser,
+  },
+  {
+    path: '/passwords/:id',
+    title: 'Update Password',
+    component : UpdatePassword,
   }
   // {
   //   path: '/profile',
