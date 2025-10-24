@@ -37,19 +37,21 @@ const ListUsers: React.FC = () => {
       navigate('/users/create')
     } else if (action === "update") {
       navigate(`/users/update/${user.id}`);
+    }else if (action === 'passwords'){
+      navigate(`/passwords/user/${user.id}`)
     }
   };
 
   // 🔹 Configuración base de botones (se aplicará dinámicamente a cada fila)
   const baseOptions = [
-    { name: "view", action: () => {} },
-    { name: "update", action: () => {} },
-    { name: "delete", action: () => {} },
-    {name: 'profile', action: () => {} },
-    {name: 'address', action: () => {} },
-    {name: 'devices', action: () => {} },
-    {name: 'passwords', action: () => {} },
-    {name: 'sessions', action: () => {} }
+    { name: "view" },
+    { name: "update" },
+    { name: "delete" },
+    {name: 'profile' },
+    {name: 'address' },
+    {name: 'devices' },
+    {name: 'passwords'},
+    {name: 'sessions' }
   ];
 
   // 🔹 Render principal de la pagina.

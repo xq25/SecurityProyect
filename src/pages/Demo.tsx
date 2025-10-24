@@ -46,7 +46,7 @@ const Demo: React.FC = () => {
             <PropertyComponent name="Propiedad 1" color="red" price={100} rent={[10, 20, 30]} />
             <PropertyComponent name="Propiedad 2" color="blue" price={200} rent={[20, 30, 40]} />
             <PropertyComponent name="Propiedad 3" color="green" price={300} rent={[30, 40, 50]} />
-            </div> 
+            </div>
         </div>
         
     </div>;

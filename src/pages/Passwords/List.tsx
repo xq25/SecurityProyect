@@ -1,44 +1,49 @@
 import React, { useState, useEffect } from "react";
-import { User } from "../../models/User";
-
 import Swal from "sweetalert2";
+//Importacion de componentes
 import { AppTable } from "../../components/ui/TableGeneric";
 import { AppButton } from "../../components/ui/ButtonGeneric";
 import { useNavigate, useParams } from "react-router-dom";
+// Clases relacionadas al password
 import { Password } from "../../models/Password";
+import { passwordService } from "../../services/passwordService";
+import { userService } from "../../services/userService";
+import {User} from '../../models/User';
+
 
 const ListPasswordsUser: React.FC = () => {
-    const [passwords, setPasswords] = useState<Password[]>([]); // Variable reactiva con la lista de usuarios.
-    const {id} = useParams<{id:string}>(); // Id del usuario al que le vamos a cargar sus contraseñas
-
-        
+    const [passwords, setPasswords] = useState<Password[]>([]); // Variable reactiva con la lista de contraseña de un usuario.
+    const [infoUser, setInfoUser] = useState<User | null>(null);// Creamos una variable reactiva con la informacion del usuario.
+    const {id} = useParams<{id:string}>(); // Id del usuario al que le vamos a cargar sus contraseñas.
     const navigate = useNavigate();
-
-    // 🔹 Al cargar el componente, obtenemos los usuarios desde el backend
+            
+    // 🔹 Al cargar el componente, obtenemos las contraseñas del usuario(id) desde el backend.
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [id]);
 
     // 🔹 Método que obtiene los usuarios desde el servicio
-    const fetchData = async () => {
-        const passwords = await passwordService.getUsers(id);
+    const fetchData = async () => { // Cargamos las contraseñas del usuario y su informacion para asi agregar todo esto a la tabla.
+        const passwords = await passwordService.getPasswordsByUserId(Number(id));
+        const infoUser = await userService.getUserById(Number(id));
         setPasswords(passwords); // Asignamos la data obtenida a la variable reactiva
+        setInfoUser(infoUser);
     };
 
-    // 🔹 Define las acciones que pueden realizarse sobre cada usuario
-    const handleAction = async (action: string, user: User) => {
+    // 🔹 Define las acciones que pueden realizarse sobre cada contraseña
+    const handleAction = async (action: string, password: Password) => {
         if (action === "delete") {
-        const success = await passwordService.deleteUser(user.id!);
+        const success = await passwordService.deletePassword(password.id!);
         if (success) {
             Swal.fire({
             title: "Eliminado",
-            text: "Usuario eliminado correctamente",
+            text: `contraseña de ${infoUser?.name} eliminada correctamente`,
             icon: "success",
             });
             fetchData(); // Refresca la tabla después de eliminar
         }
         } else if (action === "update") {
-        navigate(`passwords/user/update/${user.id}`);
+            navigate(`passwords/${password.id}`);
         }
     };
 
@@ -46,23 +51,24 @@ const ListPasswordsUser: React.FC = () => {
     const baseOptions = [
         { name: "update" },
         { name: "delete" },
-        
     ];
+
+    const tableName = infoUser? `Passwords - ${infoUser.name}`: 'cargando usuario';
 
     return (
         <div>
         <h2>Listado de contraseñas del usuario {}</h2>
         <AppTable
-            name="Usuarios"
-            header={["id", "name", "email"]}
-            items={users}
+            name= {tableName}
+            header={["id", "content", "startAt", "endAt"]}
+            items={passwords}
             // Generamos los botones a partir de las opciones
             options={baseOptions.map((opt) => (
             <AppButton
                 key={opt.name}
                 name={opt.name}
-                // Pasamos la acción con el usuario que corresponde
-                action={(user) => handleAction(opt.name, user)}
+                // Pasamos la acción con la contraseña que corresponde
+                action={(password) => handleAction(opt.name, password)}
             />
             ))}
         />
