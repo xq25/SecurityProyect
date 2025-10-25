@@ -14,6 +14,9 @@ import ListPasswordsUser from '../pages/Passwords/List';
 import UpdatePassword from '../pages/Passwords/Update';
 
 
+//Adress-User
+import CreateAddress from '../pages/Addresses/Create';
+
 //Otras paginas
 const SingIn = lazy(() => import('../pages/Authentication/SignIn'));
 // const Calendar = lazy(() => import('../pages/Calendar'));
@@ -67,7 +70,12 @@ const coreRoutes = [
     path: '/passwords/:id',
     title: 'Update Password',
     component : UpdatePassword,
-  }
+  },
+  {
+    path: '/addresses/user/:id',
+    title : 'Address User',
+    component : CreateAddress,
+  },
   // {
   //   path: '/profile',
   //   title: 'Profile',

@@ -27,8 +27,6 @@ const UpdatePassword: React.FC = () => {
     setPassword(password);
   };
 
-  const nameRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-
   const passwordValidationSchema = Yup.object({
     content: Yup.string()
       .required("La contraseña es obligatoria")

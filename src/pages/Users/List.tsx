@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, act } from "react";
 import { User } from "../../models/User";
 import { userService } from "../../services/userService";
 import Swal from "sweetalert2";
@@ -34,11 +34,13 @@ const ListUsers: React.FC = () => {
         fetchData(); // Refresca la tabla después de eliminar
       }
     } else if (action === "view") {
-      navigate('/users/create')
+      navigate('/users/create');
     } else if (action === "update") {
       navigate(`/users/update/${user.id}`);
     }else if (action === 'passwords'){
-      navigate(`/passwords/user/${user.id}`)
+      navigate(`/passwords/user/${user.id}`);
+    }else if (action === 'address'){
+      navigate(`/addresses/user/${user.id}`);
     }
   };
 
