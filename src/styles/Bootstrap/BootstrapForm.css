@@ -1,5 +1,113 @@
 /* Personalizaciones para el formulario */
+
+/* ✅ Input con foco verde */
 .form-control:focus {
   border-color: #4caf50;
   box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.25);
+}
+
+/* ✅ Input válido (borde verde) */
+.form-control.is-valid {
+  border-color: #4caf50 !important;
+  background-image: none;
+}
+
+.form-control.is-valid:focus {
+  border-color: #4caf50 !important;
+  box-shadow: 0 0 0 0.25rem rgba(76, 175, 80, 0.25);
+}
+
+/* ✅ Input inválido (borde rojo) */
+.form-control.is-invalid {
+  border-color: #dc3545 !important;
+  background-image: none;
+}
+
+.form-control.is-invalid:focus {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+}
+
+/* ✅ Mensaje de error personalizado */
+.invalid-feedback {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* ✅ Labels con color verde */
+.form-label.text-success {
+  color: #2e7d32 !important;
+}
+
+/* ✅ Botón deshabilitado (gris) */
+.btn-secondary:disabled {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* ✅ Botón habilitado (verde con efecto) */
+.btn-success {
+  background: linear-gradient(145deg, #2e7d32, #388e3c);
+  border: none;
+  box-shadow: 0px 4px 8px rgba(46, 125, 50, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-success:hover:not(:disabled) {
+  background: linear-gradient(145deg, #1b5e20, #2e7d32);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(27, 94, 32, 0.4);
+}
+
+.btn-success:active:not(:disabled) {
+  background: linear-gradient(145deg, #144d16, #1b5e20);
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(20, 77, 22, 0.3);
+}
+
+/* ✅ Transición suave del botón de gris a verde */
+.btn {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Card del formulario */
+.card.border-success {
+  border-width: 2px !important;
+}
+
+.card-header.bg-success {
+  background: linear-gradient(145deg, #2e7d32, #388e3c) !important;
+}
+
+.card-body.bg-light {
+  background-color: #fafafa !important;
+}
+
+/* Animación de entrada */
+.card {
+  animation: fadeInUp 0.4s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    margin: 1rem;
+  }
+
+  .card-body {
+    padding: 16px;
+  }
 }
