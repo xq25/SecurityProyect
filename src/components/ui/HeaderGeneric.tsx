@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 import { MaterialHeader } from "../ui/materialUI/MaterialHeader";
 import { TailwindHeader } from "../ui/tailwind/TailwindHeader";
-import { AppDropdownUser} from './UserDropDown';
+import { AppDropdownUser} from '../UserDropDown';
 
 // 🔹 Interfaz para cada ítem del header (botones de librería)
 export interface headerItem {
