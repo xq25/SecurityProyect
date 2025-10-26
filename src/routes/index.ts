@@ -16,6 +16,7 @@ import UpdatePassword from '../pages/Passwords/Update';
 
 //Adress-User
 import CreateAddress from '../pages/Addresses/Create';
+import ListAddresses from '../pages/Addresses/List';
 
 //Otras paginas
 const SingIn = lazy(() => import('../pages/Authentication/SignIn'));
@@ -74,7 +75,7 @@ const coreRoutes = [
   {
     path: '/addresses/user/:id',
     title : 'Address User',
-    component : CreateAddress,
+    component : ListAddresses,
   },
   // {
   //   path: '/profile',

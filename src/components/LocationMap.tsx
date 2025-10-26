@@ -6,11 +6,18 @@ import '../styles/LocationMap.css';
 
 interface MapLibreMapProps {
   onSelectPosition?: (lat: number, lng: number) => void;
+  lat?: number;
+  lng?: number;
 }
 
-export const LocationMap: React.FC<MapLibreMapProps> = ({ onSelectPosition }) => {
+export const LocationMap: React.FC<MapLibreMapProps> = ({ onSelectPosition, lat, lng }) => {
   const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
-
+  let latitude = 5.0703;
+  let longitude = -75.5138;
+  if (lat && lng){
+    latitude = lat;
+    longitude = lng;
+  }
   const handleMapClick = useCallback((e: any) => {
     const { lngLat } = e;
     const coords = { lat: lngLat.lat, lng: lngLat.lng };
@@ -20,10 +27,11 @@ export const LocationMap: React.FC<MapLibreMapProps> = ({ onSelectPosition }) =>
 
   return (
     <div className="maplibre-wrapper">
+      
       <Map
         initialViewState={{
-          latitude: 5.0703,
-          longitude: -75.5138,
+          latitude: latitude,
+          longitude: longitude,
           zoom: 13,
         }}
         style={{ width: "100%", height: "400px", borderRadius: "10px" }}

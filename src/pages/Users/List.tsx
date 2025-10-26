@@ -1,4 +1,4 @@
-import React, { useState, useEffect, act } from "react";
+import React, { useState, useEffect} from "react";
 import { User } from "../../models/User";
 import { userService } from "../../services/userService";
 import Swal from "sweetalert2";
