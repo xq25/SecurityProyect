@@ -76,7 +76,7 @@ const SignIn: React.FC = () => {
       </div>
       <div>
         <AppButton name={'google'} icon={<GoogleIcon/>} action={() => loginWithGoogle().then((data) => {
-          console.log("Usuario autenticado con Google:", data);
+          handleLogin(data.user);
         })}/>
         <AppButton name={'microsoft'} icon={<MicrosoftIcon/>}/> 
         <AppButton name={'github'} icon={<GithubIcon/>}/>

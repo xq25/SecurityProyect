@@ -16,7 +16,7 @@ const UpdatePassword: React.FC = () => {
   const [password, setPassword] = useState<Password | null>(null);
   const navigate = useNavigate();
   
-  const {id} = useParams<{id:string}>(); //Segun el backen este id es la referencia general de la contrasena como tal.
+  const {id} = useParams<{id:string}>(); //Segun el backen este id es la referencia general de la contrasena como tal. (No del usuario!)
 
   useEffect(() => {
     fetchData();

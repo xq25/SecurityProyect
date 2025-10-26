@@ -11,12 +11,9 @@ import { User } from "../../models/User";
 import { userService } from "../../services/userService";
 import { LocationMap } from "../../components/LocationMap";
 
-
-
 const ListAddresses: React.FC = () => {
     const [infoAddress, setInfoAddress] = useState<Address | null>(null);// Creamos una variable reactiva con la informacion del usuario.
     const [infoUser, setInfoUser] = useState<User | null>(null);// Creamos una variable reactiva con la informacion del usuario.
-    
     
     const {id} = useParams<{id:string}>(); // Id del usuario al que le vamos a cargar sus contraseñas.
     const navigate = useNavigate();
@@ -43,7 +40,8 @@ const ListAddresses: React.FC = () => {
 
     // 🔹 Configuración base de botones (se aplicará dinámicamente a cada fila)
     const baseOptions = [
-        { name: "update" }
+        { name: 'update' },
+        { name: 'delete' }
     ];
 
     const tableName = infoUser? `Address - ${infoUser.name}`: 'cargando usuario';
@@ -51,9 +49,9 @@ const ListAddresses: React.FC = () => {
     return (
         <div>
             <h2> Ubicacion del Usuario</h2>
-            <AppButton name={'create'} action={()=> {
-                navigate(`/addresses/user/${id}`); //Preguntar a felipe que si este id hace referencia al usuario o al address
-            }}/>
+            {infoAddress === null?<AppButton name={'create'} action={()=> {
+                navigate(`/addresses/user/${id}`); //Preguntar a felipe que si este id hace referencia al usuario o al address.
+            }}/>: <div>El usuario ya posee una direccion</div>}
             <LocationMap lat={infoAddress?.latitude} lng={infoAddress?.longitude}/>
 
             <AppTable
