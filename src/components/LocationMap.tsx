@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from "react";
 import Map, { Marker, NavigationControl } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import "../styles/LocationMap.css";
-
 interface MapLibreMapProps {
   onSelectPosition?: (lat: number, lng: number) => void;
   lat?: number;

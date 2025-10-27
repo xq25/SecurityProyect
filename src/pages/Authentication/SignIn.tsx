@@ -21,6 +21,7 @@ import { setUser } from "../../store/userSlice";
 
 //Importacion de la funciones de inicio de sesion 
 import {loginWithGoogle} from './loginFunctions';
+import {loginWithGitHub} from './loginFunctions';
 
 const SignIn: React.FC = () => {
   //Llamado a los Hooks
@@ -79,7 +80,9 @@ const SignIn: React.FC = () => {
           handleLogin(data.user);
         })}/>
         <AppButton name={'microsoft'} icon={<MicrosoftIcon/>}/> 
-        <AppButton name={'github'} icon={<GithubIcon/>}/>
+        <AppButton name={'github'} icon={<GithubIcon/>} action={() => loginWithGitHub().then((data) => {
+          handleLogin(data.user);
+        })}/>
       </div>
     </>
   );

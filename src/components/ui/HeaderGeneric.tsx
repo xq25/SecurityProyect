@@ -58,15 +58,15 @@ export const AppHeader: React.FC<AppHeaderProps> = () => {
   ];
 
   // 🔹 Pasamos el userDropdown como prop al header de la librería activa
-  if (user){
-    if (library === "material")
-      return <MaterialHeader items={defaultItems} userDropdown={<AppDropdownUser />} />;
+  
+  if (library === "material")
+    return <MaterialHeader items={defaultItems} userDropdown={<AppDropdownUser />} />;
 
   if (library === "bootstrap") 
     return <BootstrapHeader items={defaultItems} userDropdown={<AppDropdownUser/>} />;
 
-    if (library === "tailwind")
-      return <TailwindHeader items={defaultItems} userDropdown={<AppDropdownUser/>} />;
-  }
+  if (library === "tailwind")
+    return <TailwindHeader items={defaultItems} userDropdown={<AppDropdownUser/>} />;
+  
   return <MaterialHeader items={defaultItems} userDropdown={<AppDropdownUser/>} />;
 };

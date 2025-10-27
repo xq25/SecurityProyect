@@ -40,7 +40,6 @@ const ListUsers: React.FC = () => {
     } else if (action === "digital-signatures") {
       // Redirigir a la gestión de firma digital
       navigate(`/digital-signatures/list?userId=${user.id}`);
-      navigate(`/users/update/${user.id}`);
     }else if (action === 'passwords'){
       navigate(`/passwords/user/${user.id}`);
     }else if (action === 'address'){
