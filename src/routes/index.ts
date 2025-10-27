@@ -77,6 +77,11 @@ const coreRoutes = [
     title : 'Address User',
     component : ListAddresses,
   },
+  {
+    path: '/addresses/user/create/:id',
+    title : 'Address User',
+    component : CreateAddress,
+  },
   // {
   //   path: '/profile',
   //   title: 'Profile',

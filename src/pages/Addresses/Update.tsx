@@ -15,7 +15,7 @@ const UpdateAddress: React.FC = () => {
     const [coords, setCoords] = useState({ lat: "", lng: "" });
     const [infoAddress, setInfoAddress] = useState<Address | null>(null);// Creamos una variable reactiva con la informacion del usuario.
 
-    const {id} = useParams<{id:string}>(); // Id del address que se va a modificar. (No del usuario!)
+    const {id} = useParams<{id:string}>(); // Id del address que se va a modificar. (No del usuario!) o pasamos el del user y sacamos el id del address como tal???
     const navigate = useNavigate();
                 
     // 🔹 Al cargar el componente, obtenemos las contraseñas del usuario(id) desde el backend.
@@ -53,7 +53,6 @@ const UpdateAddress: React.FC = () => {
         console.log("Datos del formulario + mapa:", finalData);
         try {
             const success = await addressService.updateAddress( id, finalData);
-            console.log(finalData)
             if (success) {
             Swal.fire({
                 title: "Completado",
@@ -83,25 +82,25 @@ const UpdateAddress: React.FC = () => {
     return (
         <>
         <Breadcrumb pageName="Addresses / Update Address" />
-        <AppForm
+        {infoAddress?<AppForm
             mode={2}
             labels={["street", "number"]}
             validationSchema={validationSchema}
             handleAction={(values: any) => {  //Tenemos que asignar como any estos datos, ya que como tal dentro del formulario solo estan para rellenar ciertos atributos de la clase Address(street y number)
                 if (!id) {
-                    console.error("No se encontró id para actualizar la contraseña");
+                    console.error("No se encontró id para actualizar la direccion");
                     return;
                 }
                 handleUpdateAddress(Number(id), values);
             }}
             info={{
-                latitude: infoAddress?.latitude,
-                longitude: infoAddress?.longitude,
-                street: infoAddress?.street,
-                number: infoAddress?.number
+                latitude: infoAddress.latitude,
+                longitude: infoAddress.longitude,
+                street: infoAddress.street,
+                number: infoAddress.number
             }}
-            extraContent={<LocationMap onSelectPosition={handleSelectPosition} lat={infoAddress?.latitude} lng={infoAddress?.longitude}/>}
-        />  
+            extraContent={<LocationMap onSelectPosition={handleSelectPosition} lat={infoAddress.latitude} lng={infoAddress.longitude}/>}
+        />: <div> Cargando los datos de la direccion</div> }
         </>
 
     );

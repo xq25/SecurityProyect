@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import * as Yup from "yup";
 
 import { AppForm } from "../../components/ui/FormGeneric";
-import { LocationMap } from '../../components/LocationMap';
 import Breadcrumb from "../../components/Breadcrumb";
 import Swal from "sweetalert2";
 
@@ -10,19 +9,13 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import { addressService } from "../../services/addressService";
+import CreateAddress from "../Addresses/Create";
 
-const CreateAddress: React.FC = () => {
+const CreatePassword: React.FC = () => {
   const [coords, setCoords] = useState({ lat: "", lng: "" });
   const {id} = useParams<{id:string}>(); // Id del usuario al que se le va a crear un nuveo address.
 
   const navigate = useNavigate();
-
-  const handleSelectPosition = (lat: number, lng: number) => {
-    setCoords({
-      lat: lat.toFixed(6),
-      lng: lng.toFixed(6),
-    });
-  };
 
   const validationSchema = Yup.object().shape({
     street: Yup.string().required("El nombre la calle es requerido"),
@@ -83,7 +76,6 @@ const CreateAddress: React.FC = () => {
           latitude: coords.lat,
           longitude: coords.lng,
         }}
-        extraContent={<LocationMap onSelectPosition={handleSelectPosition}/>}
       />  
     </>
 

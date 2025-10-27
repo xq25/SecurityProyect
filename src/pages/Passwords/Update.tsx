@@ -37,10 +37,13 @@ const UpdatePassword: React.FC = () => {
       .matches(/[@$!%*?&]/, "Debe contener al menos un carácter especial (@$!%*?&)")
   });
 
-  const handleUpdatePassword = async (id: number, password: Password) => {
-
+  const handleUpdatePassword = async (id: number, password: any) => {
+    const finalData = { //Aqui debemos agregarle la fecha alctual al campo endAt para cumplir con el formato de la clase Password
+      ...password,
+      endAt : passwordService.getCurrentDateTime()
+    }
     try {
-      const success = await passwordService.updatePassword( id, password);
+      const success = await passwordService.updatePassword( id, finalData);
       console.log(password)
       if (success) {
         Swal.fire({
@@ -70,14 +73,14 @@ const UpdatePassword: React.FC = () => {
 
   return (
     <div>
-      <h2>Update User</h2>
+      <h2>Update Password</h2>
       <Breadcrumb pageName="Password / Update Password" />
       {password ? (
         <AppForm
           mode={2}
           labels={["content", "startAt"]}
           info={password}
-          handleAction= {(values: Password) => {
+          handleAction= {(values: any) => {
             if (!id) {
               console.error("No se encontró id para actualizar la contraseña");
               return;
@@ -85,6 +88,7 @@ const UpdatePassword: React.FC = () => {
             handleUpdatePassword(Number(id), values);
           }}
           validationSchema={passwordValidationSchema}
+          disabledFields={['startAt']}
 
         />
       ) : (

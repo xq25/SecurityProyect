@@ -14,6 +14,7 @@ import {User} from '../../models/User';
 const ListPasswordsUser: React.FC = () => {
     const [passwords, setPasswords] = useState<Password[]>([]); // Variable reactiva con la lista de contraseña de un usuario.
     const [infoUser, setInfoUser] = useState<User | null>(null);// Creamos una variable reactiva con la informacion del usuario.
+    
     const {id} = useParams<{id:string}>(); // Id del usuario al que le vamos a cargar sus contraseñas.
     const navigate = useNavigate();
             
@@ -33,15 +34,15 @@ const ListPasswordsUser: React.FC = () => {
     // 🔹 Define las acciones que pueden realizarse sobre cada contraseña
     const handleAction = async (action: string, password: Password) => {
         if (action === "delete") {
-        const success = await passwordService.deletePassword(password.id!);
-        if (success) {
-            Swal.fire({
-            title: "Eliminado",
-            text: `contraseña de ${infoUser?.name} eliminada correctamente`,
-            icon: "success",
-            });
-            fetchData(); // Refresca la tabla después de eliminar
-        }
+            const success = await passwordService.deletePassword(password.id!);
+            if (success) {
+                Swal.fire({
+                title: "Eliminado",
+                text: `contraseña de ${infoUser?.name} eliminada correctamente`,
+                icon: "success",
+                });
+                fetchData(); // Refresca la tabla después de eliminar
+            }
         } else if (action === "update") {
             navigate(`passwords/${password.id}`);
         }
@@ -57,7 +58,7 @@ const ListPasswordsUser: React.FC = () => {
 
     return (
         <div>
-        <h2>Listado de contraseñas del usuario {}</h2>
+        <h2>Listado de contraseñas del usuario</h2>
         <AppTable
             name= {tableName}
             header={["id", "content", "startAt", "endAt"]}
