@@ -12,7 +12,17 @@ export const BootstrapButton: React.FC<ButtonItem> = ({
     editar: "btn-warning text-white",
     eliminar: "btn-danger",
     ver: "btn-info text-white",
+    view: "btn-info text-white",
     actualizar: "btn-primary",
+    update: "btn-warning text-white",
+    delete: "btn-danger",
+    profile: "btn-primary",
+    address: "btn-secondary",
+    devices: "btn-success",
+    passwords: "btn-warning text-white",
+    sessions: "btn-info text-white",
+    answers: "btn-primary", 
+    signatures: "btn-dark",
   };
 
   const normalizedName = name.toLowerCase();
@@ -24,7 +34,7 @@ export const BootstrapButton: React.FC<ButtonItem> = ({
       className={`btn btn-sm ${bootstrapClass} d-flex align-items-center gap-1`}
     >
       {icon && <span>{icon}</span>}
-      {name}
+      <span className="d-none d-lg-inline">{name}</span>
     </button>
   );
 };
