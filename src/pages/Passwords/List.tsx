@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Swal from "sweetalert2";
 //Importacion de componentes
+import Swal from "sweetalert2";
 import { AppTable } from "../../components/ui/TableGeneric";
 import { AppButton } from "../../components/ui/ButtonGeneric";
+// Importaciones de Hooks
 import { useNavigate, useParams } from "react-router-dom";
-// Clases relacionadas al password
+// Importaciones relacionadas a la clase Password
 import { Password } from "../../models/Password";
 import { passwordService } from "../../services/passwordService";
+// Importaciones relacionadas con user (Las usamos para informacion especifica dentro de la tabla)
 import { userService } from "../../services/userService";
 import {User} from '../../models/User';
 

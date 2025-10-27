@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
-
+// Importaciones de componentes
 import { AppTable } from "../../components/ui/TableGeneric";
 import { AppButton } from "../../components/ui/ButtonGeneric";
-import { useNavigate, useParams } from "react-router-dom";
-// Clases relacionadas al password
-
-import { Address } from "../../models/Address";
-import { addressService } from "../../services/addressService";
-import { User } from "../../models/User";
-import { userService } from "../../services/userService";
 import { LocationMap } from "../../components/LocationMap";
 import Swal from "sweetalert2";
+// Importaciones de Hooks
+import { useNavigate, useParams } from "react-router-dom";
+// Importaciones relacionadas con la clase Address
+import { Address } from "../../models/Address";
+import { addressService } from "../../services/addressService";
+// Importaciones relacionadas con la clase Users
+import { User } from "../../models/User";
+import { userService } from "../../services/userService";
+
 
 const ListAddresses: React.FC = () => {
     const [infoAddress, setInfoAddress] = useState<Address | null>(null);// Creamos una variable reactiva con la informacion del usuario.

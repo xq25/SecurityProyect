@@ -1,29 +1,74 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
+// Importaciones de componentes
+import { AppTable } from "../../components/ui/TableGeneric";
+import { AppButton } from "../../components/ui/ButtonGeneric";
+import Swal from "sweetalert2";
+// Importaciones de Hooks
+import { useNavigate } from "react-router-dom";
+// Importaciones relacionadas con la clase Roles
 import { Roles } from "../../models/Roles";
-import {AppTable} from '../../components/ui/TableGeneric';
-import {AppButton} from '../../components/ui/ButtonGeneric'
+import { rolesService } from "../../services/roleService";
 
-const RolesList: React.FC = () => {
-  const [roles, setRoles] = useState<Roles[]>([
-    { id: 1, name: "Admin" },
-    { id: 2, name: "User" },
-  ]);
+const ListRoles: React.FC = () => {
+  const [roles, setRoles] = useState<Roles[]>([]);
+  const navigate = useNavigate();
 
-  const handleAction = (action: string, item: Roles) => {
-    if (action === "assignPermissions") {
-      console.log("Assign permissions to role:", item);
-    }
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const roles = await rolesService.getRoless();
+    setRoles(roles);
   };
 
-  const header = [];
-  header.push(Object.keys(roles[0]));
+  const handleAction = async (action: string, rol: Roles) => {
+    if (action === "delete") {
+      const success = await rolesService.deleteRoles(rol.id);
+      if (success) {
+        Swal.fire({
+          title: "Eliminado",
+          text: "Rol General eliminado correctamente",
+          icon: "success",
+        });
+        fetchData();
+      }
+    } else if (action === "view") {
+      navigate(`/roles/view/${rol.id}`);
+    } else if (action === "update") {
+      navigate(`/roles/${rol.id}`);
+    } else if (action === 'permissions'){
+      navigate(`/`)
+    }
+  }
+
+  const baseOptions = [
+    { name: "view" },
+    { name: "update" },
+    { name: "delete" },
+    { name: 'permissions' }
+  ];
+
   return (
     <div>
-      <h2>Role List</h2>
-      <AppTable name={'Roles'} header={['ID', 'Name', 'Actions']} items={[{ contentRow: ["valor1", "valor2", [<AppButton name="update" action={()=>console.log('actualice')}/>, <AppButton name="delete" action={()=>console.log('borre')}/> ]] },
-  { contentRow: ["valorA", "valorB",] }]}/>
+      <h2>Listado de Roles Generales</h2>
+      <AppButton name={'create'} action={()=> {
+        navigate('/roles/create');
+      }}/>
+      <AppTable
+        name="Roles"
+        header={["id", "name", "description"]}
+        items={roles}
+        options={baseOptions.map((opt) => (
+          <AppButton
+            key={opt.name}
+            name={opt.name}
+            action={(rol) => handleAction(opt.name, rol)}
+          />
+        ))}
+      />
     </div>
   );
 };
 
-export default RolesList;
+export default ListRoles;

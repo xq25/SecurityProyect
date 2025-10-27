@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { AppForm } from "../../components/ui/FormGeneric";
 import Swal from "sweetalert2";
 import Breadcrumb from "../../components/Breadcrumb";
-//hooks
+// Importaciones de Hooks
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 //Importaciones de las clases Password
