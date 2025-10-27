@@ -4,9 +4,7 @@ import { digitalSignatureService } from "../../services/digitalSignatureService"
 import Swal from "sweetalert2";
 import { AppTable } from "../../components/ui/TableGeneric";
 import { AppButton } from "../../components/ui/ButtonGeneric";
-import { AppActionButton } from "../../components/ui/ActionButtonGeneric";
 import { useNavigate } from "react-router-dom";
-import { FaPlus } from "react-icons/fa";
 
 const ListDigitalSignatures: React.FC = () => {
   const [signatures, setSignatures] = useState<DigitalSignature[]>([]);
@@ -62,11 +60,10 @@ const ListDigitalSignatures: React.FC = () => {
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>Listado de Firmas Digitales</h2>
-        <AppActionButton
-          text="Crear Nueva Firma"
-          onClick={() => navigate("/digital-signatures/create")}
-          icon={<FaPlus />}
-          variant="success"
+        {/* ✅ Usar AppButton en lugar de AppActionButton */}
+        <AppButton
+          name="crear"
+          action={() => navigate("/digital-signatures/create")}
         />
       </div>
 

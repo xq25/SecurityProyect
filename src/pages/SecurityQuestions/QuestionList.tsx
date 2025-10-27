@@ -4,9 +4,7 @@ import { securityQuestionService } from "../../services/securityQuestionService"
 import Swal from "sweetalert2";
 import { AppTable } from "../../components/ui/TableGeneric";
 import { AppButton } from "../../components/ui/ButtonGeneric";
-import { AppActionButton } from "../../components/ui/ActionButtonGeneric";
 import { useNavigate } from "react-router-dom";
-import { FaPlus } from "react-icons/fa";
 
 const ListSecurityQuestions: React.FC = () => {
   const [questions, setQuestions] = useState<SecurityQuestion[]>([]);
@@ -71,13 +69,10 @@ const ListSecurityQuestions: React.FC = () => {
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>Listado de Preguntas de Seguridad</h2>
-        {/* ✅ Botón reutilizable */}
-        <AppActionButton
-          text="Crear Nueva Pregunta"
-          onClick={() => navigate("/security-questions/create")}
-          icon={<FaPlus />}
-          variant="success"
-          size="medium"
+        {/* ✅ Usar AppButton en lugar de AppActionButton */}
+        <AppButton
+          name="crear"
+          action={() => navigate("/security-questions/create")}
         />
       </div>
 

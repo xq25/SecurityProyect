@@ -4,9 +4,7 @@ import { deviceService } from "../../services/deviceService";
 import Swal from "sweetalert2";
 import { AppTable } from "../../components/ui/TableGeneric";
 import { AppButton } from "../../components/ui/ButtonGeneric";
-import { AppActionButton } from "../../components/ui/ActionButtonGeneric";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { FaPlus } from "react-icons/fa";
 
 const ListDevices: React.FC = () => {
   const [devices, setDevices] = useState<Device[]>([]);
@@ -69,12 +67,10 @@ const ListDevices: React.FC = () => {
     <div>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2>Listado de Dispositivos</h2>
-        {/* ✅ Botón reutilizable */}
-        <AppActionButton
-          text="Crear Nuevo Dispositivo"
-          onClick={() => navigate("/devices/create")}
-          icon={<FaPlus />}
-          variant="success"
+        {/* ✅ Usar AppButton en lugar de AppActionButton */}
+        <AppButton
+          name="crear"
+          action={() => navigate("/devices/create")}
         />
       </div>
 
