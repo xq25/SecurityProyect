@@ -1,0 +1,93 @@
+/* Contenedor principal con tarjeta ligera */
+.tailwind-table-container {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb; /* gray-200 */
+  border-radius: 0.5rem;     /* rounded-lg */
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  padding: 0.75rem 1rem;
+}
+
+/* Título */
+.tailwind-table-title {
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 600;
+  color: #111827;      /* gray-900 */
+  margin: 0.25rem 0 0.75rem 0;
+}
+
+/* Scroll horizontal en móviles */
+.tailwind-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Tabla base */
+.tailwind-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* Encabezado */
+.tailwind-table-head {
+  background-color: #f9fafb; /* gray-50 */
+  border-bottom: 1px solid #e5e7eb; /* gray-200 */
+}
+
+.tailwind-table-header-cell {
+  text-align: left;
+  font-size: 0.8125rem; /* text-sm */
+  font-weight: 600;
+  color: #374151; /* gray-700 */
+  padding: 0.75rem 0.75rem;
+  white-space: nowrap;
+}
+
+.tailwind-table-actions-head {
+  text-align: center;
+}
+
+/* Filas y celdas */
+.tailwind-table-row {
+  transition: background-color 0.15s ease;
+}
+
+.tailwind-table-row:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.tailwind-table-row:hover {
+  background-color: #f3f4f6; /* gray-100 */
+}
+
+.tailwind-table-cell {
+  font-size: 0.875rem; /* text-sm */
+  color: #111827; /* gray-900 */
+  padding: 0.75rem 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: middle;
+}
+
+.tailwind-table-actions-cell {
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Estado vacío */
+.tailwind-table-empty {
+  text-align: center;
+  padding: 1rem;
+  color: #6b7280; /* gray-500 */
+  font-size: 0.875rem;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .tailwind-table-container {
+    padding: 0.5rem 0.75rem;
+  }
+  .tailwind-table-header-cell,
+  .tailwind-table-cell {
+    padding: 0.625rem 0.625rem;
+  }
+}

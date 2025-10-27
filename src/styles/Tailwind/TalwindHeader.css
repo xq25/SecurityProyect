@@ -126,6 +126,14 @@ header.tailwind-header {
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
+.tailwind-user-dropdown,
+.material-dropdown-container {
+  position: absolute !important;
+  right: 16px !important; /* Ajusta esta distancia según sea necesario */
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}
+
 @media (max-width: 640px) {
   .tailwind-header-title {
     font-size: 1rem;

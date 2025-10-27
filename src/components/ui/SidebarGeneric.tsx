@@ -4,6 +4,9 @@ import { useUI } from '../../context/UIProvider';  //Aqui esta almacenado el est
 import { BootstrapSideBar } from '../ui/bootstrap/BootstrapSideBar';
 import { MaterialSideBar } from '../ui/materialUI/MaterialSideBar'; 
 import { TailwindSideBar } from '../ui/tailwind/TailwindSideBar';
+import {RootState} from '../../store/store';
+import { useSelector } from 'react-redux';
+
 
 // import { useSelector } from "react-redux";
 // import { RootState } from "../../store/store";
@@ -27,6 +30,7 @@ export interface Props {
 //Aqui esta definido todo nuestro componente
 export const AppSideBar = ({ items = [], sidebarOpen, setSidebarOpen }: Props) => { //Recibimos los items del sideBar de tipo Props
     const { library } = useUI(); //Accedemos a la libreria usada.
+    const user = useSelector((state: RootState) => state.user.user); //Guardamos si tenemos un usuario logueado.
 
     const defaultItems: SideBarItem[] = [ //Definimos las opciones predeterminadas dentro de nuestro programa.
         { label: "Inicio", path: "/" },
@@ -36,12 +40,10 @@ export const AppSideBar = ({ items = [], sidebarOpen, setSidebarOpen }: Props) =
     ];
 
     const combinedItems = [...defaultItems, ...items];
-    if (library === "material") return <MaterialSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;  //Cargamos el sideBar respectivo usando la libreria seleccionada y los items previamente pasados
-    if (library === "tailwind") return <TailwindSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;
-    if (library === "bootstrap") return <BootstrapSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;
-      
-//   if (library === "bootstrap") return <BootstrapSideBar items={items} />;
-//   return <TailwindSideBar items={items} />;
-// Por defecto, usar Material UI si no hay coincidencia
-    return <MaterialSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;
+    if (user){
+      if (library === "material") return <MaterialSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;  //Cargamos el sideBar respectivo usando la libreria seleccionada y los items previamente pasados
+      if (library === "tailwind") return <TailwindSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;
+      if (library === "bootstrap") return <BootstrapSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;
+    }
+    return <div></div>;
 };

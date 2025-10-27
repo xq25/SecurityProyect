@@ -25,7 +25,7 @@ export const TailwindSideBar: React.FC<Props> = ({
     Inicio: <FaHome className="w-5 h-5" />,
     Usuarios: <FaUsers className="w-5 h-5" />,
     Roles: <FaShieldAlt className="w-5 h-5" />,
-    Permisos: <FaLock className="w-5 h-5" />,
+    Permissions: <FaLock className="w-5 h-5" />,
   };
 
   return (

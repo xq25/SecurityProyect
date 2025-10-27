@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import { User } from "../../models/User";
 import { userService } from "../../services/userService";
 import Swal from "sweetalert2";
@@ -40,6 +40,11 @@ const ListUsers: React.FC = () => {
     } else if (action === "digital-signatures") {
       // Redirigir a la gestión de firma digital
       navigate(`/digital-signatures/list?userId=${user.id}`);
+      navigate(`/users/update/${user.id}`);
+    }else if (action === 'passwords'){
+      navigate(`/passwords/user/${user.id}`);
+    }else if (action === 'address'){
+      navigate(`/addresses/user/${user.id}`);
     }
   };
 
@@ -58,6 +63,9 @@ const ListUsers: React.FC = () => {
   return (
     <div>
       <h2>Listado de Usuarios</h2>
+      <AppButton name={'create'} action={()=> {
+        navigate('/users/create');
+      }}/>
       <AppTable
         name="Usuarios"
         header={["id", "name", "email"]}

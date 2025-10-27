@@ -2,10 +2,11 @@ import React from "react";
 import { headerItem } from '../HeaderGeneric';
 import { useUI } from "../../../context/UIProvider";
 import "../../../styles/Tailwind/TalwindHeader.css";
+import { AppDropdownUser } from '../../UserDropDown'; // Importa el dropdown
 
 interface TailwindHeaderProps {
   items: headerItem[];
-  userDropdown?:   React.ReactNode,
+  userDropdown?: React.ReactNode,
 }
 
 export const TailwindHeader: React.FC<TailwindHeaderProps> = ({ items, userDropdown}) => {
@@ -40,8 +41,15 @@ export const TailwindHeader: React.FC<TailwindHeaderProps> = ({ items, userDropd
               );
             })}
           </div>
+           {/* Usar el dropdown directamente si no se proporciona uno personalizado */}
+          {userDropdown ? (
+            <div className="tailwind-user-dropdown">{userDropdown}</div>
+          ) : (
+            <div className="tailwind-user-dropdown">
+              <AppDropdownUser />
+            </div>
+          )}
         </div>
-          
       </div>
     </header>
   );
