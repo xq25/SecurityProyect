@@ -36,7 +36,7 @@ const ListRoles: React.FC = () => {
     } else if (action === "view") {
       navigate(`/roles/view/${rol.id}`);
     } else if (action === "update") {
-      navigate(`/roles/${rol.id}`);
+      navigate(`/roles/update/${rol.id}`);
     } else if (action === 'permissions'){
       navigate(`/`)
     }

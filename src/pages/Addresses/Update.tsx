@@ -16,7 +16,7 @@ const UpdateAddress: React.FC = () => {
     const [coords, setCoords] = useState({ lat: "", lng: "" });
     const [infoAddress, setInfoAddress] = useState<Address | null>(null);// Creamos una variable reactiva con la informacion del usuario.
 
-    const {id} = useParams<{id:string}>(); // Id del address que se va a modificar. (No del usuario!) o pasamos el del user y sacamos el id del address como tal???
+    const {id} = useParams<{id:string}>(); // Id del address que se va a modificar. (No del usuario!).
     const navigate = useNavigate();
                 
     // 🔹 Al cargar el componente, obtenemos las contraseñas del usuario(id) desde el backend.
@@ -101,7 +101,7 @@ const UpdateAddress: React.FC = () => {
                 number: infoAddress.number
             }}
             extraContent={<LocationMap onSelectPosition={handleSelectPosition} lat={infoAddress.latitude} lng={infoAddress.longitude}/>}
-        />: <div> Cargando los datos de la direccion</div> }
+        />: <div>Cargando los datos de la direccion</div> }
         </>
 
     );

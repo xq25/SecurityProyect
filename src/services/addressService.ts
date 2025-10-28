@@ -2,7 +2,7 @@ import axios from "axios";
 import { Address } from '../models/Address'; 
 
 // 🧭 Construcción dinámica de la URL base
-const API_URL = import.meta.env.VITE_API_URL + "/addresses" || "";
+const API_URL = import.meta.env.VITE_API_URL + "/api/addresses" || "";
 
 /**
  * Servicio para gestionar direcciones (Addresses)

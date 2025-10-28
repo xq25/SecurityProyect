@@ -1,7 +1,7 @@
 import axios from "axios";
 import { SecurityQuestion } from "../models/SecurityQuestion";
 
-const API_URL = import.meta.env.VITE_API_URL + "/security-questions" || "";
+const API_URL = import.meta.env.VITE_API_URL + "/api/security-questions" || "";
 
 class SecurityQuestionService {
     async getSecurityQuestions(): Promise<SecurityQuestion[]> {

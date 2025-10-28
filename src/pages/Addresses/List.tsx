@@ -18,7 +18,7 @@ const ListAddresses: React.FC = () => {
     const [infoAddress, setInfoAddress] = useState<Address | null>(null);// Creamos una variable reactiva con la informacion del usuario.
     const [infoUser, setInfoUser] = useState<User | null>(null); // Creamos una variable reactiva con la informacion del usuario.
     
-    const {id} = useParams<{id:string}>(); // Id del usuario al que le vamos a cargar sus contraseñas.
+    const {id} = useParams<{id:string}>(); // Id del usuario al que le vamos a cargar sus direcciones.
     const navigate = useNavigate();
             
     // 🔹 Al cargar el componente, obtenemos las contraseñas del usuario(id) desde el backend.
@@ -27,10 +27,10 @@ const ListAddresses: React.FC = () => {
     }, [id]);
 
     // 🔹 Método que obtiene los usuarios desde el servicio
-    const fetchData = async () => { // Cargamos las contraseñas del usuario y su informacion para asi agregar todo esto a la tabla.
+    const fetchData = async () => { // Cargamos las direcciones del usuario y su informacion para asi agregar todo esto a la tabla.
         const address = await addressService.getAddressesByUserId(Number(id));
         const infouser = await userService.getUserById(Number(id));
-        setInfoAddress(address); // Asignamos la data obtenida a la variable reactiva
+        setInfoAddress(address); // Asignamos la data obtenida a la variable reactiva.
         setInfoUser(infouser);
     };
 
@@ -47,10 +47,9 @@ const ListAddresses: React.FC = () => {
                 });
                 fetchData(); // Refresca la tabla después de eliminar
             }
-
         }
         else if (action === "update") {
-            navigate(`/addresses/user/${address.id}`);
+            navigate(`/addresses/user/${address.id}/update`);
         }
     };
 
@@ -66,7 +65,7 @@ const ListAddresses: React.FC = () => {
         <div>
             <h2> Ubicacion del Usuario</h2>
             {infoAddress === null?<AppButton name={'create'} action={()=> {
-                navigate(`/addresses/user/create/${id}`); //Preguntar a felipe que si este id hace referencia al usuario o al address.
+                navigate(`/addresses/user/create/${id}`); // Mandamos el id del usuario
             }}/>: <div>El usuario ya posee una direccion</div>}
             <LocationMap lat={infoAddress?.latitude} lng={infoAddress?.longitude}/>
 

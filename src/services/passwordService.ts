@@ -2,7 +2,7 @@ import axios from "axios";
 import { Password } from "../models/Password";
 // ✅ Interfaz para tipar las contraseñas
 
-const API_URL = import.meta.env.VITE_API_URL + "/passwords" || "";
+const API_URL = import.meta.env.VITE_API_URL + "/api/passwords" || "";
 
 /**
  * Servicio para gestionar contraseñas (Passwords)

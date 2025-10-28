@@ -46,7 +46,7 @@ const ListPasswordsUser: React.FC = () => {
                 fetchData(); // Refresca la tabla después de eliminar
             }
         } else if (action === "update") {
-            navigate(`passwords/${password.id}`);
+            navigate(`passwords/${password.id}/update`);
         }
     };
 
@@ -61,6 +61,9 @@ const ListPasswordsUser: React.FC = () => {
     return (
         <div>
         <h2>Listado de contraseñas del usuario</h2>
+        <AppButton name={'create'} action={()=> {
+            navigate(`/passwords/user/create/${id}`); // mandamos el id del usuario.
+        }}/>
         <AppTable
             name= {tableName}
             header={["id", "content", "startAt", "endAt"]}
