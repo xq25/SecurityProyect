@@ -6,8 +6,9 @@ import { RootState } from '../../store/store';
 import { useSelector } from 'react-redux';
 
 import { MaterialHeader } from "../ui/materialUI/MaterialHeader";
+import { BootstrapHeader } from "../ui/bootstrap/BootstrapHeader"; // Importamos el componente BootstrapHeader
 import { TailwindHeader } from "../ui/tailwind/TailwindHeader";
-import { AppDropdownUser} from './UserDropDown';
+import { AppDropdownUser} from '../UserDropDown';
 
 // 🔹 Interfaz para cada ítem del header (botones de librería)
 export interface headerItem {
@@ -57,12 +58,15 @@ export const AppHeader: React.FC<AppHeaderProps> = () => {
   ];
 
   // 🔹 Pasamos el userDropdown como prop al header de la librería activa
-  if (user){
-    if (library === "material")
-      return <MaterialHeader items={defaultItems} userDropdown={<AppDropdownUser />} />;
+  
+  if (library === "material")
+    return <MaterialHeader items={defaultItems} userDropdown={<AppDropdownUser />} />;
 
-    if (library === "tailwind")
-      return <TailwindHeader items={defaultItems} userDropdown={<AppDropdownUser/>} />;
-  }
+  if (library === "bootstrap") 
+    return <BootstrapHeader items={defaultItems} userDropdown={<AppDropdownUser/>} />;
+
+  if (library === "tailwind")
+    return <TailwindHeader items={defaultItems} userDropdown={<AppDropdownUser/>} />;
+  
   return <MaterialHeader items={defaultItems} userDropdown={<AppDropdownUser/>} />;
 };

@@ -11,6 +11,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google"; // 👈 Importa el pr
 // import SignIn from './pages/Authentication/SignIn';
 // import SignUp from './pages/Authentication/SignUp';
 import routes from './routes';
+import 'bootstrap/dist/css/bootstrap.min.css';
 // import { Navigate } from "react-router-dom"; // ✅ Asegúrate de importar Navigate
 
 

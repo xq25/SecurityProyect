@@ -1,17 +1,8 @@
 import React from "react";
 import { TextField, Button, Typography, Paper } from "@mui/material";
 import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
 import "../../../styles/MaterialUI/MaterialForm.css";
-
-export interface FormItems<T = any> {
-  mode?: number;
-  labels: string[];
-  info?: T | null;
-  handleAction?: (data: T) => void;
-  validationSchema?: Yup.ObjectSchema<any>;
-  disabledFields?: string[]; // 🆕
-}
+import { FormItems } from "../FormGeneric";
 
 export const MaterialForm = <T extends Record<string, any>>({
   mode = 0,
@@ -20,7 +11,10 @@ export const MaterialForm = <T extends Record<string, any>>({
   handleAction,
   validationSchema,
   disabledFields = [], 
+  extraContent,
+
 }: FormItems<T>) => {
+  //Aqui agregamos la informacion a los campos del formulario en caso tal de que esta misma exista (Esto solo lo usamos para actualizar)
   const initialValues = labels.reduce((acc, label) => {
     const key = label.toLowerCase();
     acc[key] = info ? info[key] ?? "" : "";
@@ -49,9 +43,13 @@ export const MaterialForm = <T extends Record<string, any>>({
       >
         {({ isValid, dirty }) => (
           <Form className="material-form">
+            {/* Aqui van agregados otros componentes que deseemos y los envolvemos en una clase especifica*/}
+            {extraContent && (<div className="material-form-extra">{extraContent}</div>)}
+
+            {/* Aqui agregamos los campos de nuestro formulario*/}
             {labels.map((label, idx) => {
               const key = label.toLowerCase();
-              const isDisabled = disabledFields.includes(key); // 🆕 Verifica si está deshabilitado
+              const isDisabled = disabledFields.includes(key); //  Verificamos si el campo está deshabilitado
               return (
                 <div className="material-form-field" key={idx}>
                   <Field name={key}>
@@ -63,7 +61,7 @@ export const MaterialForm = <T extends Record<string, any>>({
                         variant="outlined"
                         error={meta.touched && Boolean(meta.error)}
                         helperText={meta.touched && meta.error}
-                        disabled={isDisabled} // 🆕 Campo bloqueado si corresponde
+                        disabled={isDisabled} //Campo bloqueado si corresponde
                       />
                     )}
                   </Field>

@@ -1,0 +1,8 @@
+/* Personalizaciones para la tabla */
+.card.border-success {
+  border-width: 2px !important;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(76, 175, 80, 0.12) !important;
+}

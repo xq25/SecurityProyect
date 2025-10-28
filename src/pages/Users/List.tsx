@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import { User } from "../../models/User";
 import { userService } from "../../services/userService";
 import Swal from "sweetalert2";
@@ -9,21 +9,18 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/Tailwind/OverridesButtons.css";
 
 const ListUsers: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]); // Variable reactiva con la lista de usuarios
+  const [users, setUsers] = useState<User[]>([]);
   const navigate = useNavigate();
 
-  // 🔹 Al cargar el componente, obtenemos los usuarios desde el backend
   useEffect(() => {
     fetchData();
   }, []);
 
-  // 🔹 Método que obtiene los usuarios desde el servicio
   const fetchData = async () => {
     const users = await userService.getUsers();
-    setUsers(users); // Asignamos la data obtenida a la variable reactiva
+    setUsers(users);
   };
 
-  // 🔹 Define las acciones que pueden realizarse sobre cada usuario
   const handleAction = async (action: string, user: User) => {
     if (action === "delete") {
       const success = await userService.deleteUser(user.id!);
@@ -33,30 +30,37 @@ const ListUsers: React.FC = () => {
           text: "Usuario eliminado correctamente",
           icon: "success",
         });
-        fetchData(); // Refresca la tabla después de eliminar
+        fetchData();
       }
     } else if (action === "view") {
-      navigate('/users/create')
+      navigate('/users/create');
     } else if (action === "update") {
-      navigate(`/users/update/${user.id}`);
+      navigate(`/users/${user.id}/update`);
+    } else if (action === "devices") {
+      // Redirigir a la lista de dispositivos
+      navigate(`/devices/list?userId=${user.id}`);
+    } else if (action === "digital-signatures") {
+      // Redirigir a la gestión de firma digital
+      navigate(`/digital-signatures/list?userId=${user.id}`);
     }else if (action === 'passwords'){
-      navigate(`/passwords/user/${user.id}`)
+      navigate(`/passwords/user/${user.id}`);
+    }else if (action === 'address'){
+      navigate(`/addresses/user/${user.id}`);
     }
   };
 
-  // 🔹 Configuración base de botones (se aplicará dinámicamente a cada fila)
   const baseOptions = [
     { name: "view" },
     { name: "update" },
     { name: "delete" },
     { name: 'profile' },
     { name: 'address' },
+    { name: 'digital-signatures'},
     { name: 'devices' },
-    { name: 'passwords'},
+    { name: 'passwords' },
     { name: 'sessions' }
   ];
 
-  // 🔹 Render principal de la pagina.
   return (
     <div>
       <h2>Listado de Usuarios</h2>
@@ -67,12 +71,10 @@ const ListUsers: React.FC = () => {
         name="Usuarios"
         header={["id", "name", "email"]}
         items={users}
-        // Generamos los botones a partir de las opciones
         options={baseOptions.map((opt) => (
           <AppButton
             key={opt.name}
             name={opt.name}
-            // Pasamos la acción con el usuario que corresponde
             action={(user) => handleAction(opt.name, user)}
           />
         ))}

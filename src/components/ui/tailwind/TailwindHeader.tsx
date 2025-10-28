@@ -2,7 +2,7 @@ import React from "react";
 import { headerItem } from '../HeaderGeneric';
 import { useUI } from "../../../context/UIProvider";
 import "../../../styles/Tailwind/TalwindHeader.css";
-import { AppDropdownUser } from '../userDropDown'; // Importa el dropdown
+import { AppDropdownUser } from '../../UserDropDown'; // Importa el dropdown
 
 interface TailwindHeaderProps {
   items: headerItem[];

@@ -1,5 +1,6 @@
 import React from "react";
 import { useUI } from "../../context/UIProvider";
+import { BootstrapButton } from "./bootstrap/BootstrapButton";
 import { MaterialButton } from "./materialUI/MaterialButton";
 import { TailwindButton } from "./tailwind/TailwindButtonCRUD";
 
@@ -18,6 +19,8 @@ export const AppButton: React.FC<ButtonItem> = ({ name, action, item, icon }) =>
   // Solo usamos Material por ahora
   if (library === "material")
     return <MaterialButton name={name} action={() => action?.(item)} icon = {icon} />;
+  if (library === "bootstrap")
+    return <BootstrapButton name={name} action={() => action?.(item)} icon = {icon} />;
 
   if (library === "tailwind")
     return <TailwindButton name={name} action={() => action?.(item)} />;

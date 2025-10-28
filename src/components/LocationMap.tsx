@@ -1,69 +1,73 @@
-import React, { useState } from "react";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-import '../styles/LocationMap.css';
-import L from "leaflet";
-
-// ⚙️ Corrige los íconos de Leaflet (necesario en React)
-delete (L.Icon.Default.prototype as any)._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
-
-interface MapSelectorProps {
+import React, { useState, useCallback, useEffect } from "react";
+import Map, { Marker, NavigationControl } from "react-map-gl/maplibre";
+import "maplibre-gl/dist/maplibre-gl.css";
+import "../styles/LocationMap.css";
+interface MapLibreMapProps {
   onSelectPosition?: (lat: number, lng: number) => void;
+  lat?: number;
+  lng?: number;
 }
 
-const LocationMarker: React.FC<{ setPosition: (pos: [number, number]) => void }> = ({
-  setPosition,
+export const LocationMap: React.FC<MapLibreMapProps> = ({
+  onSelectPosition,
+  lat,
+  lng,
 }) => {
-  const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(null);
+  // 🔹 Estado del marcador (posición seleccionada)
+  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
 
-  // 📍 Captura clics en el mapa
-  useMapEvents({
-    click(e) {
-      const { lat, lng } = e.latlng;
-      setMarkerPosition([lat, lng]);
-      setPosition([lat, lng]);
+  //  Coordenadas iniciales (por defecto: Manizales)
+  const defaultLat = 5.0703;
+  const defaultLng = -75.5138;
+
+  // ✅ Si nos pasan `lat` y `lng`, inicializa el marcador con ellos
+  useEffect(() => {
+    if (lat && lng) {
+      setPosition({ lat, lng });
+    }
+  }, [lat, lng]);
+
+  // 🔹 Maneja los clics en el mapa para actualizar marcador
+  const handleMapClick = useCallback(
+    (e: any) => {
+      const { lngLat } = e;
+      const coords = { lat: lngLat.lat, lng: lngLat.lng };
+      setPosition(coords);
+      if (onSelectPosition) onSelectPosition(coords.lat, coords.lng);
     },
-  });
-
-  return markerPosition ? <Marker position={markerPosition} /> : null;
-};
-
-export const LocationMap: React.FC<MapSelectorProps> = ({ onSelectPosition }) => {
-  const [position, setPosition] = useState<[number, number] | null>(null);
-
-  const handleSetPosition = (pos: [number, number]) => {
-    setPosition(pos);
-    if (onSelectPosition) onSelectPosition(pos[0], pos[1]);
-  };
+    [onSelectPosition]
+  );
 
   return (
-    <div className="map-container-wrapper">
-      <div className="map-container">
-        <MapContainer
-          center={[5.0703, -75.5138]} // 📍 Manizales
-          zoom={13}
-          style={{ height: "100%", width: "100%" }}
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-          />
-          <LocationMarker setPosition={handleSetPosition} />
-        </MapContainer>
-      </div>
+    <div className="maplibre-wrapper">
+      <Map
+        initialViewState={{
+          latitude: lat ?? defaultLat,
+          longitude: lng ?? defaultLng,
+          zoom: 13,
+        }}
+        style={{ width: "100%", height: "400px", borderRadius: "10px" }}
+        mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+        onClick={handleMapClick}
+      >
+        <NavigationControl position="top-right" />
 
-      {/* 📊 Coordenadas seleccionadas */}
+        {/* ✅ Muestra marcador si hay posición inicial o seleccionada */}
+        {position && (
+          <Marker
+            latitude={position.lat}
+            longitude={position.lng}
+            color="red"
+            anchor="bottom"
+          />
+        )}
+      </Map>
+
+      {/* ✅ Muestra coordenadas seleccionadas */}
       {position && (
-        <div className="map-coordinates">
-          📍 <strong>Latitud:</strong> {position[0].toFixed(6)} |{" "}
-          <strong>Longitud:</strong> {position[1].toFixed(6)}
+        <div className="maplibre-coordinates">
+          📍 <strong>Latitud:</strong> {position.lat.toFixed(6)} |{" "}
+          <strong>Longitud:</strong> {position.lng.toFixed(6)}
         </div>
       )}
     </div>

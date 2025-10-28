@@ -1,6 +1,7 @@
 // src/components/SideBar/AppSideBar.tsx
 import { useUI } from '../../context/UIProvider';  //Aqui esta almacenado el estado de libreria actual.
 // Aqui esta la carga de el estilos de SideBar.
+import { BootstrapSideBar } from '../ui/bootstrap/BootstrapSideBar';
 import { MaterialSideBar } from '../ui/materialUI/MaterialSideBar'; 
 import { TailwindSideBar } from '../ui/tailwind/TailwindSideBar';
 import {RootState} from '../../store/store';
@@ -42,6 +43,7 @@ export const AppSideBar = ({ items = [], sidebarOpen, setSidebarOpen }: Props) =
     if (user){
       if (library === "material") return <MaterialSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;  //Cargamos el sideBar respectivo usando la libreria seleccionada y los items previamente pasados
       if (library === "tailwind") return <TailwindSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;
+      if (library === "bootstrap") return <BootstrapSideBar items={combinedItems} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>;
     }
     return <div></div>;
 };

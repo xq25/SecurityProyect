@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Menu, MenuItem, IconButton, Avatar, Divider, Typography, Box } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../store/store";
-import { setUser } from "../../store/userSlice";
+import { RootState } from "../store/store";
+import { setUser } from "../store/userSlice";
 
-import "../../styles/MaterialUI/MaterialDropDownUser.css";
+import "../styles/MaterialUI/MaterialDropDownUser.css";
 import { useNavigate } from "react-router-dom";
 
 

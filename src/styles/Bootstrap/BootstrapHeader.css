@@ -1,0 +1,9 @@
+/* Personalizaciones adicionales para el header */
+.navbar-brand {
+  letter-spacing: 0.5px;
+}
+
+.btn-outline-light:hover {
+  transform: translateY(-2px);
+  transition: all 0.2s ease;
+}

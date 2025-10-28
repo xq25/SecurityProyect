@@ -1,0 +1,64 @@
+/* Personalizaciones para el sidebar */
+
+/* ✅ Sidebar con el MISMO verde exacto que el header */
+.offcanvas.bg-success {
+  background: linear-gradient(145deg, #1b5e20, #2e7d32) !important;
+}
+
+/* ✅ Encabezado del sidebar con fondo más oscuro pero consistente */
+.offcanvas-header.bg-dark {
+  background: linear-gradient(145deg, #0d3818, #1b5e20) !important;
+  padding: 1rem 1.5rem;
+}
+
+/* Items de la lista transparentes */
+.list-group-item-success {
+  background-color: transparent !important;
+}
+
+/* Hover en los items */
+.list-group-item:hover {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  transition: background-color 0.2s ease;
+}
+
+/* Botones de navegación */
+.btn-link.text-white {
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+}
+
+.btn-link.text-white:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+/* ✅ Botón de cerrar visible y bien posicionado */
+.btn-close-white,
+.btn-outline-light {
+  filter: brightness(0) invert(1);
+  opacity: 1 !important;
+  background-size: 1.2em;
+}
+
+.btn-outline-light:hover {
+  opacity: 0.8 !important;
+  transform: scale(1.1);
+  transition: all 0.2s ease;
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* ✅ Espaciado del header para separar título y botón */
+.offcanvas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem; /* Espacio entre título y botón */
+}
+
+/* Título del sidebar */
+.offcanvas-title {
+  color: #e8f5e9 !important;
+  letter-spacing: 0.5px;
+  flex-grow: 1; /* El título toma el espacio disponible */
+}
