@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 // Importaciones relacionadas con la clase Address
 import { addressService } from "../../services/addressService";
+import { Address } from "../../models/Address";
 
 const CreateAddress: React.FC = () => {
   const [coords, setCoords] = useState({ lat: "", lng: "" });
@@ -30,8 +31,9 @@ const CreateAddress: React.FC = () => {
   });
 
   const handleCreateAddress = async(id: number, data: any) => {
-    const finalData = {
+    const finalData: Address= {
       ...data,
+      // id: addressService.generateId(), Aqui asignamos en la data el id del address como tal (No del usuario, en caso tal de que no lo de el backend)
       latitude: coords.lat,
       longitude: coords.lng,
     };
@@ -70,7 +72,7 @@ const CreateAddress: React.FC = () => {
       <Breadcrumb pageName="Addresses / Create Address" />
       <AppForm
         mode={1}
-        labels={["street", "number"]}
+        labels={["street", "number",'user_id']}
         validationSchema={validationSchema}
         handleAction={(values:any) => {
           if (!id) {
@@ -82,7 +84,9 @@ const CreateAddress: React.FC = () => {
         info={{
           latitude: coords.lat,
           longitude: coords.lng,
+          user_id: id,
         }}
+        hiddenFields={['user_id']}
         extraContent={<LocationMap onSelectPosition={handleSelectPosition}/>}
       />  
     </>

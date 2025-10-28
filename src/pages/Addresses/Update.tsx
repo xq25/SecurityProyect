@@ -45,7 +45,7 @@ const UpdateAddress: React.FC = () => {
     const handleUpdateAddress = async(id: number ,data: any) => { //Aqui data es de cualquier tipo, ya que los datos que salen del formulario son solo una parte de la clase Address 
         
         // Agregamos los datos del mapa con los datos string del formulario
-        const finalData = {
+        const finalData:Address = {
             ...data,
             latitude: coords.lat,
             longitude: coords.lng,
@@ -61,7 +61,7 @@ const UpdateAddress: React.FC = () => {
                 icon: "success",
                 timer: 3000,
             });
-            navigate(`/addresses/user/${id}`);
+            navigate(`/addresses/user/${finalData.user_id}`);
             } else {
             Swal.fire({
                 title: "Error",
@@ -94,12 +94,8 @@ const UpdateAddress: React.FC = () => {
                 }
                 handleUpdateAddress(Number(id), values);
             }}
-            info={{
-                latitude: infoAddress.latitude,
-                longitude: infoAddress.longitude,
-                street: infoAddress.street,
-                number: infoAddress.number
-            }}
+            info={infoAddress}
+            disabledFields={['id','user_id']}
             extraContent={<LocationMap onSelectPosition={handleSelectPosition} lat={infoAddress.latitude} lng={infoAddress.longitude}/>}
         />: <div>Cargando los datos de la direccion</div> }
         </>

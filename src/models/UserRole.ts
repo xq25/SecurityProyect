@@ -1,6 +1,7 @@
 export interface UserRole{
     id : string;
-    startAt: Date;
-    endAt : Date;
-    
+    startAt: string;
+    endAt : string;
+    user_id: number;
+    role_id: number;
 }

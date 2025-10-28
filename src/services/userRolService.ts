@@ -1,7 +1,7 @@
 import axios from "axios";
 import { UserRole } from "../models/UserRole";
 
-const API_URL = import.meta.env.VITE_API_URL + "/api/user_roles" || "";
+const API_URL = import.meta.env.VITE_API_URL + "/user_roles" || "";
 
 class UserRoleService {
     // Obtener todas las relaciones usuario-rol

@@ -78,7 +78,7 @@ const UpdatePassword: React.FC = () => {
       {password ? (
         <AppForm
           mode={2}
-          labels={["content", "startAt"]}
+          labels={['id',"content", "startAt", 'user_id']}
           info={password}
           handleAction= {(values: any) => {
             if (!id) {
@@ -88,8 +88,8 @@ const UpdatePassword: React.FC = () => {
             handleUpdatePassword(Number(id), values);
           }}
           validationSchema={passwordValidationSchema}
-          disabledFields={['startAt']}
-
+          disabledFields={['id','startAt','endAt']}
+          hiddenFields={['user_id']}
         />
       ) : (
         <div>Cargando usuario...</div>
