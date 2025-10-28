@@ -1,4 +1,4 @@
-import React from "react";
+ import React from "react";
 import * as Yup from "yup";
 
 //importacion de clases
