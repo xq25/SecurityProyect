@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
 import * as Yup from "yup";
+// Importaciones de componentes
 import { AppForm } from "../../components/ui/FormGeneric";
 import { LocationMap } from '../../components/LocationMap';
 import Breadcrumb from "../../components/Breadcrumb";
 import Swal from "sweetalert2";
-
+// Importaciones de Hooks
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
-
+// Importaciones relacionadas con la clase Address
 import { Address } from "../../models/Address";
 import { addressService } from "../../services/addressService";
 
 const UpdateAddress: React.FC = () => {
-    const [coords, setCoords] = useState({ lat: "", lng: "" });
+    
     const [infoAddress, setInfoAddress] = useState<Address | null>(null);// Creamos una variable reactiva con la informacion del usuario.
-
-    const {id} = useParams<{id:string}>(); // Id del address que se va a modificar. (No del usuario!) o pasamos el del user y sacamos el id del address como tal???
+    const [coords, setCoords] = useState({ lat: infoAddress?infoAddress.latitude:"", lng: infoAddress?infoAddress.longitude:"" });
+    const {id} = useParams<{id:string}>(); // Id del address que se va a modificar. (No del usuario!).
     const navigate = useNavigate();
                 
     // 🔹 Al cargar el componente, obtenemos las contraseñas del usuario(id) desde el backend.
@@ -44,7 +45,7 @@ const UpdateAddress: React.FC = () => {
     const handleUpdateAddress = async(id: number ,data: any) => { //Aqui data es de cualquier tipo, ya que los datos que salen del formulario son solo una parte de la clase Address 
         
         // Agregamos los datos del mapa con los datos string del formulario
-        const finalData = {
+        const finalData:Address = {
             ...data,
             latitude: coords.lat,
             longitude: coords.lng,
@@ -60,7 +61,7 @@ const UpdateAddress: React.FC = () => {
                 icon: "success",
                 timer: 3000,
             });
-            navigate(`/addresses/user/${id}`);
+            navigate(`/addresses/user/${finalData.user_id}`);
             } else {
             Swal.fire({
                 title: "Error",
@@ -84,7 +85,7 @@ const UpdateAddress: React.FC = () => {
         <Breadcrumb pageName="Addresses / Update Address" />
         {infoAddress?<AppForm
             mode={2}
-            labels={["street", "number"]}
+            labels={['id',"street", "number",'user_id']}
             validationSchema={validationSchema}
             handleAction={(values: any) => {  //Tenemos que asignar como any estos datos, ya que como tal dentro del formulario solo estan para rellenar ciertos atributos de la clase Address(street y number)
                 if (!id) {
@@ -93,14 +94,10 @@ const UpdateAddress: React.FC = () => {
                 }
                 handleUpdateAddress(Number(id), values);
             }}
-            info={{
-                latitude: infoAddress.latitude,
-                longitude: infoAddress.longitude,
-                street: infoAddress.street,
-                number: infoAddress.number
-            }}
+            info={infoAddress}
+            disabledFields={['id','user_id']}
             extraContent={<LocationMap onSelectPosition={handleSelectPosition} lat={infoAddress.latitude} lng={infoAddress.longitude}/>}
-        />: <div> Cargando los datos de la direccion</div> }
+        />: <div>Cargando los datos de la direccion</div> }
         </>
 
     );

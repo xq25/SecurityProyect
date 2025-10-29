@@ -1,84 +1,89 @@
-import React, { useState } from "react";
+import React from "react";
 import * as Yup from "yup";
-
+//Importacion de componentes
 import { AppForm } from "../../components/ui/FormGeneric";
-import Breadcrumb from "../../components/Breadcrumb";
 import Swal from "sweetalert2";
-
+import Breadcrumb from "../../components/Breadcrumb";
+// importaciones de Hooks
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+//Importaciones de las clases Password
+import { passwordService } from "../../services/passwordService";
 
-import { addressService } from "../../services/addressService";
-import CreateAddress from "../Addresses/Create";
 
 const CreatePassword: React.FC = () => {
-  const [coords, setCoords] = useState({ lat: "", lng: "" });
-  const {id} = useParams<{id:string}>(); // Id del usuario al que se le va a crear un nuveo address.
-
   const navigate = useNavigate();
+  
+  const {id} = useParams<{id:string}>(); //Este id hace referencia al id del usuario.
 
-  const validationSchema = Yup.object().shape({
-    street: Yup.string().required("El nombre la calle es requerido"),
-    number: Yup.string().required("El numero la calle es requerido"),
+  const passwordValidationSchema = Yup.object({
+    content: Yup.string()
+      .required("La contraseña es obligatoria")
+      .min(8, "La contraseña debe tener al menos 8 caracteres")
+      .matches(/[A-Z]/, "Debe contener al menos una letra mayúscula")
+      .matches(/[a-z]/, "Debe contener al menos una letra minúscula")
+      .matches(/[0-9]/, "Debe contener al menos un número")
+      .matches(/[@$!%*?&]/, "Debe contener al menos un carácter especial (@$!%*?&)")
   });
 
-  const handleCreateAddress = async(id: number, data: any) => {
-    const finalData = {
-      ...data,
-      latitude: coords.lat,
-      longitude: coords.lng,
-    };
-    console.log("Datos del formulario + mapa:", finalData);
+  const handleCreatePassword = async (id: number, password: any) => {
+    const finalData = { //Aqui debemos agregarle la fecha alctual al campo endAt para cumplir con el formato de la clase Password
+      ...password,
+      startAt:passwordService.getCurrentDateTime(), 
+      endAt : passwordService.getCurrentDateTime()
+    }
     try {
-      const success = await addressService.updateAddress( id, finalData);
+      const success = await passwordService.createPassword( id, finalData);
       console.log(finalData)
       if (success) {
-      Swal.fire({
+        Swal.fire({
           title: "Completado",
-          text: "Se ha generado correctamente la direccion",
+          text: "Se ha creado correctamente la contraseña",
           icon: "success",
           timer: 3000,
-      });
-      navigate(`/addresses/user/${id}`);
+        });
+        navigate(`/passwords/user/${id}`); //Redirigimos a la pagina de las contraseñas del usuario.
       } else {
-      Swal.fire({
+        Swal.fire({
           title: "Error",
-          text: "Existe un problema al momento de generar la direccion del usuario",
+          text: "Existe un problema al momento de crear la contraseña",
           icon: "error",
           timer: 3000,
-      });
+        });
       }
-  } catch (error) {
+    } catch (error) {
       Swal.fire({
-      title: "Error",
-      text: "Existe un problema al momento de generar el registro",
-      icon: "error",
-      timer: 3000,
+        title: "Error",
+        text: "Existe un problema al momento de generar la registro",
+        icon: "error",
+        timer: 3000,
       });
-  }
+    }
   };
 
   return (
-    <>
-      <Breadcrumb pageName="Addresses / Create Address" />
+    <div>
+      <h2>Create Password</h2>
+      <Breadcrumb pageName="Password / Create Password" />
       <AppForm
-        mode={1}
-        labels={["street", "number"]}
-        validationSchema={validationSchema}
-        handleAction={(values:any) => {
+        mode={2}
+        labels={['content', 'user_id']}
+        info={{
+          user_id: id
+        }}
+        handleAction= {(values: any) => {
           if (!id) {
-            console.error("No se encontró id del usuario para actualizar la direccion");
+            console.error("No se encontró id para actualizar la contraseña");
             return;
           }
-          handleCreateAddress(Number(id), values);
+          handleCreatePassword(Number(id), values);
         }}
-        info={{
-          latitude: coords.lat,
-          longitude: coords.lng,
-        }}
-      />  
-    </>
-
+        validationSchema={passwordValidationSchema}
+        hiddenFields={['user_id']}
+      />
+  
+    </div>
   );
 };
-export default CreateAddress;
+
+export default CreatePassword;

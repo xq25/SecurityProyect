@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { AppForm } from "../../components/ui/FormGeneric";
 import Swal from "sweetalert2";
 import Breadcrumb from "../../components/Breadcrumb";
-//hooks
+// Importaciones de Hooks
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 //Importaciones de las clases Password
@@ -37,9 +37,9 @@ const UpdatePassword: React.FC = () => {
       .matches(/[@$!%*?&]/, "Debe contener al menos un carácter especial (@$!%*?&)")
   });
 
-  const handleUpdatePassword = async (id: number, password: any) => {
+  const handleUpdatePassword = async (id: number, passwordUpdate: any) => {
     const finalData = { //Aqui debemos agregarle la fecha alctual al campo endAt para cumplir con el formato de la clase Password
-      ...password,
+      ...passwordUpdate,
       endAt : passwordService.getCurrentDateTime()
     }
     try {
@@ -52,7 +52,7 @@ const UpdatePassword: React.FC = () => {
           icon: "success",
           timer: 3000,
         });
-        navigate(`/passwords/user/${id}`);
+        navigate(`/passwords/user/${password?.user_id}`);
       } else {
         Swal.fire({
           title: "Error",
@@ -78,7 +78,7 @@ const UpdatePassword: React.FC = () => {
       {password ? (
         <AppForm
           mode={2}
-          labels={["content", "startAt"]}
+          labels={['id',"content", "startAt", 'user_id']}
           info={password}
           handleAction= {(values: any) => {
             if (!id) {
@@ -88,8 +88,8 @@ const UpdatePassword: React.FC = () => {
             handleUpdatePassword(Number(id), values);
           }}
           validationSchema={passwordValidationSchema}
-          disabledFields={['startAt']}
-
+          disabledFields={['id','startAt','endAt']}
+          hiddenFields={['user_id']}
         />
       ) : (
         <div>Cargando usuario...</div>

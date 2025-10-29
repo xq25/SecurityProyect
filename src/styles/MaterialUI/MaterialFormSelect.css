@@ -1,0 +1,33 @@
+.material-form-select-container {
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.material-form-select-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.material-form-select-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.material-form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.material-form-select {
+  margin-top: 10px;
+}
+
+.material-form-submit {
+  align-self: flex-end;
+  margin-top: 16px;
+  min-width: 160px;
+}

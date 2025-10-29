@@ -1,7 +1,7 @@
 import React from "react";
 import { useUI } from "../../context/UIProvider";
 import { BootstrapFileInput } from "./bootstrap/BootstrapFileInput";
-//import { MaterialFileInput } from "./material/MaterialFileInput";
+import { MaterialFileInput } from "./materialUI/MaterialFileInput";
 
 // 🔹 Estructura de un input de archivos reutilizable
 export interface FileInputItem {
@@ -26,18 +26,18 @@ export const AppFileInput: React.FC<FileInputItem> = ({
 }) => {
   const { library } = useUI();
 
-  //if (library === "material")
-  //  return (
-  //    <MaterialFileInput
-  //      label={label}
-  //      accept={accept}
-  //      onChange={onChange}
-  //      value={value}
-  //      preview={preview}
-  //      disabled={disabled}
-  //      required={required}
-  //    />
-  //  );
+  if (library === "material")
+   return (
+     <MaterialFileInput
+       label={label}
+       accept={accept}
+       onChange={onChange}
+       value={value}
+       preview={preview}
+       disabled={disabled}
+       required={required}
+     />
+   );
 
   if (library === "bootstrap")
     return (

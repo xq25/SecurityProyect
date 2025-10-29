@@ -6,10 +6,9 @@ import { UIProvider } from "./context/UIProvider"; // 👈 importa tu provider
 import { Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux"; 
 import { store } from "./store/store";
-import { GoogleOAuthProvider } from "@react-oauth/google"; // 👈 Importa el provider
+import SignIn from "./pages/Authentication/SignIn";
+import ProtectedRout from './components/Auth/ProtectedRoute';
 
-// import SignIn from './pages/Authentication/SignIn';
-// import SignUp from './pages/Authentication/SignUp';
 import routes from './routes';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import { Navigate } from "react-router-dom"; // ✅ Asegúrate de importar Navigate
@@ -29,17 +28,16 @@ function App() {
     <Loader />
   ) : (
     <>
-    <Toaster position="top-right" reverseOrder={false} containerClassName="overflow-auto" /> 
-    <Provider store={store}>
-      <UIProvider> {/* 👈 Envolvemos todo dentro del provider */}
-        {/* <GoogleOAuthProvider clientId=""> */}
+      <Toaster position="top-right" reverseOrder={false} containerClassName="overflow-auto"/>
+      <Provider store={store}>
+        <UIProvider>
           <Routes>
-            {/* <Route path="/" element={<Navigate to="/auth/signin" replace />} />  👈 Redirige al login */}
-
-            {/* <Route path="/auth/signin" element={<SignIn />} />
-            <Route path="/auth/signup" element={<SignUp />} /> */}
+            {/* Rutas públicas */}
+            <Route path="/auth/signin" element={<SignIn />} />
             
-              <Route element={<DefaultLayout/>}>
+            {/* Rutas protegidas */}
+            <Route element={<ProtectedRout />}>
+              <Route element={<DefaultLayout />}>
                 <Route index element={<Loader/>} />
                 {routes.map((routes, index) => {
                   const { path, component: Component } = routes;
@@ -48,7 +46,7 @@ function App() {
                       key={index}
                       path={path}
                       element={
-                        <Suspense fallback={<Loader />}> {/*Da espera a que el componente se cargue, mientras tanto muestra el Loader */}
+                        <Suspense fallback={<Loader />}> {/*Mientras carga el componente debemos mostrar el loading */}
                           <Component />
                         </Suspense>
                       }
@@ -56,10 +54,10 @@ function App() {
                   );
                 })}
               </Route>
-          </Routes>
-        {/* </GoogleOAuthProvider> */}
-      </UIProvider> 
-    </Provider>
+            </Route>
+          </Routes>:
+        </UIProvider>
+      </Provider>
     </>
   );
 }
