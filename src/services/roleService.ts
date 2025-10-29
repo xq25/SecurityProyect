@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Roles } from '../models/Roles' // Asegúrate de tener un modelo Roles.ts definido
 
-const API_URL = import.meta.env.VITE_API_URL + "/roless" || "";
+const API_URL = import.meta.env.VITE_API_URL + "/roles" || "";
 
 class RolesService {
     // ✅ Obtener todos los roless

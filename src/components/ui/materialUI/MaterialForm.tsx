@@ -10,11 +10,11 @@ export const MaterialForm = <T extends Record<string, any>>({
   info = null,
   handleAction,
   validationSchema,
-  disabledFields = [], 
+  disabledFields = [],
+  hiddenFields = [], // ✅ corregido el nombre
   extraContent,
-
 }: FormItems<T>) => {
-  //Aqui agregamos la informacion a los campos del formulario en caso tal de que esta misma exista (Esto solo lo usamos para actualizar)
+  // Configuramos los valores iniciales
   const initialValues = labels.reduce((acc, label) => {
     const key = label.toLowerCase();
     acc[key] = info ? info[key] ?? "" : "";
@@ -43,13 +43,20 @@ export const MaterialForm = <T extends Record<string, any>>({
       >
         {({ isValid, dirty }) => (
           <Form className="material-form">
-            {/* Aqui van agregados otros componentes que deseemos y los envolvemos en una clase especifica*/}
-            {extraContent && (<div className="material-form-extra">{extraContent}</div>)}
+            {/* Contenido adicional (extra) */}
+            {extraContent && (
+              <div className="material-form-extra">{extraContent}</div>
+            )}
 
-            {/* Aqui agregamos los campos de nuestro formulario*/}
+            {/* Renderizado de los campos */}
             {labels.map((label, idx) => {
               const key = label.toLowerCase();
-              const isDisabled = disabledFields.includes(key); //  Verificamos si el campo está deshabilitado
+
+              // ✅ Si el campo está oculto, no se renderiza
+              if (hiddenFields.includes(key)) return null;
+
+              const isDisabled = disabledFields.includes(key);
+
               return (
                 <div className="material-form-field" key={idx}>
                   <Field name={key}>
@@ -61,7 +68,7 @@ export const MaterialForm = <T extends Record<string, any>>({
                         variant="outlined"
                         error={meta.touched && Boolean(meta.error)}
                         helperText={meta.touched && meta.error}
-                        disabled={isDisabled} //Campo bloqueado si corresponde
+                        disabled={isDisabled}
                       />
                     )}
                   </Field>

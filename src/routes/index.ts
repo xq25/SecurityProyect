@@ -1,35 +1,34 @@
 import { lazy } from 'react';
 
+//Roles
+import RolesList from '../pages/Roles/List';
+import CreateRol from '../pages/Roles/Create';
+import UpdateRol from '../pages/Roles/Update';
 
-import RolesList from '../pages/Roles/RolesList';
 import Permissions from '../pages/Permissions/List';
 
 //Usuarios
 import ListUsers from '../pages/Users/List';
 import CreateUser from '../pages/Users/Create';
 import UpdateUser from '../pages/Users/Update';
+import ViewUser from '../pages/Users/View';
 
 //Passwords-Users
 import ListPasswordsUser from '../pages/Passwords/List';
+import CreatePassword from '../pages/Passwords/Create';
 import UpdatePassword from '../pages/Passwords/Update';
 
 
 //Adress-User
 import CreateAddress from '../pages/Addresses/Create';
 import ListAddresses from '../pages/Addresses/List';
+import UpdateAddress from '../pages/Addresses/Update';
+
+
 
 //Otras paginas
 const SingIn = lazy(() => import('../pages/Authentication/SignIn'));
-// const Calendar = lazy(() => import('../pages/Calendar'));
-// const Chart = lazy(() => import('../pages/Chart'));
-// const FormElements = lazy(() => import('../pages/Form/FormElements'));
-// const FormLayout = lazy(() => import('../pages/Form/FormLayout'));
-// const Profile = lazy(() => import('../pages/Profile'));
-// const Settings = lazy(() => import('../pages/Settings'));
-// const Tables = lazy(() => import('../pages/Tables'));
-// const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
-// const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
-// const Demo= lazy(() => import('../pages/Demo'));
+
 // Devices
 const CreateDevice = lazy(() => import('../pages/Devices/DeviceCreate'));
 const ListDevices = lazy(() => import('../pages/Devices/DeviceList'));
@@ -48,12 +47,13 @@ const UpdateDigitalSignature = lazy(() => import('../pages/DigitalSignatures/Sig
 const ViewDigitalSignature = lazy(() => import('../pages/DigitalSignatures/SignatureView'));
 
 const coreRoutes = [
+// Pagina de autenticacion
   {
     path: '/auth/signin',
     title: 'Sing In',
     component : SingIn,
   },
-  // DIGITAL SIGNATURES
+// CRUDS DIGITAL SIGNATURES ---
   {
     path: '/digital-signatures/list',
     title: 'Digital Signatures List',
@@ -74,7 +74,7 @@ const coreRoutes = [
     title: 'View Digital Signature',
     component: ViewDigitalSignature,
   },
-  // SECURITY QUESTIONS
+//CRUDS SECURITY QUESTIONS --- 
   {
     path: '/security-questions/list',
     title: 'Security Questions List',
@@ -100,7 +100,7 @@ const coreRoutes = [
     title: 'View Security Question',
     component: ViewSecurityQuestion,
   },
-  // DEVICES
+// CRUDS DEVICES ---
   {
     path: '/devices/create',
     title: 'Create Device',
@@ -121,6 +121,7 @@ const coreRoutes = [
     title: 'View Device',
     component: ViewDevice,
   },
+// CRUDS USERS ---
   {
     path: '/users/list',
     title: 'List Users',
@@ -137,25 +138,49 @@ const coreRoutes = [
     component: UpdateUser,
   },
   {
+    path: '/users/view/:id',
+    title: 'View User',
+    component: ViewUser,
+  },
+// CRUDS ROLES ---
+  {
     path: '/roles/list',
     title: 'List Role',
     component: RolesList,
   },
   {
+    path: '/roles/create',
+    title: 'Create Rol',
+    component: CreateRol,
+  },
+  {
+    path: '/roles/update/:id',
+    title: 'Update Rol',
+    component: UpdateRol,
+  },
+// CRUDS PERMISSIONS
+  {
     path: '/permissions',
     title: 'Permisions',
     component: Permissions,
   },
+// CRUDS PASSWORDS ---
   {
     path: '/passwords/user/:id', // Este id hace referencia al id del usuario 
     title: 'List Passwords User',
     component: ListPasswordsUser,
   },
   {
-    path: '/passwords/:id',
+    path: '/passwords/:id/update',
     title: 'Update Password',
     component : UpdatePassword,
   },
+  {
+    path : '/passwords/user/create/:id',
+    title: 'Create Password',
+    component: CreatePassword,
+  },
+// CRUDS ADDRESSES ---
   {
     path: '/addresses/user/:id',
     title : 'Address User',
@@ -166,46 +191,11 @@ const coreRoutes = [
     title : 'Address User',
     component : CreateAddress,
   },
-  // {
-  //   path: '/profile',
-  //   title: 'Profile',
-  //   component: Profile,
-  // },
-  // {
-  //   path: '/forms/form-elements',
-  //   title: 'Forms Elements',
-  //   component: FormElements,
-  // },
-  // {
-  //   path: '/forms/form-layout',
-  //   title: 'Form Layouts',
-  //   component: FormLayout,
-  // },
-  // {
-  //   path: '/tables',
-  //   title: 'Tables',
-  //   component: Tables,
-  // },
-  // {
-  //   path: '/settings',
-  //   title: 'Settings',
-  //   component: Settings,
-  // },
-  // {
-  //   path: '/chart',
-  //   title: 'Chart',
-  //   component: Chart,
-  // },
-  // {
-  //   path: '/ui/alerts',
-  //   title: 'Alerts',
-  //   component: Alerts,
-  // },
-  // {
-  //   path: '/ui/buttons',
-  //   title: 'Buttons',
-  //   component: Buttons,
-  // },
+  {
+    path: '/addresses/:id/update',
+    title: 'Update Address',
+    component: UpdateAddress,
+  }
 ];
 
 const routes = [...coreRoutes];
