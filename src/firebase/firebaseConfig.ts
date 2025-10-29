@@ -1,9 +1,6 @@
 import { initializeApp } from "firebase/app";
-<<<<<<< HEAD
 import { getAuth, GoogleAuthProvider, OAuthProvider } from "firebase/auth";
-=======
 import { getAuth, GoogleAuthProvider, GithubAuthProvider } from "firebase/auth";
->>>>>>> 1f9e425cc553c28d53daca23e9b44540f304efd2
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -17,10 +14,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
-<<<<<<< HEAD
 export const microsoftProvider = new OAuthProvider("microsoft.com");
 
 export default app;
-=======
 export const githubProvider = new GithubAuthProvider();
->>>>>>> 1f9e425cc553c28d53daca23e9b44540f304efd2
