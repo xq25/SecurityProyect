@@ -31,7 +31,7 @@ const ListUsers: React.FC = () => {
         fetchData();
       }
     } else if (action === "view") {
-      navigate('/users/create');
+      navigate(`/users/view/${user.id}`);
     } else if (action === "update") {
       navigate(`/users/update/${user.id}`);
     } else if (action === "devices") {

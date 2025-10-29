@@ -37,9 +37,9 @@ const UpdatePassword: React.FC = () => {
       .matches(/[@$!%*?&]/, "Debe contener al menos un carácter especial (@$!%*?&)")
   });
 
-  const handleUpdatePassword = async (id: number, password: any) => {
+  const handleUpdatePassword = async (id: number, passwordUpdate: any) => {
     const finalData = { //Aqui debemos agregarle la fecha alctual al campo endAt para cumplir con el formato de la clase Password
-      ...password,
+      ...passwordUpdate,
       endAt : passwordService.getCurrentDateTime()
     }
     try {
@@ -52,7 +52,7 @@ const UpdatePassword: React.FC = () => {
           icon: "success",
           timer: 3000,
         });
-        navigate(`/passwords/user/${id}`);
+        navigate(`/passwords/user/${password?.user_id}`);
       } else {
         Swal.fire({
           title: "Error",

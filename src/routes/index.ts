@@ -11,6 +11,7 @@ import Permissions from '../pages/Permissions/List';
 import ListUsers from '../pages/Users/List';
 import CreateUser from '../pages/Users/Create';
 import UpdateUser from '../pages/Users/Update';
+import ViewUser from '../pages/Users/View';
 
 //Passwords-Users
 import ListPasswordsUser from '../pages/Passwords/List';
@@ -135,6 +136,11 @@ const coreRoutes = [
     path: '/users/update/:id',
     title: 'Update Users',
     component: UpdateUser,
+  },
+  {
+    path: '/users/view/:id',
+    title: 'View User',
+    component: ViewUser,
   },
 // CRUDS ROLES ---
   {

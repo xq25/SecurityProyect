@@ -24,7 +24,7 @@ const ListRoles: React.FC = () => {
 
   const handleAction = async (action: string, rol: Roles) => {
     if (action === "delete") {
-      const success = await rolesService.deleteRoles(rol.id);
+      const success = await rolesService.deleteRoles(rol.id!);
       if (success) {
         Swal.fire({
           title: "Eliminado",
@@ -34,7 +34,7 @@ const ListRoles: React.FC = () => {
         fetchData();
       }
     } else if (action === "view") {
-      navigate(`/roles/view/${rol.id}`);
+      navigate(`/user-rol/${rol.id}`); //Aqui cargamos todos los usuarios que tiene dicho rol. (UserRol)
     } else if (action === "update") {
       navigate(`/roles/update/${rol.id}`);
     } else if (action === 'permissions'){

@@ -13,9 +13,9 @@ import { Address } from "../../models/Address";
 import { addressService } from "../../services/addressService";
 
 const UpdateAddress: React.FC = () => {
-    const [coords, setCoords] = useState({ lat: "", lng: "" });
+    
     const [infoAddress, setInfoAddress] = useState<Address | null>(null);// Creamos una variable reactiva con la informacion del usuario.
-
+    const [coords, setCoords] = useState({ lat: infoAddress?infoAddress.latitude:"", lng: infoAddress?infoAddress.longitude:"" });
     const {id} = useParams<{id:string}>(); // Id del address que se va a modificar. (No del usuario!).
     const navigate = useNavigate();
                 
@@ -85,7 +85,7 @@ const UpdateAddress: React.FC = () => {
         <Breadcrumb pageName="Addresses / Update Address" />
         {infoAddress?<AppForm
             mode={2}
-            labels={["street", "number"]}
+            labels={['id',"street", "number",'user_id']}
             validationSchema={validationSchema}
             handleAction={(values: any) => {  //Tenemos que asignar como any estos datos, ya que como tal dentro del formulario solo estan para rellenar ciertos atributos de la clase Address(street y number)
                 if (!id) {

@@ -34,7 +34,7 @@ const CreatePassword: React.FC = () => {
     }
     try {
       const success = await passwordService.createPassword( id, finalData);
-      console.log(password)
+      console.log(finalData)
       if (success) {
         Swal.fire({
           title: "Completado",
@@ -67,7 +67,10 @@ const CreatePassword: React.FC = () => {
       <Breadcrumb pageName="Password / Create Password" />
       <AppForm
         mode={2}
-        labels={['content']}
+        labels={['content', 'user_id']}
+        info={{
+          user_id: id
+        }}
         handleAction= {(values: any) => {
           if (!id) {
             console.error("No se encontró id para actualizar la contraseña");
@@ -76,6 +79,7 @@ const CreatePassword: React.FC = () => {
           handleCreatePassword(Number(id), values);
         }}
         validationSchema={passwordValidationSchema}
+        hiddenFields={['user_id']}
       />
   
     </div>

@@ -1,5 +1,5 @@
 export interface Password {
-  id: number;
+  id?: number;
   content: string;
   startAt?: string;
   endAt?: string;

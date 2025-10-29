@@ -13,7 +13,7 @@ import { addressService } from "../../services/addressService";
 import { Address } from "../../models/Address";
 
 const CreateAddress: React.FC = () => {
-  const [coords, setCoords] = useState({ lat: "", lng: "" });
+  const [coords, setCoords] = useState({ lat: "5.0703", lng: "-75.5138" }); // Asignaacion por defecto de coordenadas en manizales.
   const {id} = useParams<{id:string}>(); // Id del usuario al que se le va a crear un nuveo address.
 
   const navigate = useNavigate();
@@ -87,7 +87,7 @@ const CreateAddress: React.FC = () => {
           user_id: id,
         }}
         hiddenFields={['user_id']}
-        extraContent={<LocationMap onSelectPosition={handleSelectPosition}/>}
+        extraContent={<LocationMap onSelectPosition={handleSelectPosition} lat={5.0703} lng={-75.5138}/>}
       />  
     </>
 

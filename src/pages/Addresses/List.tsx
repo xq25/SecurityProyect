@@ -37,7 +37,7 @@ const ListAddresses: React.FC = () => {
     // 🔹 Define las acciones que pueden realizarse sobre cada contraseña
     const handleAction = async (action: string, address: Address) => {
         if(action === 'delete'){
-            const success = await addressService.deleteAddress(address.id);
+            const success = await addressService.deleteAddress(address.id!);
             
             if (success) {
                 Swal.fire({
