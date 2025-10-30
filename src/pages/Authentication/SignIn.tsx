@@ -22,6 +22,7 @@ import { setUser } from "../../store/userSlice";
 //Importacion de la funciones de inicio de sesion 
 import {loginWithGoogle} from './loginFunctions';
 import {loginWithGitHub} from './loginFunctions';
+import { loginWithMicrosoft } from "./loginFunctions";
 
 const SignIn: React.FC = () => {
   //Llamado a los Hooks
