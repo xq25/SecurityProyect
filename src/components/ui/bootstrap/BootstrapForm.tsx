@@ -8,6 +8,8 @@ export interface FormItems<T = any> {
   info?: T | null;
   handleAction?: (data: T) => void;
   validationSchema?: Yup.ObjectSchema<any>;
+  disabledFields?: string[]; // ✅ Nuevo: campos deshabilitados
+  extraContent?: React.ReactNode; // ✅ Nuevo: contenido adicional
 }
 
 export const BootstrapForm = <T extends Record<string, any>>({
@@ -16,6 +18,8 @@ export const BootstrapForm = <T extends Record<string, any>>({
   info = null,
   handleAction,
   validationSchema,
+  disabledFields = [], // ✅ Por defecto array vacío
+  extraContent, // ✅ Contenido extra opcional
 }: FormItems<T>) => {
   // ✅ Validación por defecto si no se proporciona una
   const defaultValidationSchema = Yup.object().shape(
@@ -70,9 +74,18 @@ export const BootstrapForm = <T extends Record<string, any>>({
         >
           {({ errors, touched, isValid, dirty }) => (
             <Form>
+              {/* Contenido extra ANTES de los campos (como en MaterialForm) */}
+              {extraContent && (
+                <div className="mb-4">
+                  {extraContent}
+                </div>
+              )}
+
+              {/* Campos del formulario */}
               {labels.map((label, idx) => {
                 const key = label.toLowerCase();
                 const hasError = touched[key] && errors[key];
+                const isDisabled = disabledFields.includes(key); // ✅ Verificar si está deshabilitado
                 
                 return (
                   <div className="mb-3" key={idx}>
@@ -91,6 +104,7 @@ export const BootstrapForm = <T extends Record<string, any>>({
                       }`}
                       id={key}
                       placeholder={`Ingrese ${label.toLowerCase()}`}
+                      disabled={isDisabled} // ✅ Deshabilitar si corresponde
                     />
                     
                     {/* ✅ Mensaje de error personalizado */}
@@ -101,6 +115,13 @@ export const BootstrapForm = <T extends Record<string, any>>({
                         </div>
                       )}
                     </ErrorMessage>
+
+                    {/* ✅ Texto de ayuda si el campo está deshabilitado */}
+                    {isDisabled && (
+                      <small className="form-text text-muted">
+                        Este campo no puede ser modificado
+                      </small>
+                    )}
                   </div>
                 );
               })}

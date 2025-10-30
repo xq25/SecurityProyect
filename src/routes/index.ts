@@ -46,12 +46,38 @@ const ListDigitalSignatures = lazy(() => import('../pages/DigitalSignatures/Sign
 const CreateDigitalSignature = lazy(() => import('../pages/DigitalSignatures/SignatureCreate'));
 const UpdateDigitalSignature = lazy(() => import('../pages/DigitalSignatures/SignatureUpdate'));
 const ViewDigitalSignature = lazy(() => import('../pages/DigitalSignatures/SignatureView'));
+// Answers
+const ListAnswers = lazy(() => import('../pages/Answers/AnswerList'));
+const CreateAnswer = lazy(() => import('../pages/Answers/AnswerCreate'));
+const UpdateAnswer = lazy(() => import('../pages/Answers/AnswerUpdate'));
+const ViewAnswer = lazy(() => import('../pages/Answers/AnswerView'));
 
 const coreRoutes = [
   {
     path: '/auth/signin',
     title: 'Sing In',
     component : SingIn,
+  },
+  // ANSWERS
+  {
+    path: '/answers/list',
+    title: 'List Answers',
+    component: ListAnswers,
+  },
+  {
+    path: '/answers/create',
+    title: 'Create Answer',
+    component: CreateAnswer,
+  },
+  {
+    path: '/answers/update/:id',
+    title: 'Update Answer',
+    component: UpdateAnswer,
+  },
+  {
+    path: '/answers/:id',
+    title: 'View Answer',
+    component: ViewAnswer,
   },
   // DIGITAL SIGNATURES
   {
