@@ -11,13 +11,13 @@ export const MaterialForm = <T extends Record<string, any>>({
   handleAction,
   validationSchema,
   disabledFields = [],
-  hiddenFields = [], // ✅ corregido el nombre
+  hiddenFields = [],
   extraContent,
 }: FormItems<T>) => {
   // Configuramos los valores iniciales
   const initialValues = labels.reduce((acc, label) => {
-    const key = label.toLowerCase();
-    acc[key] = info ? info[key] ?? "" : "";
+    const key = label; // Remove toLowerCase
+    acc[key] = info ? (info as any)[key] ?? "" : "";
     return acc;
   }, {} as Record<string, any>);
 
@@ -36,12 +36,14 @@ export const MaterialForm = <T extends Record<string, any>>({
         validationSchema={validationSchema}
         validateOnChange={true}
         validateOnBlur={true}
+        validateOnMount={true}
+        enableReinitialize={true}
         onSubmit={(values, { resetForm }) => {
           if (handleAction) handleAction(values as T);
           resetForm();
         }}
       >
-        {({ isValid, dirty }) => (
+        {({ isValid, dirty, isSubmitting }) => (
           <Form className="material-form">
             {/* Contenido adicional (extra) */}
             {extraContent && (
@@ -50,11 +52,10 @@ export const MaterialForm = <T extends Record<string, any>>({
 
             {/* Renderizado de los campos */}
             {labels.map((label, idx) => {
-              const key = label.toLowerCase();
-
-              // ✅ Si el campo está oculto, no se renderiza
+              const key = label; // Use original case
+              
               if (hiddenFields.includes(key)) return null;
-
+              
               const isDisabled = disabledFields.includes(key);
 
               return (
@@ -81,7 +82,7 @@ export const MaterialForm = <T extends Record<string, any>>({
               variant="contained"
               color="primary"
               sx={{ marginTop: 2 }}
-              disabled={!isValid || !dirty}
+              disabled={!isValid || !dirty || isSubmitting}
             >
               {mode === 1
                 ? "Crear"

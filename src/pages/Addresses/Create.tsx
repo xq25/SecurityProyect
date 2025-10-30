@@ -39,7 +39,7 @@ const CreateAddress: React.FC = () => {
     };
     console.log("Datos del formulario + mapa:", finalData);
     try {
-      const success = await addressService.updateAddress( id, finalData);
+      const success = await addressService.createAddress( id, finalData);
       console.log(finalData)
       if (success) {
       Swal.fire({

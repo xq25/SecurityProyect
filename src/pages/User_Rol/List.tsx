@@ -55,11 +55,11 @@ const ListUsersRol: React.FC = () => {
     <div>
       <h2>Listado de Usuarios - {rol?rol.name:'Cargando Rol...'}</h2>
       <AppButton name={'create'} action={()=> {
-        navigate(`user-rol/${id}`); // Pasamos el id del rol para poder usarlo al llamar al service.
+        navigate(`/user-rol/${id}`); // Pasamos el id del rol para poder usarlo al llamar al service.
       }}/>
       <AppTable
         name="Roles"
-        header={["user_id", "name", "email"]}
+        header={['id',"user_id",'rol_id', "name", "email"]}
         items={users_rol}
         options={baseOptions.map((opt) => (
           <AppButton

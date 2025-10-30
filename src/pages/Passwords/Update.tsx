@@ -16,7 +16,7 @@ const UpdatePassword: React.FC = () => {
   const [password, setPassword] = useState<Password | null>(null);
   const navigate = useNavigate();
   
-  const {id} = useParams<{id:string}>(); //Segun el backen este id es la referencia general de la contrasena como tal. (No del usuario!)
+  const {id} = useParams<{id:string}>(); // id general de la contrasena como tal. (No del usuario!)
 
   useEffect(() => {
     fetchData();
@@ -38,6 +38,7 @@ const UpdatePassword: React.FC = () => {
   });
 
   const handleUpdatePassword = async (id: number, passwordUpdate: any) => {
+    console.log(password);
     const finalData = { //Aqui debemos agregarle la fecha alctual al campo endAt para cumplir con el formato de la clase Password
       ...passwordUpdate,
       endAt : passwordService.getCurrentDateTime()
@@ -78,7 +79,7 @@ const UpdatePassword: React.FC = () => {
       {password ? (
         <AppForm
           mode={2}
-          labels={['id',"content", "startAt", 'user_id']}
+          labels={['id',"content",'endAt', 'user_id']}
           info={password}
           handleAction= {(values: any) => {
             if (!id) {
@@ -88,7 +89,7 @@ const UpdatePassword: React.FC = () => {
             handleUpdatePassword(Number(id), values);
           }}
           validationSchema={passwordValidationSchema}
-          disabledFields={['id','startAt','endAt']}
+          disabledFields={['id']}
           hiddenFields={['user_id']}
         />
       ) : (

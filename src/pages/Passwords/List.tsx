@@ -46,7 +46,7 @@ const ListPasswordsUser: React.FC = () => {
                 fetchData(); // Refresca la tabla después de eliminar
             }
         } else if (action === "update") {
-            navigate(`passwords/${password.id}/update`);
+            navigate(`/passwords/${password.id}/update`);
         }
     };
 

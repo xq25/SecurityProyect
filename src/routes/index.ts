@@ -4,6 +4,8 @@ import { lazy } from 'react';
 import RolesList from '../pages/Roles/List';
 import CreateRol from '../pages/Roles/Create';
 import UpdateRol from '../pages/Roles/Update';
+//User-Rol
+import ListUsersRol from '../pages/User_Rol/List';
 
 import Permissions from '../pages/Permissions/List';
 
@@ -195,7 +197,13 @@ const coreRoutes = [
     path: '/addresses/:id/update',
     title: 'Update Address',
     component: UpdateAddress,
-  }
+  },
+// CRUDS USERROL
+  {
+    path: '/user-rol/:id',
+    title: 'Users With Rol',
+    component: ListUsersRol,
+  },
 ];
 
 const routes = [...coreRoutes];

@@ -66,7 +66,7 @@ const CreatePassword: React.FC = () => {
       <h2>Create Password</h2>
       <Breadcrumb pageName="Password / Create Password" />
       <AppForm
-        mode={2}
+        mode={1}
         labels={['content', 'user_id']}
         info={{
           user_id: id

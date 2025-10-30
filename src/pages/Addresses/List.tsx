@@ -49,7 +49,7 @@ const ListAddresses: React.FC = () => {
             }
         }
         else if (action === "update") {
-            navigate(`/addresses/user/${address.id}/update`);
+            navigate(`/addresses/${address.id}/update`);
         }
     };
 
