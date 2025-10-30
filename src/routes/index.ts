@@ -45,6 +45,9 @@ const ListDigitalSignatures = lazy(() => import('../pages/DigitalSignatures/Sign
 const CreateDigitalSignature = lazy(() => import('../pages/DigitalSignatures/SignatureCreate'));
 const UpdateDigitalSignature = lazy(() => import('../pages/DigitalSignatures/SignatureUpdate'));
 const ViewDigitalSignature = lazy(() => import('../pages/DigitalSignatures/SignatureView'));
+//Profile
+const CreateProfile = lazy(() => import('../pages/Profiles/Create'));
+const UpdateProfile = lazy(() => import('../pages/Profiles/Update'));
 
 const coreRoutes = [
 // Pagina de autenticacion
@@ -180,6 +183,18 @@ const coreRoutes = [
     title: 'Create Password',
     component: CreatePassword,
   },
+// PROFILE (1:1 con User) - Azul/Tailwind
+  {
+    path: '/users/:id/profile/create',
+    title: 'Create Profile',
+    component: CreateProfile,
+  },
+  {
+    path: '/users/:id/profile/update',
+    title: 'Update Profile',
+    component: UpdateProfile,
+  },
+
 // CRUDS ADDRESSES ---
   {
     path: '/addresses/user/:id',
@@ -195,7 +210,7 @@ const coreRoutes = [
     path: '/addresses/:id/update',
     title: 'Update Address',
     component: UpdateAddress,
-  }
+  } 
 ];
 
 const routes = [...coreRoutes];
