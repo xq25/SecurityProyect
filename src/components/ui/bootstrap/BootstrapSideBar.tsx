@@ -2,7 +2,7 @@ import React from "react";
 import { Props } from "../SidebarGeneric";
 import "../../../styles/Bootstrap/BootstrapSidebar.css";
 import { useNavigate } from "react-router-dom";
-import { FaHome, FaUsers, FaShieldAlt, FaLock, FaBars, FaChevronLeft } from "react-icons/fa";
+import { FaHome, FaUsers, FaShieldAlt, FaLock, FaBars, FaChevronLeft, FaQuestionCircle, FaReply} from "react-icons/fa";
 
 export const BootstrapSideBar: React.FC<Props> = ({
   items = [],
@@ -14,6 +14,8 @@ export const BootstrapSideBar: React.FC<Props> = ({
     Usuarios: <FaUsers className="me-2" />,
     Roles: <FaShieldAlt className="me-2" />,
     Permissions: <FaLock className="me-2" />,
+    "Security Questions": <FaQuestionCircle className="me-2" />,
+    Answers: <FaReply className="me-2" />,
   };
   
   const navigate = useNavigate();
