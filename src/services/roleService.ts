@@ -1,5 +1,6 @@
-import axios from "axios";
+
 import { Roles } from '../models/Roles' // Asegúrate de tener un modelo Roles.ts definido
+import api from '../interceptors/axiosInterceptor';
 
 const API_URL = import.meta.env.VITE_API_URL + "/roles" || "";
 
@@ -7,7 +8,7 @@ class RolesService {
     // ✅ Obtener todos los roless
     async getRoless(): Promise<Roles[]> {
         try {
-            const response = await axios.get<Roles[]>(API_URL);
+            const response = await api.get<Roles[]>(API_URL);
             return response.data;
         } catch (error) {
             console.error("Error al obtener roless:", error);
@@ -18,7 +19,7 @@ class RolesService {
     // ✅ Obtener un rol por ID
     async getRolesById(id: number): Promise<Roles | null> {
         try {
-            const response = await axios.get<Roles>(`${API_URL}/${id}`);
+            const response = await api.get<Roles>(`${API_URL}/${id}`);
             return response.data;
         } catch (error) {
             console.error(`Rol con ID ${id} no encontrado:`, error);
@@ -29,7 +30,7 @@ class RolesService {
     // ✅ Crear un nuevo rol
     async createRoles(roles: Omit<Roles, "id">): Promise<Roles | null> {
         try {
-            const response = await axios.post<Roles>(API_URL, roles);
+            const response = await api.post<Roles>(API_URL, roles);
             return response.data;
         } catch (error) {
             console.error("Error al crear rol:", error);
@@ -40,7 +41,7 @@ class RolesService {
     // ✅ Actualizar un rol existente
     async updateRoles(id: number, roles: Partial<Roles>): Promise<Roles | null> {
         try {
-            const response = await axios.put<Roles>(`${API_URL}/${id}`, roles);
+            const response = await api.put<Roles>(`${API_URL}/${id}`, roles);
             return response.data;
         } catch (error) {
             console.error("Error al actualizar rol:", error);
@@ -51,7 +52,7 @@ class RolesService {
     // ✅ Eliminar un rol
     async deleteRoles(id: number): Promise<boolean> {
         try {
-            await axios.delete(`${API_URL}/${id}`);
+            await api.delete(`${API_URL}/${id}`);
             return true;
         } catch (error) {
             console.error("Error al eliminar rol:", error);

@@ -1,5 +1,5 @@
-import axios from "axios";
 import { UserRole } from "../models/UserRole";
+import api from "../interceptors/axiosInterceptor";
 
 const API_BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, ""); // e.g. "http://localhost:5000/api"
 // backend registra blueprint en '/api/user-roles' (guion) -> usar mismo segmento
@@ -22,7 +22,7 @@ class UserRoleService {
     try {
       const url = `${API_URL}`;
       console.debug("[userRoleService] GET url:", url);
-      const res = await axios.get<UserRole[]>(url);
+      const res = await api.get<UserRole[]>(url);
       return res.data;
     } catch (error: any) {
       console.error("Error al obtener relaciones usuario-rol:", error);
@@ -34,7 +34,7 @@ class UserRoleService {
     try {
       const url = `${API_URL}/${id}`;
       console.debug("[userRoleService] GET url:", url);
-      const res = await axios.get<UserRole>(url);
+      const res = await api.get<UserRole>(url);
       return res.data;
     } catch (error: any) {
       console.error("Error al obtener la relación usuario-rol:", error);
@@ -46,7 +46,7 @@ class UserRoleService {
     try {
       const url = `${API_URL}/user/${userId}`;
       console.debug("[userRoleService] GET url:", url);
-      const res = await axios.get<UserRole[]>(url);
+      const res = await api.get<UserRole[]>(url);
       return res.data;
     } catch (error: any) {
       console.error("Error al obtener roles por usuario:", error);
@@ -59,7 +59,7 @@ class UserRoleService {
     try {
       const url = `${API_URL}/role/${roleId}`;
       console.debug("[userRoleService] GET url:", url);
-      const res = await axios.get<UserRole[]>(url);
+      const res = await api.get<UserRole[]>(url);
       return res.data;
     } catch (error: any) {
       console.error("Error al obtener usuarios por rol:", error);
@@ -76,7 +76,7 @@ class UserRoleService {
 
       const url = `${API_URL}/user/${userId}/role/${roleId}`;
       console.debug("[userRoleService] POST url:", url, "payload:", payload);
-      const res = await axios.post<UserRole>(url, payload);
+      const res = await api.post<UserRole>(url, payload);
       return res.data;
     } catch (error: any) {
       console.error("Error creando relación usuario-rol:", error);
@@ -92,7 +92,7 @@ class UserRoleService {
 
       const url = `${API_URL}/${id}`;
       console.debug("[userRoleService] PUT url:", url, "payload:", payload);
-      const res = await axios.put<UserRole>(url, payload);
+      const res = await api.put<UserRole>(url, payload);
       return res.data;
     } catch (error: any) {
       console.error("Error al actualizar relación usuario-rol:", error);
@@ -104,7 +104,7 @@ class UserRoleService {
     try {
       const url = `${API_URL}/${id}`;
       console.debug("[userRoleService] DELETE url:", url);
-      await axios.delete(url);
+      await api.delete(url);
       return true;
     } catch (error: any) {
       console.error("Error al eliminar relación usuario-rol:", error);

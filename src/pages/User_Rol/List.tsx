@@ -77,8 +77,6 @@ const ListUsersRol: React.FC = () => {
   const baseOptions = [
     { name: 'Remove_rol' }
   ];
-  console.log(users_rol);
-
   return (
     <div>
       <h2>Listado de Usuarios - {rol?rol.name:'Cargando Rol...'}</h2>
