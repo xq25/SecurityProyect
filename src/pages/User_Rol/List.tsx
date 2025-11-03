@@ -11,6 +11,8 @@ import { UserRole } from '../../models/UserRole'
 // Importaciones relacionadas con la clase Roles
 import { rolesService } from "../../services/roleService";
 import { Roles } from "../../models/Roles";
+// Importaciones relacionadas con user
+import { userService } from "../../services/userService";
 
 
 
@@ -27,9 +29,34 @@ const ListUsersRol: React.FC = () => {
   }, []);
 
   const fetchData = async () => {
-    const users_rol = await userRoleService.getByRoleId(String(id)); // Aqui obtenemos los usuarios que tienen dicho rol.
+    // 1) obtener relaciones user-role
+    const usersRolArr = await userRoleService.getByRoleId(String(id));
+
+    // 2) extraer ids únicos de usuario
+    const userIds = Array.from(new Set(usersRolArr.map(ur => ur.user_id)));
+
+    // 3) obtener datos de cada usuario en paralelo (si userService tiene getUserById)
+    const usersList = await Promise.all(
+      userIds.map(uid => userService.getUserById(Number(uid)).catch(() => null))
+    );
+
+    // 4) crear mapa id -> user
+    const usersMap = new Map<number, any>();
+    usersList.forEach(u => {
+      if (u && (u as any).id != null) usersMap.set((u as any).id, u);
+    });
+
+    // 5) enriquecer relaciones con los campos de usuario para la tabla
+    const enriched = usersRolArr.map(ur => ({
+      ...ur,
+      name: usersMap.get(ur.user_id)?.name ?? "",
+      email: usersMap.get(ur.user_id)?.email ?? ""
+    }));
+
+    setUsersRol(enriched);
+
+    // 6) obtener info del rol
     const infoRol = await rolesService.getRolesById(Number(id));
-    setUsersRol(users_rol);
     setRol(infoRol);
   };
 
@@ -50,16 +77,15 @@ const ListUsersRol: React.FC = () => {
   const baseOptions = [
     { name: 'Remove_rol' }
   ];
-
   return (
     <div>
       <h2>Listado de Usuarios - {rol?rol.name:'Cargando Rol...'}</h2>
       <AppButton name={'create'} action={()=> {
-        navigate(`/user-rol/${id}`); // Pasamos el id del rol para poder usarlo al llamar al service.
+        navigate(`/user-rol/create/${id}`); // Pasamos el id del rol para poder usarlo al llamar al service.
       }}/>
       <AppTable
         name="Roles"
-        header={['id',"user_id",'rol_id', "name", "email"]}
+        header={['id',"user_id",'role_id', "name", "email"]}
         items={users_rol}
         options={baseOptions.map((opt) => (
           <AppButton

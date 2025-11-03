@@ -1,5 +1,5 @@
-import axios from "axios";
 import { Password } from "../models/Password";
+import api from "../interceptors/axiosInterceptor";
 
 const API_URL = import.meta.env.VITE_API_URL + "/passwords" || "";
 
@@ -11,7 +11,7 @@ class PasswordService {
   // 🔹 Obtener todas las contraseñas
   async getPasswords(): Promise<Password[]> {
     try {
-      const response = await axios.get<Password[]>(API_URL);
+      const response = await api.get<Password[]>(API_URL);
       return response.data;
     } catch (error) {
       console.error("Error al obtener contraseñas:", error);
@@ -22,7 +22,7 @@ class PasswordService {
   // 🔹 Obtener una contraseña por ID
   async getPasswordById(id: number): Promise<Password | null> {
     try {
-      const response = await axios.get<Password>(`${API_URL}/${id}`);
+      const response = await api.get<Password>(`${API_URL}/${id}`);
       return response.data;
     } catch (error) {
       console.error("Contraseña no encontrada:", error);
@@ -33,7 +33,7 @@ class PasswordService {
   // 🔹 Obtener contraseñas por ID de usuario
   async getPasswordsByUserId(userId: number): Promise<Password[]> {
     try {
-      const response = await axios.get<Password[]>(`${API_URL}/user/${userId}`);
+      const response = await api.get<Password[]>(`${API_URL}/user/${userId}`);
       return response.data;
     } catch (error) {
       console.error("Error al obtener contraseñas del usuario:", error);
@@ -44,7 +44,7 @@ class PasswordService {
   // 🔹 Crear una nueva contraseña
   async createPassword(userId: number, password: Omit<Password, "id">): Promise<Password | null> {
     try {
-      const response = await axios.post<Password>(`${API_URL}/user/${userId}`, password, {
+      const response = await api.post<Password>(`${API_URL}/user/${userId}`, password, {
         headers: { "Content-Type": "application/json" },
       });
       return response.data;
@@ -57,7 +57,7 @@ class PasswordService {
   // 🔹 Actualizar una contraseña
   async updatePassword(id: number, password: Partial<Password>): Promise<Password | null> {
     try {
-      const response = await axios.put<Password>(`${API_URL}/${id}`, password, {
+      const response = await api.put<Password>(`${API_URL}/${id}`, password, {
         headers: { "Content-Type": "application/json" },
       });
       return response.data;
@@ -70,17 +70,12 @@ class PasswordService {
   // 🔹 Eliminar una contraseña
   async deletePassword(id: number): Promise<boolean> {
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await api.delete(`${API_URL}/${id}`);
       return true;
     } catch (error) {
       console.error("Error al eliminar contraseña:", error);
       return false;
     }
-  }
-
-  getCurrentDateTime(): string {
-    const now = new Date();
-    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
   }
 
 }

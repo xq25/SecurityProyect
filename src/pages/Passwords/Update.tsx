@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 //Importaciones de las clases Password
 import { Password } from "../../models/Password";
 import { passwordService } from "../../services/passwordService";
+import { utils } from "../../utils/utils";
 
 
 const UpdatePassword: React.FC = () => {
@@ -41,7 +42,7 @@ const UpdatePassword: React.FC = () => {
     console.log(password);
     const finalData = { //Aqui debemos agregarle la fecha alctual al campo endAt para cumplir con el formato de la clase Password
       ...passwordUpdate,
-      endAt : passwordService.getCurrentDateTime()
+      endAt : utils.getCurrentDateTime()
     }
     try {
       const success = await passwordService.updatePassword( id, finalData);
