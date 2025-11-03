@@ -25,6 +25,7 @@ import UpdatePassword from '../pages/Passwords/Update';
 import CreateAddress from '../pages/Addresses/Create';
 import ListAddresses from '../pages/Addresses/List';
 import UpdateAddress from '../pages/Addresses/Update';
+import CreateUserRol from '../pages/User_Rol/Create';
 
 
 
@@ -204,6 +205,11 @@ const coreRoutes = [
     title: 'Users With Rol',
     component: ListUsersRol,
   },
+  {
+    path: '/user-rol/create/:id', // El id es el del rol
+    title: 'Create User Rol', 
+    component: CreateUserRol, 
+  }
 ];
 
 const routes = [...coreRoutes];

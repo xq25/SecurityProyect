@@ -1,85 +1,116 @@
 import axios from "axios";
 import { UserRole } from "../models/UserRole";
 
-const API_URL = import.meta.env.VITE_API_URL + "/user_roles" || "";
+const API_BASE = (import.meta.env.VITE_API_URL ?? "").replace(/\/$/, ""); // e.g. "http://localhost:5000/api"
+// backend registra blueprint en '/api/user-roles' (guion) -> usar mismo segmento
+const API_URL = API_BASE.endsWith("/user-roles") ? API_BASE : `${API_BASE}/user-roles`;
+
+const formatDateForBackend = (input?: string | Date): string | undefined => {
+  if (!input) return undefined;
+  const d = typeof input === "string" ? new Date(input) : input;
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  const hh = String(d.getHours()).padStart(2, "0");
+  const min = String(d.getMinutes()).padStart(2, "0");
+  const ss = String(d.getSeconds()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+};
 
 class UserRoleService {
-    // Obtener todas las relaciones usuario-rol
-    async getAll(): Promise<UserRole[]> {
-        try {
-            const response = await axios.get<UserRole[]>(API_URL);
-            return response.data;
-        } catch (error) {
-            console.error("Error al obtener relaciones usuario-rol:", error);
-            return [];
-        }
+  async getAll(): Promise<UserRole[]> {
+    try {
+      const url = `${API_URL}`;
+      console.debug("[userRoleService] GET url:", url);
+      const res = await axios.get<UserRole[]>(url);
+      return res.data;
+    } catch (error: any) {
+      console.error("Error al obtener relaciones usuario-rol:", error);
+      return [];
     }
+  }
 
-    // Obtener una relación específica por su ID
-    async getById(id: string): Promise<UserRole | null> {
-        try {
-            const response = await axios.get<UserRole>(`${API_URL}/${id}`);
-            return response.data;
-        } catch (error) {
-            console.error("Error al obtener la relación usuario-rol:", error);
-            return null;
-        }
+  async getById(id: string): Promise<UserRole | null> {
+    try {
+      const url = `${API_URL}/${id}`;
+      console.debug("[userRoleService] GET url:", url);
+      const res = await axios.get<UserRole>(url);
+      return res.data;
+    } catch (error: any) {
+      console.error("Error al obtener la relación usuario-rol:", error);
+      return null;
     }
+  }
 
-    // Obtener todas las relaciones por usuario
-    async getByUserId(userId: string): Promise<UserRole[]> {
-        try {
-            const response = await axios.get<UserRole[]>(`${API_URL}/user/${userId}`);
-            return response.data;
-        } catch (error) {
-            console.error("Error al obtener roles por usuario:", error);
-            return [];
-        }
+  async getByUserId(userId: string): Promise<UserRole[]> {
+    try {
+      const url = `${API_URL}/user/${userId}`;
+      console.debug("[userRoleService] GET url:", url);
+      const res = await axios.get<UserRole[]>(url);
+      return res.data;
+    } catch (error: any) {
+      console.error("Error al obtener roles por usuario:", error);
+      if (error?.response?.status === 404) return [];
+      return [];
     }
+  }
 
-    // Obtener todas las relaciones por rol
-    async getByRoleId(roleId: string): Promise<UserRole[]> {
-        try {
-            const response = await axios.get<UserRole[]>(`${API_URL}/role/${roleId}`);
-            return response.data;
-        } catch (error) {
-            console.error("Error al obtener usuarios por rol:", error);
-            return [];
-        }
+  async getByRoleId(roleId: string): Promise<UserRole[]> {
+    try {
+      const url = `${API_URL}/role/${roleId}`;
+      console.debug("[userRoleService] GET url:", url);
+      const res = await axios.get<UserRole[]>(url);
+      return res.data;
+    } catch (error: any) {
+      console.error("Error al obtener usuarios por rol:", error);
+      if (error?.response?.status === 404) return [];
+      return [];
     }
+  }
 
-    // Crear una nueva relación usuario-rol
-    async create(userId: string, roleId: string, data: { startAt: string; endAt: string }): Promise<UserRole | null> {
-        try {
-            const response = await axios.post<UserRole>(`${API_URL}/${userId}/${roleId}`, data);
-            return response.data;
-        } catch (error) {
-            console.error("Error al crear relación usuario-rol:", error);
-            return null;
-        }
-    }
+  async create(userId: number, roleId: number, data: Partial<UserRole>): Promise<UserRole | null> {
+    try {
+      const payload: any = {};
+      if (data.startAt) payload.startAt = formatDateForBackend(data.startAt);
+      if (data.endAt) payload.endAt = formatDateForBackend(data.endAt);
 
-    // Actualizar una relación usuario-rol existente
-    async update(id: string, data: Partial<UserRole>): Promise<UserRole | null> {
-        try {
-            const response = await axios.put<UserRole>(`${API_URL}/${id}`, data);
-            return response.data;
-        } catch (error) {
-            console.error("Error al actualizar relación usuario-rol:", error);
-            return null;
-        }
+      const url = `${API_URL}/user/${userId}/role/${roleId}`;
+      console.debug("[userRoleService] POST url:", url, "payload:", payload);
+      const res = await axios.post<UserRole>(url, payload);
+      return res.data;
+    } catch (error: any) {
+      console.error("Error creando relación usuario-rol:", error);
+      return null;
     }
+  }
 
-    // Eliminar una relación usuario-rol
-    async delete(id: string): Promise<boolean> {
-        try {
-            await axios.delete(`${API_URL}/${id}`);
-            return true;
-        } catch (error) {
-            console.error("Error al eliminar relación usuario-rol:", error);
-            return false;
-        }
+  async update(id: string, data: Partial<UserRole>): Promise<UserRole | null> {
+    try {
+      const payload: any = { ...data };
+      if (data.startAt) payload.startAt = formatDateForBackend(data.startAt);
+      if (data.endAt) payload.endAt = formatDateForBackend(data.endAt);
+
+      const url = `${API_URL}/${id}`;
+      console.debug("[userRoleService] PUT url:", url, "payload:", payload);
+      const res = await axios.put<UserRole>(url, payload);
+      return res.data;
+    } catch (error: any) {
+      console.error("Error al actualizar relación usuario-rol:", error);
+      return null;
     }
+  }
+
+  async delete(id: string): Promise<boolean> {
+    try {
+      const url = `${API_URL}/${id}`;
+      console.debug("[userRoleService] DELETE url:", url);
+      await axios.delete(url);
+      return true;
+    } catch (error: any) {
+      console.error("Error al eliminar relación usuario-rol:", error);
+      return false;
+    }
+  }
 }
 
 export const userRoleService = new UserRoleService();

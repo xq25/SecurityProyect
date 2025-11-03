@@ -18,7 +18,6 @@ export const loginWithGoogle = async () => {
       },
       token: token
     };
-
     return formattedResponse;
   } catch (error) {
     console.error("Error en login con Google:", error);
