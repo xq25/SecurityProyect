@@ -4,15 +4,20 @@ import { answerService } from "../../services/answerService";
 import { userService } from "../../services/userService";
 import { securityQuestionService } from "../../services/securityQuestionService";
 import { Answer } from "../../models/Answer";
+import { User } from "../../models/User";
+import { SecurityQuestion } from "../../models/SecurityQuestion";
+import { AppButton } from "../../components/ui/ButtonGeneric";
 import Breadcrumb from "../../components/Breadcrumb";
-import Swal from "sweetalert2";
 
-const AnswerView: React.FC = () => {
+const ViewAnswer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [answer, setAnswer] = useState<Answer | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [question, setQuestion] = useState<SecurityQuestion | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Cargar datos
   useEffect(() => {
     loadData();
   }, [id]);
@@ -21,36 +26,33 @@ const AnswerView: React.FC = () => {
     if (!id) return;
 
     try {
-      const [answerData, users, questions] = await Promise.all([
-        answerService.getAnswerById(parseInt(id)),
-        userService.getUsers(),
-        securityQuestionService.getSecurityQuestions(),
-      ]);
+      const answerData = await answerService.getAnswerById(parseInt(id));
+      setAnswer(answerData);
 
-      if (answerData) {
-        const enrichedAnswer = {
-          ...answerData,
-          user: users.find((u) => u.id === answerData.user_id),
-          question: questions.find((q) => q.id === answerData.security_question_id),
-        };
-
-        setAnswer(enrichedAnswer);
+      // ✅ Cargar relaciones
+      if (answerData?.user_id) {
+        const userData = await userService.getUserById(answerData.user_id);
+        setUser(userData);
       }
-    } catch (error: any) {
-      Swal.fire({
-        title: "Error",
-        text: error.response?.data?.message || "No se pudo cargar la respuesta",
-        icon: "error",
-      });
+
+      if (answerData?.security_question_id) {
+        const questionData = await securityQuestionService.getSecurityQuestionById(
+          answerData.security_question_id
+        );
+        setQuestion(questionData);
+      }
+    } catch (error) {
+      console.error("Error al cargar respuesta:", error);
     } finally {
       setLoading(false);
     }
   };
 
+  // ✅ Estados de carga
   if (loading) {
     return (
       <div className="text-center py-5">
-        <div className="spinner-border text-success" role="status">
+        <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Cargando...</span>
         </div>
         <p className="mt-3">Cargando respuesta...</p>
@@ -59,86 +61,95 @@ const AnswerView: React.FC = () => {
   }
 
   if (!answer) {
-    return <div className="alert alert-danger">Respuesta no encontrada</div>;
+    return (
+      <div className="alert alert-danger">
+        <i className="bi bi-exclamation-triangle me-2"></i>
+        Respuesta no encontrada
+      </div>
+    );
   }
 
   return (
     <div>
-      <h2>Detalles de la Respuesta</h2>
+      <h2>Respuesta</h2>
       <Breadcrumb pageName="Answers / Ver" />
 
-      <div className="card border-0 shadow-sm">
-        <div className="card-body p-4">
-          <div className="row mb-4">
-            <div className="col-md-6">
-              <div className="mb-3">
-                <label className="form-label text-muted fw-bold">ID:</label>
-                <p className="fs-5 mb-0">{answer.id}</p>
+      {/* ✅ Card principal */}
+      <div className="card">
+        <div className="card-body">
+          <div className="row">
+            {/* Columna izquierda: Contenido de la respuesta */}
+            <div className="col-md-6 mb-4">
+              <div className="mb-4">
+                <label className="form-label text-muted fw-bold mb-1">
+                  <i className="bi bi-tag me-2"></i>
+                  ID:
+                </label>
+                <p className="mb-0 fs-5">{answer.id}</p>
               </div>
-            </div>
-            <div className="col-md-6">
-              <div className="mb-3">
-                <label className="form-label text-muted fw-bold">Usuario ID:</label>
-                <p className="fs-5 mb-0">{answer.user_id || "N/A"}</p>
-              </div>
-            </div>
-          </div>
 
-          {answer.user && (
-            <div className="mb-4 p-3 bg-light rounded">
-              <h5 className="mb-3">
-                <i className="bi bi-person-circle me-2"></i>
-                Información del Usuario
-              </h5>
-              <div className="row">
-                <div className="col-md-6">
-                  <strong>Nombre:</strong>
-                  <p className="mb-2">{answer.user.name}</p>
-                </div>
-                <div className="col-md-6">
-                  <strong>Email:</strong>
-                  <p className="mb-2">{answer.user.email}</p>
+              <div className="mb-4">
+                <label className="form-label text-muted fw-bold mb-1">
+                  <i className="bi bi-chat-left-text me-2"></i>
+                  Contenido:
+                </label>
+                <div className="border rounded p-3 bg-light">
+                  <p className="mb-0">{answer.content}</p>
                 </div>
               </div>
             </div>
-          )}
 
-          <div className="mb-4">
-            <label className="form-label text-muted fw-bold">Pregunta ID:</label>
-            <p className="mb-2">{answer.security_question_id || "N/A"}</p>
-          </div>
+            {/* Columna derecha: Información relacionada */}
+            <div className="col-md-6 mb-4">
+              {/* Usuario */}
+              {user && (
+                <div className="mb-4 border rounded p-3 bg-light">
+                  <h6 className="mb-3 fw-bold">
+                    <i className="bi bi-person-circle me-2"></i>
+                    Usuario Asociado
+                  </h6>
+                  <div className="mb-2">
+                    <label className="form-label text-muted fw-bold mb-1">
+                      Nombre:
+                    </label>
+                    <p className="mb-0">{user.name}</p>
+                  </div>
+                  <div className="mb-0">
+                    <label className="form-label text-muted fw-bold mb-1">
+                      Email:
+                    </label>
+                    <p className="mb-0 text-secondary">{user.email}</p>
+                  </div>
+                </div>
+              )}
 
-          {answer.question && (
-            <div className="mb-4 p-3 bg-light rounded">
-              <h5 className="mb-3">
-                <i className="bi bi-question-circle me-2"></i>
-                Pregunta de Seguridad
-              </h5>
-              <p className="fs-5 mb-2">{answer.question.name}</p>
-              {answer.question.description && (
-                <p className="text-muted mb-0">
-                  <small>{answer.question.description}</small>
-                </p>
+              {/* Pregunta */}
+              {question && (
+                <div className="border rounded p-3 bg-light">
+                  <h6 className="mb-3 fw-bold">
+                    <i className="bi bi-question-circle me-2"></i>
+                    Pregunta de Seguridad
+                  </h6>
+                  <div className="mb-2">
+                    <label className="form-label text-muted fw-bold mb-1">
+                      Nombre:
+                    </label>
+                    <p className="mb-0">{question.name}</p>
+                  </div>
+                  <div className="mb-0">
+                    <label className="form-label text-muted fw-bold mb-1">
+                      Descripción:
+                    </label>
+                    <p className="mb-0 text-secondary">{question.description}</p>
+                  </div>
+                </div>
               )}
             </div>
-          )}
-
-          <div className="mb-4">
-            <label className="form-label text-muted fw-bold">Respuesta:</label>
-            <div className="alert alert-info d-flex align-items-center">
-              <i className="bi bi-shield-lock fs-4 me-3"></i>
-              <span className="fs-5">{answer.content}</span>
-            </div>
           </div>
 
-          <div className="d-flex gap-2 pt-3 border-top">
-            <button
-              className="btn btn-primary px-4"
-              onClick={() => navigate(`/answers/update/${answer.id}`)}
-            >
-              <i className="bi bi-pencil me-2"></i>
-              Editar
-            </button>
+          {/* ✅ Botones */}
+          <div className="d-flex gap-2 mt-4 pt-3 border-top">
+            <AppButton name="update" action={() => navigate(`/answers/update/${id}`)} />
             <button
               className="btn btn-secondary px-4"
               onClick={() => navigate("/answers/list")}
@@ -153,4 +164,4 @@ const AnswerView: React.FC = () => {
   );
 };
 
-export default AnswerView;
+export default ViewAnswer;

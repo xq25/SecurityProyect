@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import * as Yup from "yup";
 import { securityQuestionService } from "../../services/securityQuestionService";
+import { SecurityQuestion } from "../../models/SecurityQuestion";
+import { AppForm } from "../../components/ui/FormGeneric";
 import Breadcrumb from "../../components/Breadcrumb";
 import Swal from "sweetalert2";
 
-const SecurityQuestionUpdate: React.FC = () => {
+const UpdateSecurityQuestion: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [securityQuestion, setSecurityQuestion] = useState<SecurityQuestion | null>(null);
   const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
 
+  // ✅ Cargar datos
   useEffect(() => {
     loadData();
   }, [id]);
@@ -20,15 +22,14 @@ const SecurityQuestionUpdate: React.FC = () => {
     if (!id) return;
 
     try {
-      const question = await securityQuestionService.getSecurityQuestionById(parseInt(id));
-      if (question) {
-        setName(question.name || "");
-        setDescription(question.description || "");
-      }
-    } catch (error: any) {
+      const securityQuestionData =
+        await securityQuestionService.getSecurityQuestionById(parseInt(id));
+      setSecurityQuestion(securityQuestionData);
+    } catch (error) {
+      console.error("Error al cargar pregunta de seguridad:", error);
       Swal.fire({
         title: "Error",
-        text: error.response?.data?.message || "No se pudo cargar la pregunta",
+        text: "No se pudo cargar la pregunta de seguridad",
         icon: "error",
       });
     } finally {
@@ -36,48 +37,66 @@ const SecurityQuestionUpdate: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // ✅ Esquema de validación
+  const securityQuestionValidationSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(5, "El nombre debe tener al menos 5 caracteres")
+      .max(100, "El nombre no puede exceder 100 caracteres")
+      .required("El nombre es obligatorio"),
+    description: Yup.string()
+      .min(10, "La descripción debe tener al menos 10 caracteres")
+      .max(500, "La descripción no puede exceder 500 caracteres")
+      .required("La descripción es obligatoria"),
+  });
 
-    if (!name.trim()) {
-      Swal.fire("Error", "El nombre de la pregunta es obligatorio", "error");
-      return;
-    }
-
-    setUpdating(true);
-
+  // ✅ Handler de actualización
+  const handleUpdateSecurityQuestion = async (
+    updatedSecurityQuestion: SecurityQuestion
+  ) => {
     try {
-      await securityQuestionService.updateSecurityQuestion(parseInt(id!), {
-        name,
-        description,
-      });
+      const updated = await securityQuestionService.updateSecurityQuestion(
+        parseInt(id!),
+        updatedSecurityQuestion
+      );
 
-      Swal.fire({
-        title: "¡Éxito!",
-        text: "Pregunta actualizada correctamente",
-        icon: "success",
-        timer: 2000,
-        showConfirmButton: false,
-      });
-      navigate("/security-questions/list");
+      if (updated) {
+        Swal.fire({
+          title: "¡Éxito!",
+          text: "Pregunta de seguridad actualizada correctamente",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        navigate(`/security-questions/${id}`);
+      }
     } catch (error: any) {
       Swal.fire({
         title: "Error",
-        text: error.response?.data?.message || "No se pudo actualizar la pregunta",
+        text:
+          error.response?.data?.message ||
+          "No se pudo actualizar la pregunta de seguridad",
         icon: "error",
       });
-    } finally {
-      setUpdating(false);
     }
   };
 
+  // ✅ Estados de carga
   if (loading) {
     return (
       <div className="text-center py-5">
-        <div className="spinner-border text-success" role="status">
+        <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Cargando...</span>
         </div>
-        <p className="mt-3">Cargando pregunta...</p>
+        <p className="mt-3">Cargando pregunta de seguridad...</p>
+      </div>
+    );
+  }
+
+  if (!securityQuestion) {
+    return (
+      <div className="alert alert-danger">
+        <i className="bi bi-exclamation-triangle me-2"></i>
+        Pregunta de seguridad no encontrada
       </div>
     );
   }
@@ -87,59 +106,16 @@ const SecurityQuestionUpdate: React.FC = () => {
       <h2>Actualizar Pregunta de Seguridad</h2>
       <Breadcrumb pageName="Security Questions / Actualizar" />
 
-      {updating && (
-        <div className="alert alert-info">
-          <span className="spinner-border spinner-border-sm me-2"></span>
-          Actualizando pregunta...
-        </div>
-      )}
-
-      <div className="card">
-        <div className="card-body">
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label className="form-label">Pregunta *</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="¿Cuál es tu primera mascota?"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                disabled={updating}
-              />
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label">Descripción</label>
-              <textarea
-                className="form-control"
-                rows={3}
-                placeholder="Ingrese una descripción opcional"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                disabled={updating}
-              />
-            </div>
-
-            <div className="d-flex gap-2">
-              <button type="submit" className="btn btn-primary" disabled={updating}>
-                {updating ? "Actualizando..." : "Actualizar"}
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => navigate("/security-questions/list")}
-                disabled={updating}
-              >
-                Cancelar
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+      {/* ✅ AppForm con mode=2 e info */}
+      <AppForm
+        mode={2}
+        labels={["name", "description"]}
+        info={securityQuestion}
+        handleAction={handleUpdateSecurityQuestion}
+        validationSchema={securityQuestionValidationSchema}
+      />
     </div>
   );
 };
 
-export default SecurityQuestionUpdate;
+export default UpdateSecurityQuestion;

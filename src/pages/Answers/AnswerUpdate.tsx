@@ -4,17 +4,26 @@ import { answerService } from "../../services/answerService";
 import { userService } from "../../services/userService";
 import { securityQuestionService } from "../../services/securityQuestionService";
 import { Answer } from "../../models/Answer";
+import { User } from "../../models/User";
+import { SecurityQuestion } from "../../models/SecurityQuestion";
 import Breadcrumb from "../../components/Breadcrumb";
 import Swal from "sweetalert2";
+import { useUI } from "../../context/UIProvider";
 
-const AnswerUpdate: React.FC = () => {
+const UpdateAnswer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { library } = useUI();
   const [answer, setAnswer] = useState<Answer | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [question, setQuestion] = useState<SecurityQuestion | null>(null);
   const [content, setContent] = useState<string>("");
   const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
 
+  const [touched, setTouched] = useState(false);
+  const [error, setError] = useState("");
+
+  // ✅ Cargar datos con Promise.all
   useEffect(() => {
     loadData();
   }, [id]);
@@ -23,26 +32,27 @@ const AnswerUpdate: React.FC = () => {
     if (!id) return;
 
     try {
-      const [answerData, users, questions] = await Promise.all([
-        answerService.getAnswerById(parseInt(id)),
-        userService.getUsers(),
-        securityQuestionService.getSecurityQuestions(),
-      ]);
+      const answerData = await answerService.getAnswerById(parseInt(id));
+      setAnswer(answerData);
+      setContent(answerData?.content || "");
 
-      if (answerData) {
-        const enrichedAnswer = {
-          ...answerData,
-          user: users.find((u) => u.id === answerData.user_id),
-          question: questions.find((q) => q.id === answerData.security_question_id),
-        };
-
-        setAnswer(enrichedAnswer);
-        setContent(enrichedAnswer.content || "");
+      // ✅ Cargar user y question relacionados
+      if (answerData?.user_id) {
+        const userData = await userService.getUserById(answerData.user_id);
+        setUser(userData);
       }
-    } catch (error: any) {
+
+      if (answerData?.security_question_id) {
+        const questionData = await securityQuestionService.getSecurityQuestionById(
+          answerData.security_question_id
+        );
+        setQuestion(questionData);
+      }
+    } catch (error) {
+      console.error("Error al cargar respuesta:", error);
       Swal.fire({
         title: "Error",
-        text: error.response?.data?.message || "No se pudo cargar la respuesta",
+        text: "No se pudo cargar la respuesta",
         icon: "error",
       });
     } finally {
@@ -50,42 +60,80 @@ const AnswerUpdate: React.FC = () => {
     }
   };
 
+  const validateContent = (text: string): string => {
+    if (!text.trim()) return "El contenido es obligatorio";
+    if (text.length < 3) return "El contenido debe tener al menos 3 caracteres";
+    if (text.length > 500) return "El contenido no puede exceder 500 caracteres";
+    return "";
+  };
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const text = e.target.value;
+    setContent(text);
+    setTouched(true);
+
+    const validationError = validateContent(text);
+    setError(validationError);
+  };
+
+  // ✅ Submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!content.trim()) {
-      Swal.fire("Error", "Debe ingresar una respuesta", "error");
+    setTouched(true);
+
+    const validationError = validateContent(content);
+    setError(validationError);
+
+    if (validationError) {
+      Swal.fire({
+        title: "Error de validación",
+        text: validationError,
+        icon: "warning",
+      });
       return;
     }
 
-    setUpdating(true);
-
     try {
-      await answerService.updateAnswer(parseInt(id!), content);
+      const updated = await answerService.updateAnswer(parseInt(id!), content);
 
-      Swal.fire({
-        title: "¡Éxito!",
-        text: "Respuesta actualizada correctamente",
-        icon: "success",
-        timer: 2000,
-        showConfirmButton: false,
-      });
-      navigate("/answers/list");
+      if (updated) {
+        Swal.fire({
+          title: "¡Éxito!",
+          text: "Respuesta actualizada correctamente",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        navigate(`/answers/${id}`);
+      }
     } catch (error: any) {
       Swal.fire({
         title: "Error",
         text: error.response?.data?.message || "No se pudo actualizar la respuesta",
         icon: "error",
       });
-    } finally {
-      setUpdating(false);
     }
   };
 
+  const isFormValid = !error && touched && content.trim() !== "";
+
+  // ✅ Clase del botón según librería
+  const getPrimaryButtonClass = () => {
+    if (library === "bootstrap")
+      return "btn btn-success flex-fill fw-bold text-uppercase";
+    if (library === "material")
+      return "btn btn-primary flex-fill fw-bold text-uppercase";
+    if (library === "tailwind")
+      return "btn btn-purple flex-fill fw-bold text-uppercase";
+    return "btn btn-primary flex-fill fw-bold text-uppercase";
+  };
+
+  // ✅ Estados de carga
   if (loading) {
     return (
       <div className="text-center py-5">
-        <div className="spinner-border text-success" role="status">
+        <div className="spinner-border text-primary" role="status">
           <span className="visually-hidden">Cargando...</span>
         </div>
         <p className="mt-3">Cargando respuesta...</p>
@@ -94,105 +142,112 @@ const AnswerUpdate: React.FC = () => {
   }
 
   if (!answer) {
-    return <div className="alert alert-danger">Respuesta no encontrada</div>;
+    return (
+      <div className="alert alert-danger">
+        <i className="bi bi-exclamation-triangle me-2"></i>
+        Respuesta no encontrada
+      </div>
+    );
   }
 
   return (
     <div>
-      <h2>Actualizar Respuesta de Seguridad</h2>
+      <h2>Actualizar Respuesta</h2>
       <Breadcrumb pageName="Answers / Actualizar" />
 
-      {updating && (
-        <div className="alert alert-info">
-          <span className="spinner-border spinner-border-sm me-2"></span>
-          Actualizando respuesta...
-        </div>
-      )}
-
-      <div className="card">
-        <div className="card-body">
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label className="form-label fw-bold">Pregunta de Seguridad</label>
-              <p className="form-control-plaintext bg-light p-2 rounded">
-                {answer.question?.name || "Pregunta no disponible"}
-              </p>
-              {answer.question?.description && (
-                <small className="text-muted d-block mb-2">
-                  <i className="bi bi-info-circle me-1"></i>
-                  {answer.question.description}
-                </small>
-              )}
-              <small className="text-muted">
-                <i className="bi bi-lock me-1"></i>
-                La pregunta no puede ser modificada
-              </small>
+      {/* ✅ Card de información relacionada */}
+      <div className="row mb-4">
+        {/* Usuario */}
+        {user && (
+          <div className="col-md-6 mb-3">
+            <div className="card h-100">
+              <div className="card-body">
+                <h6 className="card-title mb-3">
+                  <i className="bi bi-person-circle me-2"></i>
+                  Usuario
+                </h6>
+                <p className="mb-1">
+                  <strong>Nombre:</strong> {user.name}
+                </p>
+                <p className="mb-0 text-secondary">
+                  <strong>Email:</strong> {user.email}
+                </p>
+              </div>
             </div>
+          </div>
+        )}
 
-            <div className="mb-3">
-              <label className="form-label fw-bold">Usuario</label>
-              <p className="form-control-plaintext bg-light p-2 rounded">
-                {answer.user ? (
-                  <>
-                    {answer.user.name}
-                    {answer.user.email && ` (${answer.user.email})`}
-                  </>
-                ) : (
-                  "Usuario no disponible"
-                )}
-              </p>
-              <small className="text-muted">
-                <i className="bi bi-lock me-1"></i>
-                El usuario no puede ser modificado
-              </small>
+        {/* Pregunta */}
+        {question && (
+          <div className="col-md-6 mb-3">
+            <div className="card h-100">
+              <div className="card-body">
+                <h6 className="card-title mb-3">
+                  <i className="bi bi-question-circle me-2"></i>
+                  Pregunta de Seguridad
+                </h6>
+                <p className="mb-1">
+                  <strong>Nombre:</strong> {question.name}
+                </p>
+                <p className="mb-0 text-secondary">
+                  <strong>Descripción:</strong> {question.description}
+                </p>
+              </div>
             </div>
-
-            <div className="mb-3">
-              <label className="form-label fw-bold">Respuesta *</label>
-              <textarea
-                className="form-control"
-                rows={3}
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Ingrese la nueva respuesta..."
-                required
-                disabled={updating}
-              />
-              <small className="text-muted">
-                <i className="bi bi-shield-check me-1"></i>
-                Solo puedes modificar el contenido de la respuesta
-              </small>
-            </div>
-
-            <div className="d-flex gap-2">
-              <button type="submit" className="btn btn-primary" disabled={updating}>
-                {updating ? (
-                  <>
-                    <span className="spinner-border spinner-border-sm me-2"></span>
-                    Actualizando...
-                  </>
-                ) : (
-                  <>
-                    <i className="bi bi-check-circle me-2"></i>
-                    Actualizar
-                  </>
-                )}
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
-                onClick={() => navigate("/answers/list")}
-                disabled={updating}
-              >
-                <i className="bi bi-x-circle me-2"></i>
-                Cancelar
-              </button>
-            </div>
-          </form>
-        </div>
+          </div>
+        )}
       </div>
+
+      <form onSubmit={handleSubmit}>
+        {/* ✅ Textarea Contenido */}
+        <div className="mb-4">
+          <label htmlFor="content" className="form-label fw-semibold">
+            Contenido
+            <span className="text-danger"> *</span>
+          </label>
+          <textarea
+            id="content"
+            className={`form-control ${touched && error ? "is-invalid" : ""} ${
+              touched && !error && content.trim() !== "" ? "is-valid" : ""
+            }`}
+            rows={5}
+            value={content}
+            onChange={handleContentChange}
+            onBlur={() => setTouched(true)}
+            placeholder="Escriba su respuesta aquí..."
+          />
+
+          {touched && error && (
+            <div className="invalid-feedback d-block">{error}</div>
+          )}
+
+          <small className="form-text text-muted d-block mt-1">
+            {content.length}/500 caracteres
+          </small>
+        </div>
+
+        {/* ✅ Botones */}
+        <div className="d-flex gap-2 mt-4">
+          <button
+            type="submit"
+            className={getPrimaryButtonClass()}
+            disabled={!isFormValid}
+          >
+            <i className="bi bi-check-circle me-2"></i>
+            ACTUALIZAR
+          </button>
+          <button
+            type="button"
+            className="btn btn-secondary flex-fill fw-bold text-uppercase"
+            onClick={() => navigate(`/answers/${id}`)}
+          >
+            <i className="bi bi-x-circle me-2"></i>
+            CANCELAR
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
 
-export default AnswerUpdate;
+export default UpdateAnswer;

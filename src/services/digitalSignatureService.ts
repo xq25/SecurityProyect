@@ -1,4 +1,3 @@
-import axios from "axios";
 import { DigitalSignature } from "../models/DigitalSignature";
 import api from "../interceptors/axiosInterceptor";
 

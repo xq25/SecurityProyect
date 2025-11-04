@@ -2,55 +2,29 @@ import React from "react";
 import { useUI } from "../../context/UIProvider";
 import { BootstrapFileInput } from "./bootstrap/BootstrapFileInput";
 import { MaterialFileInput } from "./materialUI/MaterialFileInput";
+import { TailwindFileInput } from "./tailwind/TailwindFileInput"
 
-// 🔹 Estructura de un input de archivos reutilizable
 export interface FileInputItem {
-  label?: string;               // Etiqueta del input
-  accept?: string;              // Tipos de archivo aceptados (ej: "image/*", ".pdf")
-  onChange: (file: File | null) => void; // Callback cuando cambia el archivo
-  value?: File | null;          // Archivo actual seleccionado
-  preview?: string;             // URL de vista previa (para imágenes)
-  disabled?: boolean;           // Si está deshabilitado
-  required?: boolean;           // Si es obligatorio
+  label?: string;
+  accept?: string;
+  onChange: (file: File | null) => void;
+  value: File | null;
+  preview?: string;
+  disabled?: boolean;
+  required?: boolean;
+  // ✅ Props para integración con Formik
+  name?: string;
+  error?: string;
+  touched?: boolean;
+  onBlur?: () => void;
 }
 
-// 🔹 Input de archivos genérico que adapta su diseño según la librería
-export const AppFileInput: React.FC<FileInputItem> = ({
-  label = "Seleccionar archivo",
-  accept = "image/*",
-  onChange,
-  value,
-  preview,
-  disabled = false,
-  required = false,
-}) => {
+export const AppFileInput: React.FC<FileInputItem> = (props) => {
   const { library } = useUI();
 
-  if (library === "material")
-   return (
-     <MaterialFileInput
-       label={label}
-       accept={accept}
-       onChange={onChange}
-       value={value}
-       preview={preview}
-       disabled={disabled}
-       required={required}
-     />
-   );
+  if (library === "bootstrap") return <BootstrapFileInput {...props} />;
+  if (library === "material") return <MaterialFileInput {...props} />;
+  if (library === "tailwind") return <TailwindFileInput {...props} />;
 
-  if (library === "bootstrap")
-    return (
-      <BootstrapFileInput
-        label={label}
-        accept={accept}
-        onChange={onChange}
-        value={value}
-        preview={preview}
-        disabled={disabled}
-        required={required}
-      />
-    );
-
-  return null;
+  return <BootstrapFileInput {...props} />;
 };

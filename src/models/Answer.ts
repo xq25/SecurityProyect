@@ -2,6 +2,7 @@ import { SecurityQuestion } from "./SecurityQuestion";
 import { User } from "./User";
 
 export interface Answer {
+    answer_text: string;
     id?: number;
     content?: string;
     

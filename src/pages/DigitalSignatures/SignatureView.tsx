@@ -4,6 +4,7 @@ import { digitalSignatureService } from "../../services/digitalSignatureService"
 import { userService } from "../../services/userService";
 import { DigitalSignature } from "../../models/DigitalSignature";
 import { User } from "../../models/User";
+import { AppButton } from "../../components/ui/ButtonGeneric";
 import Breadcrumb from "../../components/Breadcrumb";
 
 const ViewDigitalSignature: React.FC = () => {
@@ -14,6 +15,7 @@ const ViewDigitalSignature: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
 
+  // ✅ Cargar datos (igual que DeviceView)
   useEffect(() => {
     loadData();
   }, [id]);
@@ -25,6 +27,7 @@ const ViewDigitalSignature: React.FC = () => {
       const signatureData = await digitalSignatureService.getDigitalSignatureById(parseInt(id));
       setSignature(signatureData);
 
+      // ✅ Cargar user relacionado
       if (signatureData?.user_id) {
         const userData = await userService.getUserById(signatureData.user_id);
         setUser(userData);
@@ -40,6 +43,7 @@ const ViewDigitalSignature: React.FC = () => {
     setImageError(true);
   };
 
+  // ✅ Estados de carga
   if (loading) {
     return (
       <div className="text-center py-5">
@@ -57,26 +61,22 @@ const ViewDigitalSignature: React.FC = () => {
 
   return (
     <div>
-      <h2>FBC - Signature</h2>
+      <h2>Firma Digital</h2>
       <Breadcrumb pageName="Digital Signatures / Ver" />
 
-      <div className="card border-0 shadow-sm">
-        <div className="card-body p-4">
+      {/* ✅ Card con estilo DeviceView */}
+      <div className="card">
+        <div className="card-body">
           <div className="row">
-            {/* Columna izquierda: Imagen de la firma */}
-            <div className="col-md-5 col-lg-4">
+            {/* Columna izquierda: Imagen */}
+            <div className="col-md-5 col-lg-4 mb-4">
               <div className="border rounded p-3 bg-light d-flex align-items-center justify-content-center" style={{ minHeight: "400px" }}>
                 {signature.photo && !imageError ? (
                   <img
                     src={signature.photo}
                     alt="Digital Signature"
                     className="img-fluid rounded"
-                    style={{
-                      maxWidth: "100%",
-                      maxHeight: "400px",
-                      objectFit: "contain",
-                      display: "block",
-                    }}
+                    style={{ maxWidth: "100%", maxHeight: "400px", objectFit: "contain" }}
                     onError={handleImageError}
                   />
                 ) : (
@@ -95,7 +95,7 @@ const ViewDigitalSignature: React.FC = () => {
               {user ? (
                 <div>
                   <div className="mb-4">
-                    <label className="form-label text-muted fw-bold mb-1">Name:</label>
+                    <label className="form-label text-muted fw-bold mb-1">Nombre:</label>
                     <h4 className="mb-0">{user.name}</h4>
                   </div>
                   <div className="mb-4">
@@ -112,15 +112,12 @@ const ViewDigitalSignature: React.FC = () => {
             </div>
           </div>
 
-          {/* Botones al final */}
+          {/* ✅ Botones (igual que DeviceView) */}
           <div className="d-flex gap-2 mt-4 pt-3 border-top">
-            <button
-              className="btn btn-primary px-4"
-              onClick={() => navigate(`/digital-signatures/update/${id}`)}
-            >
-              <i className="bi bi-pencil me-2"></i>
-              Editar
-            </button>
+            <AppButton 
+              name="update" 
+              action={() => navigate(`/digital-signatures/update/${id}`)} 
+            />
             <button
               className="btn btn-secondary px-4"
               onClick={() => navigate("/digital-signatures/list")}

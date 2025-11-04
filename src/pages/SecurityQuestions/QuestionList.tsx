@@ -1,83 +1,98 @@
-import React, { useState, useEffect } from "react";
-import { SecurityQuestion } from "../../models/SecurityQuestion";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { securityQuestionService } from "../../services/securityQuestionService";
-import Swal from "sweetalert2";
+import { SecurityQuestion } from "../../models/SecurityQuestion";
 import { AppTable } from "../../components/ui/TableGeneric";
 import { AppButton } from "../../components/ui/ButtonGeneric";
-import { useNavigate } from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumb";
+import Swal from "sweetalert2";
 
-const SecurityQuestionList: React.FC = () => {
-  const [questions, setQuestions] = useState<SecurityQuestion[]>([]);
-  const [loading, setLoading] = useState(true);
+const ListSecurityQuestions: React.FC = () => {
   const navigate = useNavigate();
+  const [securityQuestions, setSecurityQuestions] = useState<SecurityQuestion[]>([]);
 
   useEffect(() => {
-    fetchData();
+    loadSecurityQuestions();
   }, []);
 
-  const fetchData = async () => {
-    setLoading(true);
+  const loadSecurityQuestions = async () => {
     try {
-      const data = await securityQuestionService.getSecurityQuestions();
-      setQuestions(data);
-    } catch (error: any) {
+      const securityQuestionsData =
+        await securityQuestionService.getSecurityQuestions();
+      setSecurityQuestions(securityQuestionsData);
+    } catch (error) {
+      console.error("Error al cargar preguntas de seguridad:", error);
       Swal.fire({
         title: "Error",
-        text: error.response?.data?.message || "No se pudieron cargar las preguntas",
+        text: "No se pudieron cargar las preguntas de seguridad",
         icon: "error",
       });
-    } finally {
-      setLoading(false);
     }
   };
 
-  const handleAction = async (action: string, question: SecurityQuestion) => {
-    if (action === "delete") {
-      const result = await Swal.fire({
-        title: "¿Está seguro?",
-        text: `¿Desea eliminar la pregunta "${question.name}"?`,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#d33",
-        cancelButtonColor: "#3085d6",
-        confirmButtonText: "Sí, eliminar",
-        cancelButtonText: "Cancelar",
-      });
+  const handleAction = async (action: string, securityQuestion: SecurityQuestion) => {
+    switch (action) {
+      case "view":
+        navigate(`/security-questions/${securityQuestion.id}`);
+        break;
 
-      if (result.isConfirmed) {
-        try {
-          await securityQuestionService.deleteSecurityQuestion(question.id!);
-          Swal.fire({
-            title: "¡Eliminado!",
-            text: "Pregunta eliminada correctamente",
-            icon: "success",
-            timer: 2000,
-            showConfirmButton: false,
-          });
-          fetchData();
-        } catch (error: any) {
-          Swal.fire({
-            title: "Error",
-            text: error.response?.data?.message || "No se pudo eliminar la pregunta",
-            icon: "error",
-          });
+      case "update":
+        navigate(`/security-questions/update/${securityQuestion.id}`);
+        break;
+
+      case "delete":
+        const result = await Swal.fire({
+          title: "¿Estás seguro?",
+          text: "Esta acción no se puede deshacer",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "Sí, eliminar",
+          cancelButtonText: "Cancelar",
+        });
+
+        if (result.isConfirmed) {
+          try {
+            await securityQuestionService.deleteSecurityQuestion(
+              securityQuestion.id!
+            );
+            Swal.fire({
+              title: "¡Eliminado!",
+              text: "Pregunta de seguridad eliminada correctamente",
+              icon: "success",
+              timer: 2000,
+              showConfirmButton: false,
+            });
+            loadSecurityQuestions();
+          } catch (error: any) {
+            Swal.fire({
+              title: "Error",
+              text:
+                error.response?.data?.message ||
+                "No se pudo eliminar la pregunta de seguridad",
+              icon: "error",
+            });
+          }
         }
-      }
-    } else if (action === "view") {
-      navigate(`/security-questions/${question.id}`);
-    } else if (action === "update") {
-      navigate(`/security-questions/update/${question.id}`);
-    } else if (action === "answers") {
-      navigate(`/answers/list?question_id=${question.id}`);
+        break;
+
+      // ✅ Nueva acción para ver respuestas
+      case "answers":
+        navigate(`/answers/list?questionId=${securityQuestion.id}`);
+        break;
+
+      default:
+        break;
     }
   };
 
+  // ✅ Opciones de acciones (agregamos "answers")
   const baseOptions = [
     { name: "view" },
     { name: "update" },
     { name: "delete" },
-    { name: "answers" },
+    { name: "answers" }, // ✅ Nueva opción
   ];
 
   return (
@@ -85,34 +100,28 @@ const SecurityQuestionList: React.FC = () => {
       <h2>Preguntas de Seguridad</h2>
       <Breadcrumb pageName="Security Questions / Lista" />
 
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h3>Listado</h3>
-        <AppButton name="crear" action={() => navigate("/security-questions/create")} />
+      <div className="mb-3">
+        <AppButton
+          name="crear"
+          action={() => navigate("/security-questions/create")}
+        />
       </div>
 
-      {loading ? (
-        <div className="text-center py-5">
-          <div className="spinner-border text-success" role="status">
-            <span className="visually-hidden">Cargando...</span>
-          </div>
-          <p className="mt-3">Cargando preguntas de seguridad...</p>
-        </div>
-      ) : (
-        <AppTable
-          name="Preguntas de Seguridad"
-          header={["id", "name", "description"]}
-          items={questions}
-          options={baseOptions.map((opt) => (
-            <AppButton
-              key={opt.name}
-              name={opt.name}
-              action={(question) => handleAction(opt.name, question)}
-            />
-          ))}
-        />
-      )}
+      {/* ✅ AppTable con header actualizado */}
+      <AppTable
+        name="Preguntas de Seguridad"
+        header={["id", "name", "description"]}
+        items={securityQuestions}
+        options={baseOptions.map((opt) => (
+          <AppButton
+            key={opt.name}
+            name={opt.name}
+            action={(securityQuestion) => handleAction(opt.name, securityQuestion)}
+          />
+        ))}
+      />
     </div>
   );
 };
 
-export default SecurityQuestionList;
+export default ListSecurityQuestions;

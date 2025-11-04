@@ -1,4 +1,3 @@
-import axios from "axios";
 import { Answer } from "../models/Answer";
 import api from "../interceptors/axiosInterceptor";
 import { Api } from "@mui/icons-material";

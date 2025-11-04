@@ -1,4 +1,3 @@
-import axios from "axios";
 import { SecurityQuestion } from "../models/SecurityQuestion";
 import api from "../interceptors/axiosInterceptor";
 
