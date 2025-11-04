@@ -1,6 +1,6 @@
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import { Formik, Form, Field} from "formik";
+
 import "../../../styles/Tailwind/TailwindForm.css";
 import { FormItems } from "../FormGeneric";
 
@@ -15,11 +15,13 @@ export const TailwindForm = <T extends Record<string, any>>({
   info = null,
   handleAction,
   validationSchema,
+  disabledFields = [],
+  hiddenFields = [],
+  extraContent,
 }: FormItems<T>) => {
-  // 🔸 Generamos los valores iniciales basados en los labels y la info pasada
   const initialValues = labels.reduce((acc, label) => {
-    const key = label.toLowerCase();
-    acc[key] = info ? info[key] ?? "" : "";
+    const key = label;
+    acc[key] = info ? (info as any)[key] ?? "" : "";
     return acc;
   }, {} as Record<string, any>);
 
@@ -40,25 +42,35 @@ export const TailwindForm = <T extends Record<string, any>>({
         validationSchema={validationSchema}
         validateOnChange={true}
         validateOnBlur={true}
+        validateOnMount={true}
+        enableReinitialize={true}
         onSubmit={(values, { resetForm }) => {
           if (handleAction) handleAction(values as T);
           resetForm();
         }}
       >
-        {({ isValid, dirty }) => (
+        {({ isValid, dirty, isSubmitting }) => (
           <Form className="tailwind-form">
+            {/* 🔹 Contenido extra opcional */}
+            {extraContent && (
+              <div className="tailwind-form-extra">{extraContent}</div>
+            )}
+
             {/* 🔹 Generamos campos dinámicamente según labels */}
             {labels.map((label, idx) => {
-              const key = label.toLowerCase();
+              const key = label;
+
+              // 🔹 Omitir campos ocultos
+              if (hiddenFields.includes(key)) return null;
+
+              const isDisabled = disabledFields.includes(key);
+
               return (
                 <div className="tailwind-form-field" key={idx}>
                   <Field name={key}>
                     {({ field, meta }: any) => (
                       <div className="tailwind-input-group">
-                        <label 
-                          htmlFor={key} 
-                          className="tailwind-input-label"
-                        >
+                        <label htmlFor={key} className="tailwind-input-label">
                           {label}
                         </label>
                         <input
@@ -68,7 +80,8 @@ export const TailwindForm = <T extends Record<string, any>>({
                             meta.touched && meta.error ? "tailwind-input-error" : ""
                           }`}
                           type="text"
-                          placeholder={`Ingrese ${label.toLowerCase()}`}
+                          placeholder={`Ingrese ${label}`}
+                          disabled={isDisabled}
                         />
                         {meta.touched && meta.error && (
                           <div className="tailwind-error-message">
@@ -86,9 +99,9 @@ export const TailwindForm = <T extends Record<string, any>>({
             <button
               type="submit"
               className={`tailwind-submit-button ${
-                !isValid || !dirty ? "tailwind-button-disabled" : ""
+                !isValid || !dirty || isSubmitting ? "tailwind-button-disabled" : ""
               }`}
-              disabled={!isValid || !dirty}
+              disabled={!isValid || !dirty || isSubmitting}
             >
               {mode === 1
                 ? "Crear"

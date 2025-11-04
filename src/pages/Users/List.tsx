@@ -31,9 +31,9 @@ const ListUsers: React.FC = () => {
         fetchData();
       }
     } else if (action === "view") {
-      navigate('/users/create');
+      navigate(`/users/view/${user.id}`);
     } else if (action === "update") {
-      navigate(`/users/${user.id}/update`);
+      navigate(`/users/update/${user.id}`);
     } else if (action === "devices") {
       // Redirigir a la lista de dispositivos
       navigate(`/devices/list?userId=${user.id}`);

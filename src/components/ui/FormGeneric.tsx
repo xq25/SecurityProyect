@@ -18,9 +18,10 @@ export interface FormItems<T = any> {
   validationSchema?: Yup.ObjectSchema<any>;
   disabledFields?: string[]; // campos que estaran deshabilitados.
   extraContent?: React.ReactNode; // 🔥 aquí podrás pasar el <LocationMap />
+  hiddenFields?: string[];
 }
 
-export const AppForm:  React.FC<FormItems>  = ({mode, labels, info, handleAction, validationSchema, disabledFields, extraContent}) => {
+export const AppForm:  React.FC<FormItems>  = ({mode, labels, info, handleAction, validationSchema, disabledFields, hiddenFields,extraContent}) => {
 
     const {library} = useUI();
 
@@ -32,6 +33,7 @@ export const AppForm:  React.FC<FormItems>  = ({mode, labels, info, handleAction
         handleAction={handleAction} 
         validationSchema={validationSchema} 
         disabledFields={disabledFields} 
+        hiddenFields={hiddenFields}
         extraContent={extraContent}
       />
     if (library === 'bootstrap')
@@ -42,8 +44,9 @@ export const AppForm:  React.FC<FormItems>  = ({mode, labels, info, handleAction
         handleAction={handleAction} 
         validationSchema={validationSchema} 
         disabledFields={disabledFields} 
+        hiddenFields={hiddenFields}
         extraContent={extraContent}
       />
 
-    if (library === 'tailwind') return <TailwindForm mode={mode} labels={labels} info={info} handleAction={handleAction} validationSchema={validationSchema}/>
+    if (library === 'tailwind') return <TailwindForm mode={mode} labels={labels} info={info} handleAction={handleAction} validationSchema={validationSchema} disabledFields={disabledFields} hiddenFields={hiddenFields}extraContent={extraContent}/>
     }
