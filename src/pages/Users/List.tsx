@@ -5,8 +5,6 @@ import Swal from "sweetalert2";
 import { AppTable } from "../../components/ui/TableGeneric";
 import { AppButton } from "../../components/ui/ButtonGeneric";
 import { useNavigate } from "react-router-dom";
-//para que no aparezcan los estilos de fire invisibles 
-import "../../styles/Tailwind/OverridesButtons.css";
 
 const ListUsers: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);

@@ -1,14 +1,7 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import { FormItems } from "../FormGeneric";
 
-export interface FormItems<T = any> {
-  mode?: number;
-  labels: string[];
-  info?: T | null;
-  handleAction?: (data: T) => void;
-  validationSchema?: Yup.ObjectSchema<any>;
-}
 
 export const BootstrapForm = <T extends Record<string, any>>({
   mode = 0,
@@ -16,38 +9,13 @@ export const BootstrapForm = <T extends Record<string, any>>({
   info = null,
   handleAction,
   validationSchema,
+  disabledFields = [],
+  hiddenFields = [],
+  extraContent,
 }: FormItems<T>) => {
-  // ✅ Validación por defecto si no se proporciona una
-  const defaultValidationSchema = Yup.object().shape(
-    labels.reduce((acc, label) => {
-      const key = label.toLowerCase();
-      
-      // Validación específica para email
-      if (key === "email") {
-        acc[key] = Yup.string()
-          .email("Debe ser un correo electrónico válido")
-          .required(`El ${label} es obligatorio`);
-      } 
-      // Validación para name
-      else if (key === "name" || key === "nombre") {
-        acc[key] = Yup.string()
-          .min(3, `El ${label} debe tener al menos 3 caracteres`)
-          .required(`El ${label} es obligatorio`);
-      }
-      // Validación genérica para otros campos
-      else {
-        acc[key] = Yup.string().required(`El ${label} es obligatorio`);
-      }
-      
-      return acc;
-    }, {} as Record<string, Yup.StringSchema>)
-  );
-
-  const finalValidationSchema = validationSchema || defaultValidationSchema;
-
   const initialValues = labels.reduce((acc, label) => {
-    const key = label.toLowerCase();
-    acc[key] = info ? info[key] ?? "" : "";
+    const key = label;
+    acc[key] = info ? (info as any)[key] ?? "" : "";
     return acc;
   }, {} as Record<string, any>);
 
@@ -63,15 +31,28 @@ export const BootstrapForm = <T extends Record<string, any>>({
       <div className="card-body bg-light">
         <Formik
           initialValues={initialValues}
-          validationSchema={finalValidationSchema}
-          onSubmit={(values) => {
+          validationSchema={validationSchema}
+          validateOnMount={true}
+          validateOnChange={true}
+          validateOnBlur={true}
+          enableReinitialize={true}
+          onSubmit={(values, { resetForm }) => {
             if (handleAction) handleAction(values as T);
+            resetForm();
           }}
         >
-          {({ errors, touched, isValid, dirty }) => (
+          {({ errors, touched, isValid, dirty, isSubmitting }) => (
             <Form>
+              {extraContent && (
+                <div className="mb-3">{extraContent}</div>
+              )}
+
               {labels.map((label, idx) => {
-                const key = label.toLowerCase();
+                const key = label;
+                
+                if (hiddenFields.includes(key)) return null;
+                
+                const isDisabled = disabledFields.includes(key);
                 const hasError = touched[key] && errors[key];
                 
                 return (
@@ -81,19 +62,13 @@ export const BootstrapForm = <T extends Record<string, any>>({
                     </label>
                     <Field
                       name={key}
-                      type={key === "email" ? "email" : key === "password" ? "password" : "text"}
-                      className={`form-control ${
-                        touched[key] && errors[key] 
-                          ? "is-invalid border-danger" 
-                          : touched[key] && !errors[key]
-                          ? "is-valid border-success"
-                          : ""
-                      }`}
+                      type={key.toLowerCase() === "email" ? "email" : 
+                            key.toLowerCase() === "password" ? "password" : "text"}
+                      className={`form-control ${hasError ? "is-invalid" : ""}`}
                       id={key}
-                      placeholder={`Ingrese ${label.toLowerCase()}`}
+                      placeholder={`Ingrese ${label}`}
+                      disabled={isDisabled}
                     />
-                    
-                    {/* ✅ Mensaje de error personalizado */}
                     <ErrorMessage name={key}>
                       {(msg) => (
                         <div className="invalid-feedback d-block text-danger fw-medium">
@@ -105,15 +80,10 @@ export const BootstrapForm = <T extends Record<string, any>>({
                 );
               })}
 
-              {/* ✅ Botón con estado dinámico */}
               <button 
                 type="submit" 
-                className={`btn w-100 fw-bold text-uppercase ${
-                  isValid && dirty 
-                    ? "btn-success" 
-                    : "btn-secondary"
-                }`}
-                disabled={!isValid || !dirty}
+                className="btn w-100 fw-bold text-uppercase btn-success"
+                disabled={!isValid || !dirty || isSubmitting}
               >
                 {mode === 1 ? "Crear" : mode === 2 ? "Actualizar" : "Enviar"}
               </button>

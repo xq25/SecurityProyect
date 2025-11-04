@@ -9,6 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 //Importaciones de las clases Password
 import { passwordService } from "../../services/passwordService";
+import { utils } from "../../utils/utils";
+
 
 
 const CreatePassword: React.FC = () => {
@@ -29,8 +31,8 @@ const CreatePassword: React.FC = () => {
   const handleCreatePassword = async (id: number, password: any) => {
     const finalData = { //Aqui debemos agregarle la fecha alctual al campo endAt para cumplir con el formato de la clase Password
       ...password,
-      startAt:passwordService.getCurrentDateTime(), 
-      endAt : passwordService.getCurrentDateTime()
+      startAt: utils.getCurrentDateTime(), 
+      endAt : utils.getCurrentDateTime()
     }
     try {
       const success = await passwordService.createPassword( id, finalData);
@@ -66,7 +68,7 @@ const CreatePassword: React.FC = () => {
       <h2>Create Password</h2>
       <Breadcrumb pageName="Password / Create Password" />
       <AppForm
-        mode={2}
+        mode={1}
         labels={['content', 'user_id']}
         info={{
           user_id: id

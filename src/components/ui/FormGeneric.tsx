@@ -43,9 +43,10 @@ export const AppForm:  React.FC<FormItems>  = ({mode, labels, info, handleAction
         info={info} 
         handleAction={handleAction} 
         validationSchema={validationSchema} 
-        //disabledFields={disabledFields} 
-        //extraContent={extraContent}
+        disabledFields={disabledFields} 
+        hiddenFields={hiddenFields}
+        extraContent={extraContent}
       />
 
-    if (library === 'tailwind') return <TailwindForm mode={mode} labels={labels} info={info} handleAction={handleAction} validationSchema={validationSchema}/>
+    if (library === 'tailwind') return <TailwindForm mode={mode} labels={labels} info={info} handleAction={handleAction} validationSchema={validationSchema} disabledFields={disabledFields} hiddenFields={hiddenFields}extraContent={extraContent}/>
     }

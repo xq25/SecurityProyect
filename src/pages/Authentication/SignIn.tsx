@@ -1,4 +1,4 @@
- import React from "react";
+import React from "react";
 import * as Yup from "yup";
 
 //importacion de clases
@@ -30,33 +30,48 @@ const SignIn: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   // const googleLogin = useGoogleLoginHandler(); // ✅ usamos el hook aquí
   
-  const handleLogin = async (user: User) => {
+  const handleLogin = async (object: User | { user: User; token: string }) => {
+  try {
+    // 🧠 Caso 1: Si el objeto recibido tiene estructura { user, token }
+    if ("user" in object && "token" in object) {
+      console.log('entre')
+      const { user, token } = object;
 
-    console.log("aqui " + JSON.stringify(user));
-    try {
-      const response = await SecurityService.login(user);
-      console.log('Usuario autenticado:', response);
+      // Actualiza el store
+      dispatch(setUser(user));
 
-      // Normaliza la respuesta según tu service (data | user | response)
-      const responseUser = (response as any)?.data ?? (response as any)?.user ?? response;
-
-      // Actualiza el store con el usuario que nos devolvio el backend
-      dispatch(setUser(responseUser));
-
-      //Guardamos los datos en el localStorage para mantener la sesion despues de recargar la pagina
-      try {
-        localStorage.setItem("user", JSON.stringify(responseUser));
-        const token = (response as any)?.token ?? (responseUser as any)?.token;
-        if (token) localStorage.setItem("token", token);
-      } catch (e) {
-        console.warn("No se pudo guardar en localStorage", e);
-      }
+      // Guarda en localStorage
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
 
       navigate("/");
-    } catch (error) {
-      console.error('Error al iniciar sesión', error);
+      return;
     }
+
+    // 🧠 Caso 2: Si recibimos un objeto tipo User (proceso normal de login)
+    const response = await SecurityService.login(object);
+    console.log("Usuario autenticado:", response);
+
+    const responseUser = (response as any)?.data ?? (response as any)?.user ?? response;
+    const token = (response as any)?.token ?? (responseUser as any)?.token;
+
+    // Actualiza el store
+    dispatch(setUser(responseUser));
+
+    // Guarda en localStorage
+    try {
+      localStorage.setItem("user", JSON.stringify(responseUser));
+      if (token) localStorage.setItem("token", token);
+    } catch (e) {
+      console.warn("No se pudo guardar en localStorage", e);
+    }
+
+    navigate("/");
+  } catch (error) {
+    console.error("Error al iniciar sesión", error);
   }
+};
+
   const schemas = Yup.object({
     email: Yup.string()
       .email("El correo no es válido")
@@ -78,11 +93,11 @@ const SignIn: React.FC = () => {
       </div>
       <div>
         <AppButton name={'google'} icon={<GoogleIcon/>} action={() => loginWithGoogle().then((data) => {
-          handleLogin(data.user);
+          handleLogin(data);
         })}/>
         <AppButton name={'microsoft'} icon={<MicrosoftIcon/>}/> 
         <AppButton name={'github'} icon={<GithubIcon/>} action={() => loginWithGitHub().then((data) => {
-          handleLogin(data.user);
+          handleLogin(data);
         })}/>
       </div>
     </>

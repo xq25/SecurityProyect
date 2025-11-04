@@ -9,6 +9,9 @@ export const TailwindForm = <T extends Record<string, any>>({
   info = null,
   handleAction,
   validationSchema,
+  disabledFields = [],
+  hiddenFields = [],
+  extraContent,
 }: FormItems<T>) => {
   
   const initialValues = labels.reduce((acc, label) => {

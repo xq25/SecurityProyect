@@ -39,7 +39,7 @@ const CreateRol: React.FC = () => {
           icon: "success",
           timer: 3000,
         });
-        navigate("/users/list");
+        navigate("/roles/list");
       } else {
         Swal.fire({
           title: "Error",
