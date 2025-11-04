@@ -25,7 +25,7 @@
 .tailwind-crud-button-editar,
 .tailwind-crud-button-actualizar,
 .tailwind-crud-button-update {
-  width: 3.75rem !important; /* Más ancho para mostrar texto */
+  width: 3.75rem !important;
   height: 2.5rem !important;
   padding: 0 !important;
   justify-content: center !important;
@@ -41,7 +41,7 @@
 .tailwind-crud-button-eliminar,
 .tailwind-crud-button-remove,
 .tailwind-crud-button-borrar {
-  width: 3.75rem !important; /* Más ancho para mostrar texto */
+  width: 3.75rem !important;
   height: 2.5rem !important;
   padding: 0 !important;
   justify-content: center !important;
@@ -50,6 +50,67 @@
   background: #dc2626 !important;
   letter-spacing: normal !important;
   margin-right: 6px !important;
+}
+
+/* === BOTÓN CREAR PERFIL === */
+.tailwind-crud-button-create_profile,
+.tailwind-crud-button-create-profile {
+  width: auto !important;
+  height: 2.5rem !important;
+  padding: 0 1rem !important;
+  justify-content: center !important;
+  color: #fff !important;
+  border-radius: .375rem !important;
+  background: #3b82f6 !important;
+  letter-spacing: normal !important;
+  margin-right: 6px !important;
+}
+
+.tailwind-crud-button-create_profile:hover,
+.tailwind-crud-button-create-profile:hover {
+  background: #2563eb !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* === BOTÓN EDITAR PERFIL === */
+.tailwind-crud-button-edit_profile,
+.tailwind-crud-button-edit-profile {
+  width: auto !important;
+  height: 2.5rem !important;
+  padding: 0 1rem !important;
+  justify-content: center !important;
+  color: #fff !important;
+  border-radius: .375rem !important;
+  background: #10b981 !important;
+  letter-spacing: normal !important;
+  margin-right: 6px !important;
+}
+
+.tailwind-crud-button-edit_profile:hover,
+.tailwind-crud-button-edit-profile:hover {
+  background: #059669 !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3) !important;
+}
+
+/* === BOTÓN SESIONES === */
+.tailwind-crud-button-sessions {
+  width: auto !important;
+  height: 2.5rem !important;
+  padding: 0 1rem !important;
+  justify-content: center !important;
+  color: #fff !important;
+  border-radius: .375rem !important;
+  background: #8b5cf6 !important;
+  letter-spacing: normal !important;
+  margin-right: 6px !important;
+}
+
+.tailwind-crud-button-sessions:hover {
+  background: #7c3aed !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 6px rgba(139, 92, 246, 0.3) !important;
 }
 
 /* Mejoras para la celda de acciones */

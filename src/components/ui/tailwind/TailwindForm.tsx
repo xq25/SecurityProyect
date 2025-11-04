@@ -1,14 +1,8 @@
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import { Formik, Form, Field } from "formik";
 import "../../../styles/Tailwind/TailwindForm.css";
 import { FormItems } from "../FormGeneric";
 
-/**
- * 🔹 TailwindForm genérico con Formik + Yup
- * Genera formularios dinámicos y aplica validaciones automáticas.
- * Usa tipado genérico <T> para adaptar el formulario a cualquier modelo (User, Roles, etc.)
- */
 export const TailwindForm = <T extends Record<string, any>>({
   mode = 0,
   labels,
@@ -16,88 +10,111 @@ export const TailwindForm = <T extends Record<string, any>>({
   handleAction,
   validationSchema,
 }: FormItems<T>) => {
-  // 🔸 Generamos los valores iniciales basados en los labels y la info pasada
+  
   const initialValues = labels.reduce((acc, label) => {
-    const key = label.toLowerCase();
-    acc[key] = info ? info[key] ?? "" : "";
+    acc[label] = info ? info[label] ?? "" : "";
     return acc;
   }, {} as Record<string, any>);
 
   return (
     <div className="tailwind-form-container">
-      {/* 🔹 Título dinámico según modo */}
       <h2 className="tailwind-form-title">
-        {mode === 1
-          ? "Crear Nuevo Registro"
-          : mode === 2
-          ? "Editar Registro"
-          : "Registro"}
+        {mode === 1 ? "Crear Nuevo Registro" : mode === 3 ? "Editar Registro" : "Registro"}
       </h2>
 
-      {/* 🔹 Formik controla estado, validaciones y envío */}
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        validateOnChange={true}
-        validateOnBlur={true}
-        onSubmit={(values, { resetForm }) => {
-          if (handleAction) handleAction(values as T);
-          resetForm();
+        enableReinitialize={true}
+        onSubmit={(values, { setSubmitting }) => {
+          if (handleAction) {
+            handleAction(values as T);
+          }
+          setSubmitting(false);
         }}
       >
-        {({ isValid, dirty }) => (
-          <Form className="tailwind-form">
-            {/* 🔹 Generamos campos dinámicamente según labels */}
-            {labels.map((label, idx) => {
-              const key = label.toLowerCase();
-              return (
-                <div className="tailwind-form-field" key={idx}>
-                  <Field name={key}>
-                    {({ field, meta }: any) => (
+        {({ setFieldValue, values }) => {
+          return (
+            <Form className="tailwind-form">
+              {labels.map((label, idx) => {
+                const isFileField = label.toLowerCase() === 'photo' || label.toLowerCase() === 'file';
+                
+                return (
+                  <div className="tailwind-form-field" key={idx}>
+                    {isFileField ? (
                       <div className="tailwind-input-group">
-                        <label 
-                          htmlFor={key} 
-                          className="tailwind-input-label"
-                        >
+                        <label htmlFor={label} className="tailwind-input-label">
                           {label}
                         </label>
                         <input
-                          {...field}
-                          id={key}
-                          className={`tailwind-input ${
-                            meta.touched && meta.error ? "tailwind-input-error" : ""
-                          }`}
-                          type="text"
-                          placeholder={`Ingrese ${label.toLowerCase()}`}
+                          id={label}
+                          name={label}
+                          type="file"
+                          accept="image/*"
+                          className="tailwind-input"
+                          onChange={(event) => {
+                            const file = event.currentTarget.files?.[0];
+                            setFieldValue(label, file || null);
+                          }}
                         />
-                        {meta.touched && meta.error && (
-                          <div className="tailwind-error-message">
-                            {meta.error}
+                        
+                        {values[label] instanceof File && (
+                          <div className="mt-3">
+                            <p className="text-sm text-gray-600 mb-2">Vista previa:</p>
+                            <img
+                              src={URL.createObjectURL(values[label])}
+                              alt="Preview"
+                              className="w-32 h-32 object-cover rounded-lg border-2 border-gray-300"
+                            />
+                          </div>
+                        )}
+                        
+                        {mode === 3 && info && info[label] && !(values[label] instanceof File) && (
+                          <div className="mt-3">
+                            <p className="text-sm text-gray-600 mb-2">Imagen actual:</p>
+                            <img
+                              src={typeof info[label] === 'string' && info[label].startsWith('http') 
+                                ? info[label] 
+                                : `http://127.0.0.1:5000/api/profiles/${info[label]}`}
+                              alt="Current"
+                              className="w-32 h-32 object-cover rounded-lg border-2 border-gray-300"
+                            />
                           </div>
                         )}
                       </div>
+                    ) : (
+                      <Field name={label}>
+                        {({ field, meta }: any) => (
+                          <div className="tailwind-input-group">
+                            <label htmlFor={label} className="tailwind-input-label">
+                              {label}
+                            </label>
+                            <input
+                              {...field}
+                              id={label}
+                              className={`tailwind-input ${
+                                meta.touched && meta.error ? "tailwind-input-error" : ""
+                              }`}
+                              type={label.toLowerCase() === "password" ? "password" : "text"}
+                              placeholder={`Ingrese ${label}`}
+                            />
+                            {meta.touched && meta.error && (
+                              <div className="tailwind-error-message">{meta.error}</div>
+                            )}
+                          </div>
+                        )}
+                      </Field>
                     )}
-                  </Field>
-                </div>
-              );
-            })}
+                  </div>
+                );
+              })}
 
-            {/* 🔹 Botón de envío */}
-            <button
-              type="submit"
-              className={`tailwind-submit-button ${
-                !isValid || !dirty ? "tailwind-button-disabled" : ""
-              }`}
-              disabled={!isValid || !dirty}
-            >
-              {mode === 1
-                ? "Crear"
-                : mode === 2
-                ? "Actualizar"
-                : "Enviar"}
-            </button>
-          </Form>
-        )}
+              <button type="submit" className="tailwind-submit-button">
+                {mode === 1 ? "Crear" : mode === 3 ? "Actualizar" : "Guardar"}
+              </button>
+            </Form>
+          );
+        }}
       </Formik>
     </div>
   );

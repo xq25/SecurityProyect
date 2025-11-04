@@ -48,6 +48,16 @@ const ViewDigitalSignature = lazy(() => import('../pages/DigitalSignatures/Signa
 //Profile
 const CreateProfile = lazy(() => import('../pages/Profiles/Create'));
 const UpdateProfile = lazy(() => import('../pages/Profiles/Update'));
+//Permissions
+const ListPermissions = lazy(() => import('../pages/Permissions/List'));
+const CreatePermission = lazy(() => import('../pages/Permissions/Create'));
+const UpdatePermission = lazy(() => import('../pages/Permissions/Update'));
+// Importar componente de RolePermission
+const ManageRolePermissions = lazy(() => import('../pages/RolePermissions/Manage'));
+
+//Sessions-User
+import ListSessions from '../pages/Sessions/List';
+import ViewSession from '../pages/Sessions/View';
 
 const coreRoutes = [
 // Pagina de autenticacion
@@ -145,6 +155,17 @@ const coreRoutes = [
     title: 'View User',
     component: ViewUser,
   },
+  // CRUDS SESSIONS ---
+  {
+    path: '/users/:id/sessions',
+    title: 'List Sessions',
+    component: ListSessions,
+  },
+  {
+    path: '/users/:id/sessions/:sessionId',
+    title: 'View Session',
+    component: ViewSession,
+  },
 // CRUDS ROLES ---
   {
     path: '/roles/list',
@@ -193,6 +214,29 @@ const coreRoutes = [
     path: '/users/:id/profile/update',
     title: 'Update Profile',
     component: UpdateProfile,
+  },
+// PERMISSIONS (CRUD) - Azul/Tailwind
+  {
+    path: '/permissions/list',
+    title: 'List Permissions',
+    component: ListPermissions,
+  },
+  {
+    path: '/permissions/create',
+    title: 'Create Permission',
+    component: CreatePermission,
+  },
+  {
+    path: '/permissions/update/:id',
+    title: 'Update Permission',
+    component: UpdatePermission,
+  },
+  
+  // ROLE PERMISSIONS (N:N) - Azul/Tailwind
+  {
+    path: '/roles/:id/permissions',
+    title: 'Manage Role Permissions',
+    component: ManageRolePermissions,
   },
 
 // CRUDS ADDRESSES ---
