@@ -1,5 +1,4 @@
-import axios from "axios";
-import { Device } from "../models/Device";}
+import { Device } from "../models/Device";
 import api from "../interceptors/axiosInterceptor";
 
 // ✅ Usar VITE_BACK_URL del archivo .env
