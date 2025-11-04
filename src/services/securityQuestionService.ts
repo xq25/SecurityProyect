@@ -1,5 +1,6 @@
 import axios from "axios";
 import { SecurityQuestion } from "../models/SecurityQuestion";
+import api from "../interceptors/axiosInterceptor";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/security-questions`;
 
@@ -7,7 +8,7 @@ class SecurityQuestionService {
     // GET /api/security-questions
     async getSecurityQuestions(): Promise<SecurityQuestion[]> {
         try {
-            const response = await axios.get<SecurityQuestion[]>(API_URL);
+            const response = await api.get<SecurityQuestion[]>(API_URL);
             return response.data;
         } catch (error) {
             console.error("Error al obtener preguntas de seguridad:", error);
@@ -18,7 +19,7 @@ class SecurityQuestionService {
     // GET /api/security-questions/:id
     async getSecurityQuestionById(id: number): Promise<SecurityQuestion | null> {
         try {
-            const response = await axios.get<SecurityQuestion>(`${API_URL}/${id}`);
+            const response = await api.get<SecurityQuestion>(`${API_URL}/${id}`);
             return response.data;
         } catch (error) {
             console.error("Pregunta de seguridad no encontrada:", error);
@@ -29,7 +30,7 @@ class SecurityQuestionService {
     // POST /api/security-questions
     async createSecurityQuestion(question: Omit<SecurityQuestion, "id">): Promise<SecurityQuestion | null> {
         try {
-            const response = await axios.post<SecurityQuestion>(API_URL, question);
+            const response = await api.post<SecurityQuestion>(API_URL, question);
             return response.data;
         } catch (error) {
             console.error("Error al crear pregunta de seguridad:", error);
@@ -40,7 +41,7 @@ class SecurityQuestionService {
     // PUT /api/security-questions/:id
     async updateSecurityQuestion(id: number, question: Partial<SecurityQuestion>): Promise<SecurityQuestion | null> {
         try {
-            const response = await axios.put<SecurityQuestion>(`${API_URL}/${id}`, question);
+            const response = await api.put<SecurityQuestion>(`${API_URL}/${id}`, question);
             return response.data;
         } catch (error) {
             console.error("Error al actualizar pregunta de seguridad:", error);
@@ -51,7 +52,7 @@ class SecurityQuestionService {
     // DELETE /api/security-questions/:id
     async deleteSecurityQuestion(id: number): Promise<boolean> {
         try {
-            await axios.delete(`${API_URL}/${id}`);
+            await api.delete(`${API_URL}/${id}`);
             return true;
         } catch (error) {
             console.error("Error al eliminar pregunta de seguridad:", error);

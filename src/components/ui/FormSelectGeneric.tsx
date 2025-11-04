@@ -15,15 +15,19 @@ export interface FormSelectItems<T = any> {
   handleAction?: (data: T) => void;        // Callback al submit
   validationSchema?: Yup.ObjectSchema<any>; // Validación Yup
   
+  //  Campos deshabilitados
+  disabledFields?: string[];               // Array de nombres de campos a deshabilitar (ej: ["email", "name"])
+  
   // 🔹 Propiedades del Select
-  selectLabel?: string;                    // Label del select (ej: "Usuario Propietario:") (Esto se refiere al label al cual va a estaar asignado el select)
-  selectOptions: any[];                    // Opciones del select. Aqui se cargan todas las opciones del select, Aqui se pueden cargar objetos
+  selectLabel?: string;                    // Label del select (ej: "Usuario Propietario:")
+  selectOptions: any[];                    // Opciones del select
   selectValue: number | string;            // Valor seleccionado
   onSelectChange: (value: number | string) => void; // Callback del select
-  selectDisplayKey?: string;               // Key para mostrar (ej: "name") // Si tenemos objetos dentro de las opciones, aqui definimos el key que vamos a mostrar de este objeto
-  selectValueKey?: string;                 // Key para value (ej: "id")  // Aqui esta el valor que vamos a guardar de cada seleccion 
-  selectPlaceholder?: string;              // Placeholder del select // Seleccion por defecto 
-  selectRequired?: boolean;                // Si es obligatorio // Es obligatoria la seleccion?
+  selectDisplayKey?: string;               // Key para mostrar (ej: "name")
+  selectValueKey?: string;                 // Key para value (ej: "id")
+  selectPlaceholder?: string;              // Placeholder del select
+  selectRequired?: boolean;                // Si es obligatorio
+  selectDisabled?: boolean;                // ✅ Si el select está deshabilitado
 }
 
 // 🔹 Formulario con select genérico
@@ -33,6 +37,7 @@ export const AppFormSelect: React.FC<FormSelectItems> = ({
   info,
   handleAction,
   validationSchema,
+  disabledFields,
   selectLabel,
   selectOptions,
   selectValue,
@@ -41,6 +46,7 @@ export const AppFormSelect: React.FC<FormSelectItems> = ({
   selectValueKey,
   selectPlaceholder,
   selectRequired,
+  selectDisabled,
 }) => {
   const { library } = useUI();
 
@@ -52,6 +58,7 @@ export const AppFormSelect: React.FC<FormSelectItems> = ({
         info={info}
         handleAction={handleAction}
         validationSchema={validationSchema}
+        disabledFields={disabledFields}
         selectLabel={selectLabel}
         selectOptions={selectOptions}
         selectValue={selectValue}
@@ -60,6 +67,7 @@ export const AppFormSelect: React.FC<FormSelectItems> = ({
         selectValueKey={selectValueKey}
         selectPlaceholder={selectPlaceholder}
         selectRequired={selectRequired}
+        selectDisabled={selectDisabled}
       />
     );
 
@@ -71,6 +79,7 @@ export const AppFormSelect: React.FC<FormSelectItems> = ({
        info={info}
        handleAction={handleAction}
        validationSchema={validationSchema}
+       disabledFields={disabledFields}
        selectLabel={selectLabel}
        selectOptions={selectOptions}
        selectValue={selectValue}
@@ -79,6 +88,7 @@ export const AppFormSelect: React.FC<FormSelectItems> = ({
        selectValueKey={selectValueKey}
        selectPlaceholder={selectPlaceholder}
        selectRequired={selectRequired}
+       selectDisabled={selectDisabled}
      />
    );
 };

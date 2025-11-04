@@ -1,5 +1,6 @@
 import axios from "axios";
 import { DigitalSignature } from "../models/DigitalSignature";
+import api from "../interceptors/axiosInterceptor";
 
 const API_URL = `${import.meta.env.VITE_API_URL}/digital-signatures`;
 const BASE_URL = import.meta.env.VITE_API_URL; // ✅ Mantener /api en la URL base
@@ -19,7 +20,7 @@ class DigitalSignatureService {
 
   async getDigitalSignatures(): Promise<DigitalSignature[]> {
     try {
-      const response = await axios.get<DigitalSignature[]>(API_URL);
+      const response = await api.get<DigitalSignature[]>(API_URL);
       return response.data.map(sig => ({
         ...sig,
         photo: this.getImageUrl(sig.photo)
@@ -32,7 +33,7 @@ class DigitalSignatureService {
 
   async getDigitalSignatureById(id: number): Promise<DigitalSignature | null> {
     try {
-      const response = await axios.get<DigitalSignature>(`${API_URL}/${id}`);
+      const response = await api.get<DigitalSignature>(`${API_URL}/${id}`);
       return {
         ...response.data,
         photo: this.getImageUrl(response.data.photo)
@@ -45,7 +46,7 @@ class DigitalSignatureService {
 
   async getDigitalSignatureByUserId(user_id: number): Promise<DigitalSignature | null> {
     try {
-      const response = await axios.get<DigitalSignature>(`${API_URL}/user/${user_id}`);
+      const response = await api.get<DigitalSignature>(`${API_URL}/user/${user_id}`);
       return {
         ...response.data,
         photo: this.getImageUrl(response.data.photo)
@@ -61,7 +62,7 @@ class DigitalSignatureService {
       const formData = new FormData();
       formData.append("photo", photoFile);
 
-      const response = await axios.post<DigitalSignature>(
+      const response = await api.post<DigitalSignature>(
         `${API_URL}/user/${user_id}`,
         formData,
         {
@@ -86,7 +87,7 @@ class DigitalSignatureService {
       const formData = new FormData();
       formData.append("photo", photoFile);
 
-      const response = await axios.put<DigitalSignature>(
+      const response = await api.put<DigitalSignature>(
         `${API_URL}/${id}`,
         formData,
         {
@@ -108,7 +109,7 @@ class DigitalSignatureService {
 
   async deleteDigitalSignature(id: number): Promise<boolean> {
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await api.delete(`${API_URL}/${id}`);
       return true;
     } catch (error) {
       console.error("Error al eliminar firma digital:", error);
