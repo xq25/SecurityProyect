@@ -3,23 +3,17 @@ import { useNavigate, useParams } from "react-router-dom";
 import { answerService } from "../../services/answerService";
 import { userService } from "../../services/userService";
 import { securityQuestionService } from "../../services/securityQuestionService";
-import { User } from "../../models/User";
-import { SecurityQuestion } from "../../models/SecurityQuestion";
 import { Answer } from "../../models/Answer";
 import Breadcrumb from "../../components/Breadcrumb";
 import Swal from "sweetalert2";
 
-const UpdateAnswer: React.FC = () => {
+const AnswerUpdate: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [users, setUsers] = useState<User[]>([]);
-  const [questions, setQuestions] = useState<SecurityQuestion[]>([]);
-  const [formData, setFormData] = useState({
-    content: "",
-    userId: 0,
-    securityQuestionId: 0,
-  });
+  const [answer, setAnswer] = useState<Answer | null>(null);
+  const [content, setContent] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -28,62 +22,79 @@ const UpdateAnswer: React.FC = () => {
   const loadData = async () => {
     if (!id) return;
 
-    const answerData = await answerService.getAnswerById(parseInt(id));
-    const usersData = await userService.getUsers();
-    const questionsData = await securityQuestionService.getSecurityQuestions();
+    try {
+      const [answerData, users, questions] = await Promise.all([
+        answerService.getAnswerById(parseInt(id)),
+        userService.getUsers(),
+        securityQuestionService.getSecurityQuestions(),
+      ]);
 
-    if (answerData) {
-      setFormData({
-        content: answerData.content ?? "",
-        userId: answerData.userId ?? 0,
-        securityQuestionId: answerData.securityQuestionId ?? 0,
+      if (answerData) {
+        const enrichedAnswer = {
+          ...answerData,
+          user: users.find((u) => u.id === answerData.user_id),
+          question: questions.find((q) => q.id === answerData.security_question_id),
+        };
+
+        setAnswer(enrichedAnswer);
+        setContent(enrichedAnswer.content || "");
+      }
+    } catch (error: any) {
+      Swal.fire({
+        title: "Error",
+        text: error.response?.data?.message || "No se pudo cargar la respuesta",
+        icon: "error",
       });
+    } finally {
+      setLoading(false);
     }
-
-    setUsers(usersData);
-    setQuestions(questionsData);
-    setLoading(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!id) return;
-
-    if (formData.content.trim() === "") {
+    if (!content.trim()) {
       Swal.fire("Error", "Debe ingresar una respuesta", "error");
       return;
     }
 
-    try {
-      const updated = await answerService.updateAnswer(parseInt(id), formData);
+    setUpdating(true);
 
-      if (updated) {
-        Swal.fire({
-          title: "Completado",
-          text: "Respuesta actualizada correctamente",
-          icon: "success",
-          timer: 3000,
-        });
-        navigate("/answers/list");
-      } else {
-        Swal.fire({
-          title: "Error",
-          text: "No se pudo actualizar la respuesta",
-          icon: "error",
-        });
-      }
-    } catch (error) {
+    try {
+      await answerService.updateAnswer(parseInt(id!), content);
+
+      Swal.fire({
+        title: "¡Éxito!",
+        text: "Respuesta actualizada correctamente",
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      navigate("/answers/list");
+    } catch (error: any) {
       Swal.fire({
         title: "Error",
-        text: "Ocurrió un error al actualizar la respuesta",
+        text: error.response?.data?.message || "No se pudo actualizar la respuesta",
         icon: "error",
       });
+    } finally {
+      setUpdating(false);
     }
   };
 
   if (loading) {
-    return <div>Cargando...</div>;
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-success" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+        <p className="mt-3">Cargando respuesta...</p>
+      </div>
+    );
+  }
+
+  if (!answer) {
+    return <div className="alert alert-danger">Respuesta no encontrada</div>;
   }
 
   return (
@@ -91,74 +102,89 @@ const UpdateAnswer: React.FC = () => {
       <h2>Actualizar Respuesta de Seguridad</h2>
       <Breadcrumb pageName="Answers / Actualizar" />
 
+      {updating && (
+        <div className="alert alert-info">
+          <span className="spinner-border spinner-border-sm me-2"></span>
+          Actualizando respuesta...
+        </div>
+      )}
+
       <div className="card">
         <div className="card-body">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label className="form-label">Usuario</label>
-              <select
-                className="form-select"
-                value={formData.userId}
-                onChange={(e) =>
-                  setFormData({ ...formData, userId: parseInt(e.target.value) })
-                }
-                disabled
-              >
-                {users.map((user) => (
-                  <option key={user.id} value={user.id}>
-                    {user.name} - {user.email}
-                  </option>
-                ))}
-              </select>
-              <div className="form-text">El usuario no puede ser modificado</div>
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label">Pregunta de Seguridad</label>
-              <select
-                className="form-select"
-                value={formData.securityQuestionId}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    securityQuestionId: parseInt(e.target.value),
-                  })
-                }
-                disabled
-              >
-                {questions.map((question) => (
-                  <option key={question.id} value={question.id}>
-                    {question.name}
-                  </option>
-                ))}
-              </select>
-              <div className="form-text">
+              <label className="form-label fw-bold">Pregunta de Seguridad</label>
+              <p className="form-control-plaintext bg-light p-2 rounded">
+                {answer.question?.name || "Pregunta no disponible"}
+              </p>
+              {answer.question?.description && (
+                <small className="text-muted d-block mb-2">
+                  <i className="bi bi-info-circle me-1"></i>
+                  {answer.question.description}
+                </small>
+              )}
+              <small className="text-muted">
+                <i className="bi bi-lock me-1"></i>
                 La pregunta no puede ser modificada
-              </div>
+              </small>
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Respuesta</label>
+              <label className="form-label fw-bold">Usuario</label>
+              <p className="form-control-plaintext bg-light p-2 rounded">
+                {answer.user ? (
+                  <>
+                    {answer.user.name}
+                    {answer.user.email && ` (${answer.user.email})`}
+                  </>
+                ) : (
+                  "Usuario no disponible"
+                )}
+              </p>
+              <small className="text-muted">
+                <i className="bi bi-lock me-1"></i>
+                El usuario no puede ser modificado
+              </small>
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label fw-bold">Respuesta *</label>
               <textarea
                 className="form-control"
                 rows={3}
-                value={formData.content}
-                onChange={(e) =>
-                  setFormData({ ...formData, content: e.target.value })
-                }
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                placeholder="Ingrese la nueva respuesta..."
                 required
+                disabled={updating}
               />
+              <small className="text-muted">
+                <i className="bi bi-shield-check me-1"></i>
+                Solo puedes modificar el contenido de la respuesta
+              </small>
             </div>
 
             <div className="d-flex gap-2">
-              <button type="submit" className="btn btn-warning">
-                Actualizar
+              <button type="submit" className="btn btn-primary" disabled={updating}>
+                {updating ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2"></span>
+                    Actualizando...
+                  </>
+                ) : (
+                  <>
+                    <i className="bi bi-check-circle me-2"></i>
+                    Actualizar
+                  </>
+                )}
               </button>
               <button
                 type="button"
                 className="btn btn-secondary"
                 onClick={() => navigate("/answers/list")}
+                disabled={updating}
               >
+                <i className="bi bi-x-circle me-2"></i>
                 Cancelar
               </button>
             </div>
@@ -169,4 +195,4 @@ const UpdateAnswer: React.FC = () => {
   );
 };
 
-export default UpdateAnswer;
+export default AnswerUpdate;

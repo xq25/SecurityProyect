@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { answerService } from "../../services/answerService";
+import { userService } from "../../services/userService";
+import { securityQuestionService } from "../../services/securityQuestionService";
 import { Answer } from "../../models/Answer";
 import Breadcrumb from "../../components/Breadcrumb";
+import Swal from "sweetalert2";
 
-const ViewAnswer: React.FC = () => {
+const AnswerView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [answer, setAnswer] = useState<Answer | null>(null);
@@ -17,17 +20,46 @@ const ViewAnswer: React.FC = () => {
   const loadData = async () => {
     if (!id) return;
 
-    const answerData = await answerService.getAnswerById(parseInt(id));
-    setAnswer(answerData);
-    setLoading(false);
+    try {
+      const [answerData, users, questions] = await Promise.all([
+        answerService.getAnswerById(parseInt(id)),
+        userService.getUsers(),
+        securityQuestionService.getSecurityQuestions(),
+      ]);
+
+      if (answerData) {
+        const enrichedAnswer = {
+          ...answerData,
+          user: users.find((u) => u.id === answerData.user_id),
+          question: questions.find((q) => q.id === answerData.security_question_id),
+        };
+
+        setAnswer(enrichedAnswer);
+      }
+    } catch (error: any) {
+      Swal.fire({
+        title: "Error",
+        text: error.response?.data?.message || "No se pudo cargar la respuesta",
+        icon: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (loading) {
-    return <div>Cargando...</div>;
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-success" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+        <p className="mt-3">Cargando respuesta...</p>
+      </div>
+    );
   }
 
   if (!answer) {
-    return <div>Respuesta no encontrada</div>;
+    return <div className="alert alert-danger">Respuesta no encontrada</div>;
   }
 
   return (
@@ -35,67 +67,83 @@ const ViewAnswer: React.FC = () => {
       <h2>Detalles de la Respuesta</h2>
       <Breadcrumb pageName="Answers / Ver" />
 
-      <div className="card">
-        <div className="card-body">
-          <div className="row mb-3">
+      <div className="card border-0 shadow-sm">
+        <div className="card-body p-4">
+          <div className="row mb-4">
             <div className="col-md-6">
-              <strong>ID:</strong>
-              <p>{answer.id}</p>
+              <div className="mb-3">
+                <label className="form-label text-muted fw-bold">ID:</label>
+                <p className="fs-5 mb-0">{answer.id}</p>
+              </div>
             </div>
             <div className="col-md-6">
-              <strong>Usuario ID:</strong>
-              <p>{answer.userId}</p>
+              <div className="mb-3">
+                <label className="form-label text-muted fw-bold">Usuario ID:</label>
+                <p className="fs-5 mb-0">{answer.user_id || "N/A"}</p>
+              </div>
             </div>
           </div>
 
           {answer.user && (
-            <div className="row mb-3">
-              <div className="col-md-12">
-                <strong>Usuario:</strong>
-                <p>
-                  {answer.user.name} ({answer.user.email})
+            <div className="mb-4 p-3 bg-light rounded">
+              <h5 className="mb-3">
+                <i className="bi bi-person-circle me-2"></i>
+                Información del Usuario
+              </h5>
+              <div className="row">
+                <div className="col-md-6">
+                  <strong>Nombre:</strong>
+                  <p className="mb-2">{answer.user.name}</p>
+                </div>
+                <div className="col-md-6">
+                  <strong>Email:</strong>
+                  <p className="mb-2">{answer.user.email}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="mb-4">
+            <label className="form-label text-muted fw-bold">Pregunta ID:</label>
+            <p className="mb-2">{answer.security_question_id || "N/A"}</p>
+          </div>
+
+          {answer.question && (
+            <div className="mb-4 p-3 bg-light rounded">
+              <h5 className="mb-3">
+                <i className="bi bi-question-circle me-2"></i>
+                Pregunta de Seguridad
+              </h5>
+              <p className="fs-5 mb-2">{answer.question.name}</p>
+              {answer.question.description && (
+                <p className="text-muted mb-0">
+                  <small>{answer.question.description}</small>
                 </p>
-              </div>
+              )}
             </div>
           )}
 
-          <div className="row mb-3">
-            <div className="col-md-12">
-              <strong>Pregunta ID:</strong>
-              <p>{answer.securityQuestionId}</p>
+          <div className="mb-4">
+            <label className="form-label text-muted fw-bold">Respuesta:</label>
+            <div className="alert alert-info d-flex align-items-center">
+              <i className="bi bi-shield-lock fs-4 me-3"></i>
+              <span className="fs-5">{answer.content}</span>
             </div>
           </div>
 
-          {answer.securityQuestion && (
-            <div className="row mb-3">
-              <div className="col-md-12">
-                <strong>Pregunta de Seguridad:</strong>
-                <p className="text-lg">{answer.securityQuestion.name}</p>
-              </div>
-            </div>
-          )}
-
-          <div className="row mb-3">
-            <div className="col-md-12">
-              <strong>Respuesta:</strong>
-              <div className="alert alert-info">
-                <i className="bi bi-shield-lock me-2"></i>
-                {answer.content}
-              </div>
-            </div>
-          </div>
-
-          <div className="d-flex gap-2">
+          <div className="d-flex gap-2 pt-3 border-top">
             <button
-              className="btn btn-primary"
+              className="btn btn-primary px-4"
               onClick={() => navigate(`/answers/update/${answer.id}`)}
             >
+              <i className="bi bi-pencil me-2"></i>
               Editar
             </button>
             <button
-              className="btn btn-secondary"
+              className="btn btn-secondary px-4"
               onClick={() => navigate("/answers/list")}
             >
+              <i className="bi bi-arrow-left me-2"></i>
               Volver
             </button>
           </div>
@@ -105,4 +153,4 @@ const ViewAnswer: React.FC = () => {
   );
 };
 
-export default ViewAnswer;
+export default AnswerView;

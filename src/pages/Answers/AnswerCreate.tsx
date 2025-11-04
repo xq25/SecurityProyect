@@ -5,88 +5,78 @@ import { userService } from "../../services/userService";
 import { securityQuestionService } from "../../services/securityQuestionService";
 import { User } from "../../models/User";
 import { SecurityQuestion } from "../../models/SecurityQuestion";
-import { Answer } from "../../models/Answer";
 import Breadcrumb from "../../components/Breadcrumb";
 import Swal from "sweetalert2";
 
-const CreateAnswer: React.FC = () => {
+const AnswerCreate: React.FC = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [questions, setQuestions] = useState<SecurityQuestion[]>([]);
-  const [formData, setFormData] = useState({
-    content: "",
-    userId: 0,
-    securityQuestionId: 0,
-  });
+  const [selectedUserId, setSelectedUserId] = useState<number>(0);
+  const [selectedQuestionId, setSelectedQuestionId] = useState<number>(0);
+  const [content, setContent] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadData();
   }, []);
 
   const loadData = async () => {
-    const usersData = await userService.getUsers();
-    const questionsData = await securityQuestionService.getSecurityQuestions();
-    setUsers(usersData);
-    setQuestions(questionsData);
+    try {
+      const [usersData, questionsData] = await Promise.all([
+        userService.getUsers(),
+        securityQuestionService.getSecurityQuestions(),
+      ]);
+      setUsers(usersData);
+      setQuestions(questionsData);
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "No se pudieron cargar los datos",
+        icon: "error",
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (formData.userId === 0) {
+    if (selectedUserId === 0) {
       Swal.fire("Error", "Debe seleccionar un usuario", "error");
       return;
     }
 
-    if (formData.securityQuestionId === 0) {
+    if (selectedQuestionId === 0) {
       Swal.fire("Error", "Debe seleccionar una pregunta de seguridad", "error");
       return;
     }
 
-    if (formData.content.trim() === "") {
+    if (!content.trim()) {
       Swal.fire("Error", "Debe ingresar una respuesta", "error");
       return;
     }
 
+    setLoading(true);
+
     try {
-      // Verificar si el usuario ya respondió esta pregunta
-      const alreadyAnswered = await answerService.checkUserAnsweredQuestion(
-        formData.userId,
-        formData.securityQuestionId
-      );
+      await answerService.createAnswer(selectedUserId, selectedQuestionId, content);
 
-      if (alreadyAnswered) {
-        Swal.fire({
-          title: "Advertencia",
-          text: "El usuario ya ha respondido esta pregunta de seguridad",
-          icon: "warning",
-        });
-        return;
-      }
-
-      const created = await answerService.createAnswer(formData);
-
-      if (created) {
-        Swal.fire({
-          title: "Completado",
-          text: "Respuesta creada correctamente",
-          icon: "success",
-          timer: 3000,
-        });
-        navigate("/answers/list");
-      } else {
-        Swal.fire({
-          title: "Error",
-          text: "No se pudo crear la respuesta",
-          icon: "error",
-        });
-      }
-    } catch (error) {
+      Swal.fire({
+        title: "¡Éxito!",
+        text: "Respuesta creada correctamente",
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      navigate("/answers/list");
+    } catch (error: any) {
       Swal.fire({
         title: "Error",
-        text: "Ocurrió un error al crear la respuesta",
+        text: error.response?.data?.message || "No se pudo crear la respuesta",
         icon: "error",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,18 +85,24 @@ const CreateAnswer: React.FC = () => {
       <h2>Crear Respuesta de Seguridad</h2>
       <Breadcrumb pageName="Answers / Crear" />
 
+      {loading && (
+        <div className="alert alert-info">
+          <span className="spinner-border spinner-border-sm me-2"></span>
+          Creando respuesta...
+        </div>
+      )}
+
       <div className="card">
         <div className="card-body">
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label className="form-label">Usuario</label>
+              <label className="form-label">Usuario *</label>
               <select
                 className="form-select"
-                value={formData.userId}
-                onChange={(e) =>
-                  setFormData({ ...formData, userId: parseInt(e.target.value) })
-                }
+                value={selectedUserId}
+                onChange={(e) => setSelectedUserId(parseInt(e.target.value))}
                 required
+                disabled={loading}
               >
                 <option value="0">Seleccionar usuario...</option>
                 {users.map((user) => (
@@ -118,17 +114,13 @@ const CreateAnswer: React.FC = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Pregunta de Seguridad</label>
+              <label className="form-label">Pregunta de Seguridad *</label>
               <select
                 className="form-select"
-                value={formData.securityQuestionId}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    securityQuestionId: parseInt(e.target.value),
-                  })
-                }
+                value={selectedQuestionId}
+                onChange={(e) => setSelectedQuestionId(parseInt(e.target.value))}
                 required
+                disabled={loading}
               >
                 <option value="0">Seleccionar pregunta...</option>
                 {questions.map((question) => (
@@ -140,30 +132,27 @@ const CreateAnswer: React.FC = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Respuesta</label>
+              <label className="form-label">Respuesta *</label>
               <textarea
                 className="form-control"
                 rows={3}
-                value={formData.content}
-                onChange={(e) =>
-                  setFormData({ ...formData, content: e.target.value })
-                }
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
                 placeholder="Ingrese la respuesta..."
                 required
+                disabled={loading}
               />
-              <div className="form-text">
-                La respuesta debe ser algo que solo el usuario pueda recordar
-              </div>
             </div>
 
             <div className="d-flex gap-2">
-              <button type="submit" className="btn btn-success">
-                Crear
+              <button type="submit" className="btn btn-success" disabled={loading}>
+                {loading ? "Creando..." : "Crear"}
               </button>
               <button
                 type="button"
                 className="btn btn-secondary"
                 onClick={() => navigate("/answers/list")}
+                disabled={loading}
               >
                 Cancelar
               </button>
@@ -175,4 +164,4 @@ const CreateAnswer: React.FC = () => {
   );
 };
 
-export default CreateAnswer;
+export default AnswerCreate;

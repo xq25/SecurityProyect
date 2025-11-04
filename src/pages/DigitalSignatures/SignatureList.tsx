@@ -69,10 +69,10 @@ const ListDigitalSignatures: React.FC = () => {
 
       <AppTable
         name="Firmas Digitales"
-        header={["id", "userId", "photo"]}
+        header={["id", "user_id", "photo"]}
         items={signatures.map((sig) => ({
           id: sig.id,
-          userId: sig.userId,
+          user_id: sig.user_id,
           photo: sig.photo ? "✓ Cargada" : "✗ Sin foto",
         }))}
         options={baseOptions.map((opt) => (

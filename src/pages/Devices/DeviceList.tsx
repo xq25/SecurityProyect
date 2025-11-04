@@ -76,7 +76,7 @@ const ListDevices: React.FC = () => {
 
       <AppTable
         name="Dispositivos"
-        header={["id", "name", "ip", "operating_system", "userId"]}
+        header={["id", "name", "ip", "operating_system", "user_id"]}
         items={devices}
         options={baseOptions.map((opt) => (
           <AppButton

@@ -58,7 +58,7 @@ const CreateDevice: React.FC = () => {
     try {
       const deviceWithUser = {
         ...device,
-        userId: selectedUserId,
+        user_id: selectedUserId,
       };
 
       const createdDevice = await deviceService.createDevice(deviceWithUser);

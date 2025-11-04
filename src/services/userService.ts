@@ -1,7 +1,7 @@
 import axios from "axios"; // Axios es una libreria que nos permite realizar peticiones a las API
 import { User } from "../models/User";
 
-const API_URL = import.meta.env.VITE_API_URL + "/users" || "";
+const API_URL = `${import.meta.env.VITE_BACK_URL}/users`;
 
 class UserService {
     async getUsers(): Promise<User[]> {  //async lo usamos para decir que espere a que se ejecute esta funcion para hacer algo mas. 

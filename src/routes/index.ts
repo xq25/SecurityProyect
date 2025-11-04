@@ -36,11 +36,10 @@ const ListDevices = lazy(() => import('../pages/Devices/DeviceList'));
 const UpdateDevice = lazy(() => import('../pages/Devices/DeviceUpdate'));
 const ViewDevice = lazy(() => import('../pages/Devices/DeviceView'));
 // Security Questions
-const ListSecurityQuestions = lazy(() => import('../pages/SecurityQuestions/QuestionList'));
-const CreateSecurityQuestion = lazy(() => import('../pages/SecurityQuestions/QuestionCreate'));
-const UpdateSecurityQuestion = lazy(() => import('../pages/SecurityQuestions/QuestionUpdate'));
-const SecurityQuestionAnswers = lazy(() => import('../pages/SecurityQuestions/SecurityAnswers'));
-const ViewSecurityQuestion = lazy(() => import('../pages/SecurityQuestions/QuestionView'));
+const SecurityQuestionList = lazy(() => import('../pages/SecurityQuestions/QuestionList'));
+const SecurityQuestionCreate = lazy(() => import('../pages/SecurityQuestions/QuestionCreate'));
+const SecurityQuestionUpdate = lazy(() => import('../pages/SecurityQuestions/QuestionUpdate'));
+const SecurityQuestionView = lazy(() => import('../pages/SecurityQuestions/QuestionView'));
 // Digital Signatures
 const ListDigitalSignatures = lazy(() => import('../pages/DigitalSignatures/SignatureList'));
 const CreateDigitalSignature = lazy(() => import('../pages/DigitalSignatures/SignatureCreate'));
@@ -104,27 +103,22 @@ const coreRoutes = [
   {
     path: '/security-questions/list',
     title: 'Security Questions List',
-    component: ListSecurityQuestions,
+    component: SecurityQuestionList,
   },
   {
     path: '/security-questions/create',
     title: 'Create Security Question',
-    component: CreateSecurityQuestion,
+    component: SecurityQuestionCreate,
   },
   {
     path: '/security-questions/update/:id',
     title: 'Update Security Question',
-    component: UpdateSecurityQuestion,
-  },
-  {
-    path: '/security-questions/answers/:id',
-    title: 'Security Question Answers',
-    component: SecurityQuestionAnswers,
+    component: SecurityQuestionUpdate,
   },
   {
     path: '/security-questions/:id',
     title: 'View Security Question',
-    component: ViewSecurityQuestion,
+    component: SecurityQuestionView,
   },
   // DEVICES
   {

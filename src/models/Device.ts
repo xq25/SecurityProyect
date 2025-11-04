@@ -6,6 +6,6 @@ export interface Device {
     ip?: string;
     operating_system?: string;
     // Relación con User
-    userId?: number; //Llave foránea
+    user_id?: number; //Llave foránea
     user?: User;
 }
