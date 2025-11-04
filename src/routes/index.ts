@@ -1,4 +1,6 @@
 import { lazy } from 'react';
+//Home Page
+import Home from '../pages/Home';
 
 //Roles
 import RolesList from '../pages/Roles/List';
@@ -55,6 +57,12 @@ const coreRoutes = [
     path: '/auth/signin',
     title: 'Sing In',
     component : SingIn,
+  },
+//Pagina de incio
+  {
+    path: '/',
+    title: 'Home Page',
+    component: Home,
   },
 // CRUDS DIGITAL SIGNATURES ---
   {

@@ -1,0 +1,168 @@
+.home {
+  font-family: "Poppins", sans-serif;
+  color: #333;
+  background-color: #fafafa;
+  overflow-x: hidden;
+}
+
+/* 🟦 Hero */
+.hero {
+  background: linear-gradient(135deg, #1976d2, #64b5f6);
+  color: white;
+  text-align: center;
+  padding: 6rem 1rem 5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.hero-subtitle {
+  font-size: 1.3rem;
+  margin-top: 1rem;
+  opacity: 0.9;
+}
+
+/* 🔷 Secciones generales */
+.section-title {
+  font-size: 1.8rem;
+  color: #1976d2;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+.about,
+.features,
+.tech,
+.team {
+  max-width: 1100px;
+  margin: 3rem auto;
+  padding: 0 2rem;
+}
+
+/* 📄 About */
+.about-text {
+  line-height: 1.7;
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+}
+
+/* ⚙️ Features */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.feature-card h3 {
+  color: #1976d2;
+  margin-bottom: 0.5rem;
+}
+
+/* ⚛️ Tech logos */
+.tech-logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin: 2rem 0;
+}
+
+.tech-logos img {
+  height: 70px;
+  transition: transform 0.3s ease;
+}
+
+.tech-logos img:hover {
+  transform: scale(1.15);
+}
+
+.tech-text {
+  text-align: center;
+  font-size: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* 👨‍💻 Team */
+.team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+.team-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  border-radius: 10px;
+  padding: 0.8rem 1.5rem;
+  width: 260px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.team-card span {
+  font-weight: 500;
+}
+
+.github-btn img {
+  width: 28px;
+  height: 28px;
+  transition: transform 0.3s ease;
+}
+
+.github-btn img:hover {
+  transform: scale(1.2);
+}
+
+/* 🧾 Footer */
+.footer {
+  background: #1976d2;
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  margin-top: 4rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+/* 📱 Responsive */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.3rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .tech-logos img {
+    height: 50px;
+  }
+}
