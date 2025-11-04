@@ -1,5 +1,6 @@
 import React from "react";
 import {Drawer,IconButton,List,ListItem,ListItemText,ListItemButton,ListItemIcon,Divider,Typography,Box,} from "@mui/material";
+import { FaQuestionCircle, FaReply} from "react-icons/fa";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import HomeIcon from "@mui/icons-material/Home";
@@ -21,6 +22,8 @@ export const MaterialSideBar: React.FC<Props> = ({
     Usuarios: <PeopleIcon />,
     Roles: <SecurityIcon />,
     Permissions: <LockIcon />,
+    "Security Questions": <FaQuestionCircle/>,
+    Answers: <FaReply/>
   };
   const navegate = useNavigate();
   return (

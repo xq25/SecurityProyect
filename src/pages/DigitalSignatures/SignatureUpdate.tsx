@@ -16,6 +16,7 @@ const UpdateDigitalSignature: React.FC = () => {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -24,19 +25,23 @@ const UpdateDigitalSignature: React.FC = () => {
   const loadData = async () => {
     if (!id) return;
 
-    const signatureData = await digitalSignatureService.getDigitalSignatureById(parseInt(id));
-    setSignature(signatureData);
+    try {
+      const signatureData = await digitalSignatureService.getDigitalSignatureById(parseInt(id));
+      setSignature(signatureData);
 
-    if (signatureData?.userId) {
-      const userData = await userService.getUserById(signatureData.userId);
-      setUser(userData);
+      if (signatureData?.user_id) {
+        const userData = await userService.getUserById(signatureData.user_id);
+        setUser(userData);
+      }
+
+      if (signatureData?.photo) {
+        setPhotoPreview(signatureData.photo);
+      }
+    } catch (error) {
+      console.error("Error al cargar firma digital:", error);
+    } finally {
+      setLoading(false);
     }
-
-    if (signatureData?.photo) {
-      setPhotoPreview(signatureData.photo);
-    }
-
-    setLoading(false);
   };
 
   const handleFileChange = (file: File | null) => {
@@ -45,9 +50,14 @@ const UpdateDigitalSignature: React.FC = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPhotoPreview(reader.result as string);
+        setImageError(false);
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleImageError = () => {
+    setImageError(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,42 +68,44 @@ const UpdateDigitalSignature: React.FC = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("photo", photoFile);
-
     try {
-      const updated = await digitalSignatureService.updateDigitalSignature(parseInt(id!), formData);
+      const updated = await digitalSignatureService.updateDigitalSignature(
+        parseInt(id!),
+        photoFile
+      );
 
       if (updated) {
         Swal.fire({
-          title: "Completado",
+          title: "¡Éxito!",
           text: "Firma digital actualizada correctamente",
           icon: "success",
-          timer: 3000,
+          timer: 2000,
+          showConfirmButton: false,
         });
         navigate(`/digital-signatures/list`);
-      } else {
-        Swal.fire({
-          title: "Error",
-          text: "No se pudo actualizar la firma digital",
-          icon: "error",
-        });
       }
-    } catch (error) {
+    } catch (error: any) {
       Swal.fire({
         title: "Error",
-        text: "Ocurrió un error al actualizar la firma digital",
+        text: error.response?.data?.message || "No se pudo actualizar la firma digital",
         icon: "error",
       });
     }
   };
 
   if (loading) {
-    return <div>Cargando...</div>;
+    return (
+      <div className="text-center py-5">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+        <p className="mt-3">Cargando firma digital...</p>
+      </div>
+    );
   }
 
   if (!signature) {
-    return <div>Firma digital no encontrada</div>;
+    return <div className="alert alert-danger">Firma digital no encontrada</div>;
   }
 
   return (
@@ -106,23 +118,50 @@ const UpdateDigitalSignature: React.FC = () => {
           {/* Información del usuario */}
           {user && (
             <div className="mb-4">
-              <h5>Name: FBC</h5>
+              <h5>Name: {user.name}</h5>
               <p className="text-muted">Email: {user.email}</p>
+            </div>
+          )}
+
+          {/* Mostrar imagen actual */}
+          {photoPreview && !photoFile && !imageError && (
+            <div className="mb-3">
+              <label className="form-label fw-bold">Imagen actual:</label>
+              <div className="border p-3 bg-light text-center">
+                <img
+                  src={photoPreview}
+                  alt="Current Signature"
+                  className="img-fluid"
+                  style={{
+                    maxWidth: "300px",
+                    maxHeight: "200px",
+                    objectFit: "contain",
+                  }}
+                  onError={handleImageError}
+                />
+              </div>
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
             <AppFileInput
-              label="Photo:"
+              label="Nueva foto:"
               accept="image/*"
               onChange={handleFileChange}
               value={photoFile}
-              preview={photoPreview}
+              preview={photoFile ? photoPreview : ""}
             />
 
             <div className="d-flex gap-2 mt-3">
-              <button type="submit" className="btn btn-primary w-100">
-                Update
+              <button type="submit" className="btn btn-primary">
+                Actualizar
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => navigate("/digital-signatures/list")}
+              >
+                Cancelar
               </button>
             </div>
           </form>

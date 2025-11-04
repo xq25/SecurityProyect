@@ -23,8 +23,8 @@ const ViewDevice: React.FC = () => {
     const deviceData = await deviceService.getDeviceById(parseInt(id));
     setDevice(deviceData);
 
-    if (deviceData?.userId) {
-      const userData = await userService.getUserById(deviceData.userId);
+    if (deviceData?.user_id) {
+      const userData = await userService.getUserById(deviceData.user_id);
       setUser(userData);
     }
 
@@ -71,7 +71,7 @@ const ViewDevice: React.FC = () => {
           <div className="row mb-3">
             <div className="col-12">
               <strong>Usuario Propietario:</strong>
-              <p>{user ? `${user.name} (${user.email})` : `ID: ${device.userId}`}</p>
+              <p>{user ? `${user.name} (${user.email})` : `ID: ${device.user_id}`}</p>
             </div>
           </div>
 

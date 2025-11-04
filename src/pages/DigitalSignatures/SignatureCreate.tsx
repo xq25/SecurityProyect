@@ -36,49 +36,44 @@ const CreateDigitalSignature: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (selectedUserId === 0) {
-      Swal.fire("Error", "Debe seleccionar un usuario", "error");
-      return;
-    }
+  if (selectedUserId === 0) {
+    Swal.fire("Error", "Debe seleccionar un usuario", "error");
+    return;
+  }
 
-    if (!photoFile) {
-      Swal.fire("Error", "Debe seleccionar una foto", "error");
-      return;
-    }
+  if (!photoFile) {
+    Swal.fire("Error", "Debe seleccionar una foto", "error");
+    return;
+  }
 
-    const formData = new FormData();
-    formData.append("userId", selectedUserId.toString());
-    formData.append("photo", photoFile);
+  try {
+    // ✅ Ahora solo pasa user_id y photoFile (FormData se crea en el service)
+    const created = await digitalSignatureService.createDigitalSignature(
+      selectedUserId,
+      photoFile
+    );
 
-    try {
-      const created = await digitalSignatureService.createDigitalSignature(formData);
-
-      if (created) {
-        Swal.fire({
-          title: "Completado",
-          text: "Firma digital creada correctamente",
-          icon: "success",
-          timer: 3000,
-        });
-        navigate("/digital-signatures/list");
-      } else {
-        Swal.fire({
-          title: "Error",
-          text: "No se pudo crear la firma digital",
-          icon: "error",
-        });
-      }
-    } catch (error) {
+    if (created) {
       Swal.fire({
-        title: "Error",
-        text: "Ocurrió un error al crear la firma digital",
-        icon: "error",
+        title: "¡Éxito!",
+        text: "Firma digital creada correctamente",
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false,
       });
+      navigate("/digital-signatures/list");
     }
-  };
+  } catch (error: any) {
+    Swal.fire({
+      title: "Error",
+      text: error.response?.data?.message || "No se pudo crear la firma digital",
+      icon: "error",
+    });
+  } 
+};
 
   return (
     <div>

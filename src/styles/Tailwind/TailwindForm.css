@@ -110,3 +110,60 @@
 .tailwind-button-disabled:hover {
   background-color: #9ca3af;
 }
+
+/* FORZAR VISIBILIDAD DEL BOTÓN DE ENVÍO */
+button.tailwind-submit-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  padding: 0.625rem 1.25rem !important;
+  background-color: #6d28d9 !important; /* morado visible */
+  color: #ffffff !important;             /* texto blanco */
+  border: none !important;
+  border-radius: 0.375rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 8px rgba(109,40,217,0.12) !important;
+  transition: background-color 0.15s ease-in-out, transform 0.08s ease !important;
+  opacity: 1 !important;
+}
+
+/* hover activo (no cambiar si está deshabilitado) */
+button.tailwind-submit-button:hover:not(:disabled) {
+  background-color: #5b21b6 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* estado deshabilitado: claro y no transparente por otras reglas */
+button.tailwind-submit-button.tailwind-button-disabled,
+button.tailwind-submit-button:disabled {
+  background-color: #9ca3af !important; /* gris visible */
+  color: #ffffff !important;
+  opacity: 0.9 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  transform: none !important;
+  pointer-events: auto !important; /* mantener hover/tooltip si necesitas */
+}
+
+/* Asegura que reglas globales .tailwind-button no sobrescriban este botón */
+button.tailwind-submit-button,
+button.tailwind-submit-button * {
+  all: unset;
+  /* restauramos solo lo necesario */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  font-size: 0.875rem;
+}
+button.tailwind-submit-button {
+  /* re-aplicar aparts que quitó el all:unset */
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.375rem;
+  background-color: #6d28d9;
+  color: #fff;
+  text-align: center;
+}
+

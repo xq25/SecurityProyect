@@ -1,5 +1,6 @@
 import React from "react";
 import { ButtonItem } from "../ButtonGeneric";
+import '../../../styles/Bootstrap/BootstrapButton.css'
 
 export const BootstrapButton: React.FC<ButtonItem> = ({
   name = "Acción",
@@ -23,18 +24,41 @@ export const BootstrapButton: React.FC<ButtonItem> = ({
     sessions: "btn-info text-white",
     answers: "btn-primary", 
     signatures: "btn-dark",
+    
+    // ✅ Botones sociales
+    google: "btn-social btn-google",
+    microsoft: "btn-social btn-microsoft",
+    github: "btn-social btn-github",
   };
 
   const normalizedName = name.toLowerCase();
   const bootstrapClass = buttonClassMap[normalizedName] || "btn-success";
 
+  // ✅ Verificar si es un botón social
+  const isSocialButton = ["google", "microsoft", "github"].includes(normalizedName);
+
+  // ✅ Renderizado diferente para botones sociales
+  if (isSocialButton) {
+    return (
+      <button
+        onClick={action}
+        className={`btn ${bootstrapClass}`}
+        type="button"
+      >
+        {icon && <span className="btn-icon">{icon}</span>}
+        <span>{name.toUpperCase()}</span>
+      </button>
+    );
+  }
+
+  // ✅ Renderizado normal para otros botones - SIEMPRE VISIBLE
   return (
     <button
       onClick={action}
-      className={`btn btn-sm ${bootstrapClass} d-flex align-items-center gap-1`}
+      className={`btn btn-sm ${bootstrapClass}`}
+      type="button"
     >
-      {icon && <span>{icon}</span>}
-      <span className="d-none d-lg-inline">{name}</span>
+      <span>{name}</span> {/* ✅ Siempre visible, sin iconos */}
     </button>
   );
 };

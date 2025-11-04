@@ -96,6 +96,7 @@ const SignIn: React.FC = () => {
         })}/>
         <AppButton name={'microsoft'} icon={<MicrosoftIcon/>}/> 
         <AppButton name={'github'} icon={<GithubIcon/>} action={() => loginWithGitHub().then((data) => {
+          console.log(data);          
           handleLogin(data);
         })}/>
       </div>

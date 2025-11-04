@@ -1,0 +1,28 @@
+/* Forzar visibilidad solo del botón OK (confirm) de SweetAlert2 */
+.swal2-container .swal2-confirm,
+.swal2-popup .swal2-confirm,
+button[class*="swal"][class*="confirm"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: .5rem .75rem !important;
+  min-width: 3.25rem !important;
+  background-color: #6d28d9 !important; /* morado visible */
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: .375rem !important;
+  box-shadow: 0 6px 18px rgba(109,40,217,0.12) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  font-size: 0.875rem !important;
+}
+
+/* Asegurar texto si alguna regla lo oculta */
+.swal2-container .swal2-confirm > span,
+.swal2-popup .swal2-confirm > span,
+button[class*="swal"][class*="confirm"] > span {
+  font-size: inherit !important;
+  visibility: visible !important;
+  color: inherit !important;
+}

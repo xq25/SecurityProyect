@@ -1,7 +1,7 @@
 import { User } from "../models/User";
 import api from "../interceptors/axiosInterceptor";
 
-const API_URL = import.meta.env.VITE_API_URL + "/users" || "";
+const API_URL = `${import.meta.env.VITE_API_URL}/users`;
 
 class UserService {
     async getUsers(): Promise<User[]> {  //async lo usamos para decir que espere a que se ejecute esta funcion para hacer algo mas. 

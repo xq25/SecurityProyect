@@ -40,16 +40,20 @@ const ListDevices = lazy(() => import('../pages/Devices/DeviceList'));
 const UpdateDevice = lazy(() => import('../pages/Devices/DeviceUpdate'));
 const ViewDevice = lazy(() => import('../pages/Devices/DeviceView'));
 // Security Questions
-const ListSecurityQuestions = lazy(() => import('../pages/SecurityQuestions/QuestionList'));
-const CreateSecurityQuestion = lazy(() => import('../pages/SecurityQuestions/QuestionCreate'));
-const UpdateSecurityQuestion = lazy(() => import('../pages/SecurityQuestions/QuestionUpdate'));
-const SecurityQuestionAnswers = lazy(() => import('../pages/SecurityQuestions/SecurityAnswers'));
-const ViewSecurityQuestion = lazy(() => import('../pages/SecurityQuestions/QuestionView'));
+const SecurityQuestionList = lazy(() => import('../pages/SecurityQuestions/QuestionList'));
+const SecurityQuestionCreate = lazy(() => import('../pages/SecurityQuestions/QuestionCreate'));
+const SecurityQuestionUpdate = lazy(() => import('../pages/SecurityQuestions/QuestionUpdate'));
+const SecurityQuestionView = lazy(() => import('../pages/SecurityQuestions/QuestionView'));
 // Digital Signatures
 const ListDigitalSignatures = lazy(() => import('../pages/DigitalSignatures/SignatureList'));
 const CreateDigitalSignature = lazy(() => import('../pages/DigitalSignatures/SignatureCreate'));
 const UpdateDigitalSignature = lazy(() => import('../pages/DigitalSignatures/SignatureUpdate'));
 const ViewDigitalSignature = lazy(() => import('../pages/DigitalSignatures/SignatureView'));
+// Answers
+const ListAnswers = lazy(() => import('../pages/Answers/AnswerList'));
+const CreateAnswer = lazy(() => import('../pages/Answers/AnswerCreate'));
+const UpdateAnswer = lazy(() => import('../pages/Answers/AnswerUpdate'));
+const ViewAnswer = lazy(() => import('../pages/Answers/AnswerView'));
 
 const coreRoutes = [
 // Pagina de autenticacion
@@ -65,6 +69,28 @@ const coreRoutes = [
     component: Home,
   },
 // CRUDS DIGITAL SIGNATURES ---
+  // ANSWERS
+  {
+    path: '/answers/list',
+    title: 'List Answers',
+    component: ListAnswers,
+  },
+  {
+    path: '/answers/create',
+    title: 'Create Answer',
+    component: CreateAnswer,
+  },
+  {
+    path: '/answers/update/:id',
+    title: 'Update Answer',
+    component: UpdateAnswer,
+  },
+  {
+    path: '/answers/:id',
+    title: 'View Answer',
+    component: ViewAnswer,
+  },
+  // DIGITAL SIGNATURES
   {
     path: '/digital-signatures/list',
     title: 'Digital Signatures List',
@@ -89,27 +115,22 @@ const coreRoutes = [
   {
     path: '/security-questions/list',
     title: 'Security Questions List',
-    component: ListSecurityQuestions,
+    component: SecurityQuestionList,
   },
   {
     path: '/security-questions/create',
     title: 'Create Security Question',
-    component: CreateSecurityQuestion,
+    component: SecurityQuestionCreate,
   },
   {
     path: '/security-questions/update/:id',
     title: 'Update Security Question',
-    component: UpdateSecurityQuestion,
-  },
-  {
-    path: '/security-questions/answers/:id',
-    title: 'Security Question Answers',
-    component: SecurityQuestionAnswers,
+    component: SecurityQuestionUpdate,
   },
   {
     path: '/security-questions/:id',
     title: 'View Security Question',
-    component: ViewSecurityQuestion,
+    component: SecurityQuestionView,
   },
 // CRUDS DEVICES ---
   {

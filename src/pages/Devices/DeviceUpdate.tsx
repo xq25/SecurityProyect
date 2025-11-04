@@ -31,7 +31,7 @@ const UpdateDevice: React.FC = () => {
 
     if (deviceData) {
       setDevice(deviceData);
-      setSelectedUserId(deviceData.userId || 0);
+      setSelectedUserId(deviceData.user_id || 0);
     }
 
     setUsers(usersData);
@@ -68,7 +68,7 @@ const UpdateDevice: React.FC = () => {
     try {
       const deviceWithUser = {
         ...updatedDevice,
-        userId: selectedUserId,
+        user_id: selectedUserId,
       };
 
       const updated = await deviceService.updateDevice(parseInt(id!), deviceWithUser);
