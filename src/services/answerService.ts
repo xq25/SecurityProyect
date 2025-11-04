@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Answer } from "../models/Answer";
 
-const API_URL = `${import.meta.env.VITE_BACK_URL}/answers`;
+const API_URL = `${import.meta.env.VITE_API_URL}/answers`;
 
 class AnswerService {
     async getAnswers(): Promise<Answer[]> {

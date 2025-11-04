@@ -1,8 +1,8 @@
 import axios from "axios";
 import { DigitalSignature } from "../models/DigitalSignature";
 
-const API_URL = `${import.meta.env.VITE_BACK_URL}/digital-signatures`;
-const BASE_URL = import.meta.env.VITE_BACK_URL; // ✅ Mantener /api en la URL base
+const API_URL = `${import.meta.env.VITE_API_URL}/digital-signatures`;
+const BASE_URL = import.meta.env.VITE_API_URL; // ✅ Mantener /api en la URL base
 
 class DigitalSignatureService {
   // ✅ Helper para construir la URL completa de la imagen

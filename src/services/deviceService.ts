@@ -2,7 +2,7 @@ import axios from "axios";
 import { Device } from "../models/Device";
 
 // ✅ Usar VITE_BACK_URL del archivo .env
-const API_URL = `${import.meta.env.VITE_BACK_URL}/devices`;
+const API_URL = `${import.meta.env.VITE_API_URL}/devices`;
 
 class DeviceService {
   // ✅ GET /api/devices - Listar todos los dispositivos
