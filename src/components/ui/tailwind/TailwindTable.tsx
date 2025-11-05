@@ -15,10 +15,8 @@ export const TailwindTable: React.FC<Props> = ({
 
   return (
     <div className="tailwind-table-container">
-      {/* Título superior */}
       <h2 className="tailwind-table-title">Tabla de {name}</h2>
 
-      {/* Contenedor con scroll horizontal en pantallas pequeñas */}
       <div className="tailwind-table-scroll">
         <table className="tailwind-table">
           <thead className="tailwind-table-head">
@@ -42,15 +40,20 @@ export const TailwindTable: React.FC<Props> = ({
                 <tr key={rowIdx} className="tailwind-table-row">
                   {autoHeader.map((key, colIdx) => (
                     <td key={colIdx} className="tailwind-table-cell">
-                      {String(item[key])}
+                      {String(item[key] ?? "")}
                     </td>
                   ))}
 
                   {options.length > 0 && (
                     <td className="tailwind-table-cell tailwind-table-actions-cell">
-                      {options.map((OptionComponent, idx) =>
-                        React.cloneElement(OptionComponent, { item, key: idx })
-                      )}
+                      <div className="flex gap-2 justify-center">
+                        {options.map((OptionComponent, idx) =>
+                          React.cloneElement(OptionComponent, { 
+                            item, 
+                            key: idx 
+                          })
+                        )}
+                      </div>
                     </td>
                   )}
                 </tr>

@@ -1,53 +1,80 @@
+import axios from 'axios';
+import { auth } from '../firebase/firebaseConfig';
 
-import axios from "axios"; // Esta es la libreria que usamos para las APIs
-
-// Lista de rutas que no deben ser interceptadas.
-
-// No todos las peticiones que van al backend deben llevar un token de verificacion.
-const EXCLUDED_ROUTES = ["/login", "/register"]; // Para que deberia tener estas peticiones un token, si estas son apenas las que nos general el token.
-
-const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL, // Cambia la URL base según tu API (Aqui estamos usando nuestro postman)
-    headers: { "Content-Type": "application/json" }, //Configuraamos el header general
-});
-
-// Interceptor de solicitud
-api.interceptors.request.use(  //A qui pedimos que todas las peeticiones que van a la Api se intercepten
-    (request) => {
-        console.log("Interceptando solicitud a:", JSON.stringify(request)); // Esta linea la usamos para mostrar la peticion 
-        // Verificar si la URL está en la lista de excluidas
-        if (EXCLUDED_ROUTES.some((route) => request.url?.includes(route))) { // Si la url de la peticion pertence a las rutas excluidas, dejamos pasar tal cual como viene.
-            return request;
-        }
+// Configurar interceptor para incluir token en todas las peticiones
+axios.interceptors.request.use(
+  async (config) => {
+    try {
+      // Obtener el usuario actual de Firebase
+      const currentUser = auth.currentUser;
+      
+      if (currentUser) {
+        // Obtener token fresco de Firebase
+        const token = await currentUser.getIdToken(true);
         
-        const token = localStorage.getItem("token"); // Aqui sacamos el token que tenemos en nuestro localStorage (Esto solo existe si esta logueado el usuario)
-        // Agregar token si la ruta no está excluida
-        if (token) {
-            // Interceptamos una peticion y le colocamos el token.
-            request.headers.Authorization = `Bearer ${token}`; // La plabra 'bearer es obligatoria , es un estandar para idndetificar que lo que sigue despues es el token '
+        // Agregar token al header Authorization
+        config.headers.Authorization = `Bearer ${token}`;
+        
+        console.log('🔑 Token agregado a la petición');
+      } else {
+        // Si no hay usuario, intentar obtener token del localStorage (fallback)
+        const storedToken = localStorage.getItem('token');
+        
+        if (storedToken) {
+          config.headers.Authorization = `Bearer ${storedToken}`;
+          console.log('🔑 Token del localStorage agregado');
         }
-        return request;
-    },
-    (error) => { // Si hay algun error nos devuleve el fallo.
-        return Promise.reject(error);
+      }
+      
+      return config;
+    } catch (error) {
+      console.error('❌ Error obteniendo token:', error);
+      return config;
     }
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
-// Interceptor de respuesta del Backend (Podemos hacer un doble check para ver que la respuesta este bien )
-api.interceptors.response.use(
-    (response) => { // Si la respuesta es valida la dejamos pasar.
-        return response;
-    },
-    (error) => {
-        if (error.response?.status === 401) { // Si tenemos la un error 40X es porque enviamos algo invalido desde el front
-            console.log("No autorizado, redirigiendo a login...");
-            window.location.href = "/login"; // Redirigir si la sesión expira
+// Interceptor de respuesta para manejar errores de autenticación
+axios.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    
+    // Si el error es 401 (No autorizado) y no hemos reintentado
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      
+      try {
+        const currentUser = auth.currentUser;
+        
+        if (currentUser) {
+          // Renovar token
+          const newToken = await currentUser.getIdToken(true);
+          
+          // Actualizar en localStorage
+          localStorage.setItem('token', newToken);
+          
+          // Reintentar petición con nuevo token
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return axios(originalRequest);
+        } else {
+          // No hay usuario, redirigir a login
+          console.error('❌ No hay usuario autenticado');
+          localStorage.clear();
+          window.location.href = '/auth/signin';
         }
-        // Otro tipo de error es el 500, que es un fallo dentro del backend.
-        return Promise.reject(error);
-
+      } catch (refreshError) {
+        console.error('❌ Error renovando token:', refreshError);
+        localStorage.clear();
+        window.location.href = '/auth/signin';
+      }
     }
+    
+    return Promise.reject(error);
+  }
 );
 
-export default api;
-// Para activar el interceptor hay que colocarlo en el userService
+export default axios;

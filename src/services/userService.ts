@@ -24,16 +24,43 @@ class UserService {
             return null;
         }
     }
+   
 
-    async createUser(user: Omit<User, "id">): Promise<User | null> {
-        try {
-            const response = await axios.post<User>(API_URL, user);
-            return response.data;
-        } catch (error) {
-            console.error("Error al crear usuario:", error);
-            return null;
-        }
+
+    async getUserByEmail(email: string): Promise<User | null> {
+  try {
+    console.log("🔍 Buscando usuario por email:", email);
+    const response = await axios.get(`${API_URL}/`);
+    console.log("📋 Total usuarios en backend:", response.data.length);
+    
+    const users: User[] = response.data;
+    const user = users.find(u => u.email === email);
+    
+    if (user) {
+      console.log("✅ Usuario encontrado:", user);
+    } else {
+      console.log("❌ Usuario NO encontrado en backend");
     }
+    
+    return user || null;
+  } catch (error) {
+    console.error("❌ Error getting user by email:", error);
+    return null;
+  }
+}
+
+async createUser(userData: Partial<User>): Promise<User | null> {
+  try {
+    console.log("📝 Creando usuario en backend:", userData);
+    const response = await axios.post(`${API_URL}/`, userData);
+    console.log("✅ Usuario creado:", response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error("❌ Error creating user:", error);
+    console.error("❌ Error response:", error.response?.data);
+    return null;
+  }
+}
 
     async updateUser(id: number, user: Partial<User>): Promise<User | null> {
         try {
@@ -54,6 +81,7 @@ class UserService {
             return false;
         }
     }
+
 }
 
 // Exportamos una instancia de la clase para reutilizarla

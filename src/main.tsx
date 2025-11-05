@@ -1,4 +1,5 @@
 import React from 'react';
+import './interceptors/axiosInterceptor'; // ← IMPORTANTE: Importar antes de cualquier servicio
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './App';

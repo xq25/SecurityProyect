@@ -1,3 +1,4 @@
+// ...existing code...
 import { lazy } from 'react';
 
 //Roles
@@ -26,7 +27,7 @@ import CreateAddress from '../pages/Addresses/Create';
 import ListAddresses from '../pages/Addresses/List';
 import UpdateAddress from '../pages/Addresses/Update';
 import CreateUserRol from '../pages/User_Rol/Create';
-
+import ListSessions from '../pages/Sessions/List'; // Lista unificada (usa param userId)
 
 
 //Otras paginas
@@ -55,12 +56,16 @@ const UpdateProfile = lazy(() => import('../pages/Profiles/Update'));
 const ListPermissions = lazy(() => import('../pages/Permissions/List'));
 const CreatePermission = lazy(() => import('../pages/Permissions/Create'));
 const UpdatePermission = lazy(() => import('../pages/Permissions/Update'));
+const ViewPermission = lazy(() => import('../pages/Permissions/View'));
 // Importar componente de RolePermission
 const ManageRolePermissions = lazy(() => import('../pages/RolePermissions/Manage'));
+// Sessions view (detalle)
+const ViewSession = lazy(() => import('../pages/Sessions/View'));
+const ListSessions = lazy(() => import('../pages/Sessions/List'));
 
-//Sessions-User
-import ListSessions from '../pages/Sessions/List';
-import ViewSession from '../pages/Sessions/View';
+
+
+
 
 const coreRoutes = [
 // Pagina de autenticacion
@@ -159,16 +164,12 @@ const coreRoutes = [
     component: ViewUser,
   },
   // CRUDS SESSIONS ---
-  {
-    path: '/users/:id/sessions',
-    title: 'List Sessions',
-    component: ListSessions,
-  },
-  {
-    path: '/users/:id/sessions/:sessionId',
-    title: 'View Session',
-    component: ViewSession,
-  },
+  // Lista de sesiones por usuario (parámetro: userId)
+ // Sessions (user-focused)
+  { path: '/sessions/user/:userId', title: 'User Sessions', component: ListSessions },
+  { path: '/users/:userId/sessions', title: 'User Sessions (alt)', component: ListSessions },
+  { path: '/sessions/:sessionId', title: 'View Session', component: ViewSession },
+  
 // CRUDS ROLES ---
   {
     path: '/roles/list',
@@ -234,6 +235,11 @@ const coreRoutes = [
     title: 'Update Permission',
     component: UpdatePermission,
   },
+  {
+  path: '/permissions/:id',
+  title: 'Ver Permiso',
+  component: ViewPermission,
+  },
   
   // ROLE PERMISSIONS (N:N) - Azul/Tailwind
   {
@@ -264,6 +270,7 @@ const coreRoutes = [
     title: 'Users With Rol',
     component: ListUsersRol,
   },
+  
   {
     path: '/user-rol/create/:id', // El id es el del rol
     title: 'Create User Rol', 

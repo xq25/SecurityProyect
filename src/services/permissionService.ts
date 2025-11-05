@@ -1,58 +1,101 @@
 import axios from "axios";
 import { Permission } from "../models/Permission";
 
-const API_URL = (import.meta.env.VITE_API_URL || "") + "/permissions";
+const API_URL = import.meta.env.VITE_API_URL || "";
+const BASE_PATH = "/permissions/";  // ✅ Agregar / al final
 
 class PermissionService {
+  /**
+   * Obtener todos los permisos
+   */
   async getPermissions(): Promise<Permission[]> {
     try {
-      const response = await axios.get<Permission[]>(API_URL);
+      console.log("📋 Fetching all permissions...");
+      const response = await axios.get<Permission[]>(`${API_URL}${BASE_PATH}`);
+      console.log("✅ Permissions loaded:", response.data);
       return response.data;
-    } catch (error) {
-      console.error("Error fetching permissions:", error);
-      return [];
+    } catch (error: any) {
+      console.error("❌ Error fetching permissions:", error.response?.data || error.message);
+      throw error;
     }
   }
 
-  async getPermissionById(id: number): Promise<Permission | null> {
+  /**
+   * Obtener permiso por ID
+   */
+  async getPermissionById(id: number): Promise<Permission> {
     try {
-      const response = await axios.get<Permission>(`${API_URL}/${id}`);
+      console.log(`🔍 Fetching permission ${id}...`);
+      const response = await axios.get<Permission>(`${API_URL}${BASE_PATH}${id}`);
+      console.log("✅ Permission loaded:", response.data);
       return response.data;
-    } catch (error) {
-      console.error("Error fetching permission:", error);
-      return null;
+    } catch (error: any) {
+      console.error(`❌ Error fetching permission ${id}:`, error.response?.data || error.message);
+      throw error;
     }
   }
 
-  async createPermission(permission: Omit<Permission, "id">): Promise<Permission | null> {
+  /**
+   * Crear nuevo permiso
+   */
+  async createPermission(permission: Omit<Permission, "id" | "created_at" | "updated_at">): Promise<Permission> {
     try {
-      const response = await axios.post<Permission>(API_URL, permission);
+      // ✅ Enviar todos los formatos posibles para compatibilidad
+      const payload = {
+        entity: permission.URL || permission.url || permission.entity,
+        URL: permission.URL || permission.url || permission.entity,
+        url: permission.URL || permission.url || permission.entity,
+        method: permission.method,
+      };
+      
+      console.log("📝 Creating permission with payload:", payload);
+      const response = await axios.post<Permission>(`${API_URL}${BASE_PATH}`, payload);
+      console.log("✅ Permission created:", response.data);
       return response.data;
-    } catch (error) {
-      console.error("Error creating permission:", error);
-      return null;
+    } catch (error: any) {
+      console.error("❌ Error creating permission:", error.response?.data || error.message);
+      throw error;
     }
   }
 
-  async updatePermission(id: number, permission: Partial<Permission>): Promise<boolean> {
+  /**
+   * Actualizar permiso
+   */
+  async updatePermission(id: number, permission: Partial<Permission>): Promise<Permission> {
     try {
-      await axios.put(`${API_URL}/${id}`, permission);
-      return true;
-    } catch (error) {
-      console.error("Error updating permission:", error);
-      return false;
+      // ✅ Enviar todos los formatos
+      const payload = {
+        entity: permission.URL || permission.url || permission.entity,
+        URL: permission.URL || permission.url || permission.entity,
+        url: permission.URL || permission.url || permission.entity,
+        method: permission.method,
+      };
+      
+      console.log(`📝 Updating permission ${id} with payload:`, payload);
+      const response = await axios.put<Permission>(`${API_URL}${BASE_PATH}${id}`, payload);
+      console.log("✅ Permission updated:", response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error(`❌ Error updating permission ${id}:`, error.response?.data || error.message);
+      throw error;
     }
   }
 
+  /**
+   * Eliminar permiso
+   */
   async deletePermission(id: number): Promise<boolean> {
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      console.log(`🗑️ Deleting permission ${id}...`);
+      await axios.delete(`${API_URL}${BASE_PATH}${id}`);
+      console.log("✅ Permission deleted");
       return true;
-    } catch (error) {
-      console.error("Error deleting permission:", error);
-      return false;
+    } catch (error: any) {
+      console.error(`❌ Error deleting permission ${id}:`, error.response?.data || error.message);
+      throw error;
     }
   }
 }
 
 export const permissionService = new PermissionService();
+export default permissionService;

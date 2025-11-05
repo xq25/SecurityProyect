@@ -11,18 +11,34 @@ const UpdatePermission: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [permission, setPermission] = useState<Permission | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPermission = async () => {
-      if (!id) return;
-      const data = await permissionService.getPermissionById(Number(id));
-      setPermission(data);
-    };
     fetchPermission();
   }, [id]);
 
+  const fetchPermission = async () => {
+    if (!id) return;
+    
+    try {
+      const data = await permissionService.getPermissionById(Number(id));
+      console.log("✅ Permission loaded:", data);
+      setPermission(data);
+    } catch (error) {
+      console.error("❌ Error loading permission:", error);
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo cargar el permiso",
+        icon: "error",
+      });
+      navigate("/permissions/list");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const validationSchema = Yup.object({
-    url: Yup.string()
+    URL: Yup.string()  // ✅ 'URL' mayúscula
       .required("La URL es obligatoria")
       .max(255, "La URL no puede tener más de 255 caracteres"),
     method: Yup.string()
@@ -30,37 +46,59 @@ const UpdatePermission: React.FC = () => {
       .oneOf(["GET", "POST", "PUT", "DELETE", "PATCH"], "Método HTTP inválido"),
   });
 
-  const labels: (keyof Permission)[] = ["url", "method"];
+  const labels: (keyof Permission)[] = ["URL", "method"];  // ✅ 'URL' mayúscula
 
   const handleUpdate = async (values: Permission) => {
     if (!id) return;
     
-    const updated = await permissionService.updatePermission(Number(id), values);
-    
-    if (updated) {
+    try {
+      console.log("📝 Updating with:", values);
+      
+      await permissionService.updatePermission(Number(id), {
+        URL: values.URL,  // ✅ Usar 'URL'
+        method: values.method,
+      });
+      
       Swal.fire({
-        title: "Permiso actualizado exitosamente",
+        title: "¡Éxito!",
+        text: "Permiso actualizado exitosamente",
         icon: "success",
         timer: 2000,
         showConfirmButton: false,
       });
       navigate("/permissions/list");
-    } else {
+    } catch (error: any) {
+      console.error("❌ Error updating:", error);
       Swal.fire({
-        title: "Error al actualizar el permiso",
+        title: "Error",
+        text: error.response?.data?.error || "No se pudo actualizar el permiso",
         icon: "error",
-        timer: 2500,
       });
     }
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Cargando permiso...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!permission) {
-    return <div className="p-6">Cargando permiso...</div>;
+    return (
+      <div className="p-6">
+        <p className="text-gray-600 dark:text-gray-400">No se encontró el permiso</p>
+      </div>
+    );
   }
 
   return (
     <div>
-      <Breadcrumb pageName="Permissions / Update" />
+      <Breadcrumb pageName="Actualizar Permiso" />
       <AppForm
         mode={3}
         labels={labels as string[]}

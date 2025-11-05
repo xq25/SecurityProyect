@@ -11,7 +11,7 @@ const CreatePermission: React.FC = () => {
   const navigate = useNavigate();
 
   const validationSchema = Yup.object({
-    url: Yup.string()
+    URL: Yup.string()  // ✅ Cambiar a 'URL' (mayúscula)
       .required("La URL es obligatoria")
       .max(255, "La URL no puede tener más de 255 caracteres"),
     method: Yup.string()
@@ -19,31 +19,40 @@ const CreatePermission: React.FC = () => {
       .oneOf(["GET", "POST", "PUT", "DELETE", "PATCH"], "Método HTTP inválido"),
   });
 
-  const labels: (keyof Permission)[] = ["url", "method"];
+  const labels: (keyof Permission)[] = ["URL", "method"];  // ✅ 'URL' en mayúscula
 
   const handleCreate = async (values: Permission) => {
-    const created = await permissionService.createPermission(values);
-    
-    if (created) {
-      Swal.fire({
-        title: "Permiso creado exitosamente",
-        icon: "success",
-        timer: 2000,
-        showConfirmButton: false,
+    try {
+      console.log("📝 Sending to API:", values);
+      
+      const created = await permissionService.createPermission({
+        URL: values.URL,  // ✅ Usar 'URL'
+        method: values.method,
       });
-      navigate("/permissions/list");
-    } else {
+      
+      if (created) {
+        Swal.fire({
+          title: "¡Éxito!",
+          text: "Permiso creado exitosamente",
+          icon: "success",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+        navigate("/permissions/list");
+      }
+    } catch (error: any) {
+      console.error("❌ Error creating permission:", error);
       Swal.fire({
-        title: "Error al crear el permiso",
+        title: "Error",
+        text: error.response?.data?.error || "No se pudo crear el permiso",
         icon: "error",
-        timer: 2500,
       });
     }
   };
 
   return (
     <div>
-      <Breadcrumb pageName="Permissions / Create" />
+      <Breadcrumb pageName="Crear Permiso" />
       <AppForm
         mode={1}
         labels={labels as string[]}

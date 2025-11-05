@@ -1,8 +1,14 @@
 export interface Session {
   id?: string;
   token?: string;
-  userId: string;
-  expiration?: Date;
+  userId?: string;
+  
+  // Acepta ambos formatos del backend
+  State?: 'active' | 'expired' | 'revoked';
+  state?: 'active' | 'expired' | 'revoked';
+  
+  expiration?: string | Date;
   FACode?: string;
-  State?: string;   
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }

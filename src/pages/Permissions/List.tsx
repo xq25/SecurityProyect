@@ -10,14 +10,28 @@ import { Permission } from "../../models/Permission";
 const ListPermissions: React.FC = () => {
   const navigate = useNavigate();
   const [permissions, setPermissions] = useState<Permission[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
-    const data = await permissionService.getPermissions();
-    setPermissions(data);
+    setLoading(true);
+    try {
+      const data = await permissionService.getPermissions();
+      console.log("✅ Permissions loaded:", data);
+      setPermissions(data || []);
+    } catch (error) {
+      console.error("❌ Error loading permissions:", error);
+      Swal.fire({
+        title: "Error",
+        text: "No se pudieron cargar los permisos",
+        icon: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleAction = async (action: string, permission: Permission) => {
@@ -32,65 +46,98 @@ const ListPermissions: React.FC = () => {
       });
 
       if (confirm.isConfirmed) {
-        const success = await permissionService.deletePermission(Number(permission.id));
-        
-        if (success) {
+        try {
+          await permissionService.deletePermission(Number(permission.id));
+          
           Swal.fire({
-            title: "Eliminado",
+            title: "¡Eliminado!",
             text: "Permiso eliminado correctamente",
             icon: "success",
+            timer: 2000,
+            showConfirmButton: false,
           });
+          
           fetchData();
-        } else {
+        } catch (error) {
           Swal.fire({
-            title: "Error al eliminar",
+            title: "Error",
+            text: "No se pudo eliminar el permiso",
             icon: "error",
-            timer: 2500,
           });
         }
       }
     } else if (action === "update") {
       navigate(`/permissions/update/${permission.id}`);
+    } else if (action === "view") {
+      navigate(`/permissions/${permission.id}`);
+    }
+  };
+
+  const formatDate = (dateString: string | Date | undefined) => {
+    if (!dateString) return "N/A";
+    try {
+      return new Date(dateString).toLocaleString("es-ES", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch {
+      return String(dateString);
     }
   };
 
   const baseOptions = [
+    { name: "view" },
     { name: "update" },
     { name: "delete" },
   ];
 
-  const header = ["ID", "URL", "Método"];
+  // ✅ Mapear correctamente los campos
+  const mappedPermissions = permissions.map((perm) => ({
+    id: perm.id,
+    URL: perm.URL || perm.url || perm.entity || "N/A",  // ✅ Soportar todos los formatos
+    method: perm.method || "N/A",
+    created_at: formatDate(perm.created_at),
+  }));
+
+  const header = ["id", "URL", "method", "created_at"];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Cargando permisos...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
-      <Breadcrumb pageName="Permissions / List" />
-      <div className="p-6">
-        <h2 className="text-2xl font-bold mb-4">Listado de Permisos</h2>
-        
+      <Breadcrumb pageName="Permisos" />
+      
+      <div className="flex justify-end mb-4">
         <AppButton 
           name="create" 
           action={() => navigate("/permissions/create")} 
-        />x
-        
-        <AppTable
-          name="Permissions"
-          header={header}
-          items={permissions}
-          options={baseOptions.map((opt) => (
-            <AppButton
-              key={opt.name}
-              name={opt.name}
-              action={(permission) => handleAction(opt.name, permission)}
-            />
-          ))}
         />
-
-        {permissions.length === 0 && (
-          <div className="text-center text-gray-500 py-8">
-            No hay permisos registrados
-          </div>
-        )}
       </div>
+      
+      <AppTable
+        name="Permissions"
+        header={header}
+        items={mappedPermissions}
+        options={baseOptions.map((opt) => (
+          <AppButton
+            key={opt.name}
+            name={opt.name}
+            action={(permission) => handleAction(opt.name, permission)}
+          />
+        ))}
+      />
     </div>
   );
 };

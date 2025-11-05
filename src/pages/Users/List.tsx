@@ -31,32 +31,37 @@ const ListUsers: React.FC = () => {
         fetchData();
       }
     } else if (action === "view") {
+      // ← view mantiene su funcionalidad original
       navigate(`/users/view/${user.id}`);
     } else if (action === "update") {
       navigate(`/users/update/${user.id}`);
+    } else if (action === "profile") {
+      // ← CAMBIO: profile ahora también navega a la vista completa
+      navigate(`/users/view/${user.id}`);
+    } else if (action === "sessions") {
+      // ← CAMBIO: sessions navega a lista de sesiones del usuario
+      navigate(`/sessions/user/${user.id}`);
     } else if (action === "devices") {
-      // Redirigir a la lista de dispositivos
       navigate(`/devices/list?userId=${user.id}`);
     } else if (action === "digital-signatures") {
-      // Redirigir a la gestión de firma digital
       navigate(`/digital-signatures/list?userId=${user.id}`);
-    }else if (action === 'passwords'){
+    } else if (action === 'passwords'){
       navigate(`/passwords/user/${user.id}`);
-    }else if (action === 'address'){
+    } else if (action === 'address'){
       navigate(`/addresses/user/${user.id}`);
     }
   };
 
   const baseOptions = [
-    { name: "view" },
+    { name: "view" },           // ← Se mantiene
     { name: "update" },
     { name: "delete" },
-    { name: 'profile' },
+    { name: 'profile' },        // ← Ahora también va a /users/view/:id
     { name: 'address' },
     { name: 'digital-signatures'},
     { name: 'devices' },
     { name: 'passwords' },
-    { name: 'sessions' }
+    { name: 'sessions' }        // ← Navega a /sessions/user/:id
   ];
 
   return (

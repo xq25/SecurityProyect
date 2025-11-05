@@ -1,3 +1,4 @@
+import './interceptors/axiosInterceptor'; // ← IMPORTANTE: Importar antes de cualquier servicio
 import { useEffect, useState, Suspense, lazy } from "react";
 import { Toaster } from "react-hot-toast";
 import Loader from "./common/Loader";
