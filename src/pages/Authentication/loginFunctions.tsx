@@ -13,7 +13,6 @@ import { setUser } from "../../store/userSlice";
 
 export const loginWithGoogle = async () => {
   try {
-    console.log('🔐 Iniciando login con Google...');
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
     const token = await user.getIdToken();
@@ -40,7 +39,6 @@ export const loginWithGoogle = async () => {
 
 export const loginWithGitHub = async () => {
   try {
-    console.log('🔐 Iniciando login con GitHub...');
     const result = await signInWithPopup(auth, githubProvider);
     const user = result.user;
     const token = await user.getIdToken();
@@ -67,7 +65,6 @@ export const loginWithGitHub = async () => {
 
 export const loginWithMicrosoft = async () => {
   try {
-    console.log('🔐 Iniciando login con Microsoft...');
     const result = await signInWithPopup(auth, microsoftProvider);
     const user = result.user;
     const token = await user.getIdToken();

@@ -73,7 +73,6 @@ const CreateSession: React.FC = () => {
 
   const handleCreate = async (values: any) => {
     try {
-      console.log("📝 Creating session with values:", values);
       
       const payload: any = {
         State: values.State,

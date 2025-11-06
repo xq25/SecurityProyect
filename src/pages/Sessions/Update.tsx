@@ -64,7 +64,6 @@ const UpdateSession: React.FC = () => {
         expiration: values.expiration ? new Date(values.expiration).toISOString() : undefined,
       };
 
-      console.log("📝 Updating session with payload:", payload);
       await sessionService.updateSession(id, payload);
       Swal.fire({ 
         title: "Actualizado", 
