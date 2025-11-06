@@ -1,74 +1,108 @@
-import axios from "axios";
+import api from '../interceptors/axiosInterceptor';
 import { Profile } from "../models/Profile";
 
-const API_URL = (import.meta.env.VITE_API_URL || "") + "/profiles";
+const API_URL = import.meta.env.VITE_API_URL || "";
 
 class ProfileService {
-  async getProfileByUser(userId: number): Promise<Profile | null> {
+  /**
+   * Obtener todos los perfiles
+   */
+  async getProfiles(): Promise<Profile[]> {
     try {
-      const response = await axios.get<Profile>(`${API_URL}/user/${userId}`);
+      console.log(`🔍 GET: ${API_URL}/profiles`);
+      const response = await api.get<Profile[]>(`${API_URL}/profiles`);
+      console.log('✅ Profiles loaded:', response.data);
       return response.data;
-    } catch (error: any) {
-      if (error.response?.status === 404) {
-        return null;
-      }
-      console.error("Error fetching profile:", error);
-      return null;
+    } catch (error) {
+      console.error("❌ Error fetching profiles:", error);
+      throw error;
     }
   }
 
-  async createProfile(userId: number, profileData: any): Promise<Profile | null> {
+  /**
+   * Obtener perfil por ID
+   */
+  async getProfileById(id: number): Promise<Profile> {
     try {
-      const formData = new FormData();
-      formData.append('phone', profileData.phone || '');
-      
-      if (profileData.photo && profileData.photo instanceof File) {
-        formData.append('photo', profileData.photo);
-      }
-      
-      const response = await axios.post<Profile>(`${API_URL}/user/${userId}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      
+      console.log(`🔍 GET: ${API_URL}/profiles/${id}`);
+      const response = await api.get<Profile>(`${API_URL}/profiles/${id}`);
+      console.log('✅ Profile loaded:', response.data);
       return response.data;
-    } catch (error: any) {
-      console.error("Error creating profile:", error);
-      return null;
+    } catch (error) {
+      console.error(`❌ Error fetching profile ${id}:`, error);
+      throw error;
     }
   }
 
-  async updateProfile(profileId: number, profileData: any): Promise<boolean> {
+  /**
+   * Crear nuevo perfil
+   */
+  async createProfile(profile: Partial<Profile>): Promise<Profile> {
     try {
-      const formData = new FormData();
-      
-      if (profileData.phone !== undefined) {
-        formData.append('phone', profileData.phone);
-      }
-      
-      if (profileData.photo && profileData.photo instanceof File) {
-        formData.append('photo', profileData.photo);
-      }
-      
-      const response = await axios.put(`${API_URL}/${profileId}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      
+      console.log(`📝 POST: ${API_URL}/profiles`, profile);
+      const response = await api.post<Profile>(`${API_URL}/profiles`, profile);
+      console.log('✅ Profile created:', response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error("❌ Error creating profile:", error);
+      const errorMsg = error.response?.data?.error || 
+                       error.response?.data?.message || 
+                       'No se pudo crear el perfil';
+      throw new Error(errorMsg);
+    }
+  }
+
+  /**
+   * Actualizar perfil
+   */
+  async updateProfile(id: number, profile: Partial<Profile>): Promise<Profile> {
+    try {
+      console.log(`📝 PUT: ${API_URL}/profiles/${id}`, profile);
+      const response = await api.put<Profile>(`${API_URL}/profiles/${id}`, profile);
+      console.log('✅ Profile updated:', response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error(`❌ Error updating profile ${id}:`, error);
+      const errorMsg = error.response?.data?.error || 
+                       error.response?.data?.message || 
+                       'No se pudo actualizar el perfil';
+      throw new Error(errorMsg);
+    }
+  }
+
+  /**
+   * Eliminar perfil
+   */
+  async deleteProfile(id: number): Promise<boolean> {
+    try {
+      console.log(`🗑️ DELETE: ${API_URL}/profiles/${id}`);
+      await api.delete(`${API_URL}/profiles/${id}`);
+      console.log('✅ Profile deleted');
       return true;
     } catch (error: any) {
-      console.error("Error updating profile:", error);
-      return false;
+      console.error(`❌ Error deleting profile ${id}:`, error);
+      const errorMsg = error.response?.data?.error || 
+                       error.response?.data?.message || 
+                       'No se pudo eliminar el perfil';
+      throw new Error(errorMsg);
     }
   }
 
-  getPhotoUrl(filename: string | null): string | null {
-    if (!filename) return null;
-    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://127.0.0.1:5000';
-    return `${baseUrl}/api/profiles/${filename}`;
+  /**
+   * Obtener perfil por User ID
+   */
+  async getProfileByUserId(userId: number): Promise<Profile> {
+    try {
+      console.log(`🔍 GET: ${API_URL}/profiles/user/${userId}`);
+      const response = await api.get<Profile>(`${API_URL}/profiles/user/${userId}`);
+      console.log('✅ Profile by user loaded:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error(`❌ Error fetching profile for user ${userId}:`, error);
+      throw error;
+    }
   }
 }
 
 export const profileService = new ProfileService();
+export default profileService;
