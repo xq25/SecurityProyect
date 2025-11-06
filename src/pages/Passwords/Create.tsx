@@ -36,7 +36,6 @@ const CreatePassword: React.FC = () => {
     }
     try {
       const success = await passwordService.createPassword( id, finalData);
-      console.log(finalData)
       if (success) {
         Swal.fire({
           title: "Completado",

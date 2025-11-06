@@ -46,7 +46,6 @@ const UpdatePassword: React.FC = () => {
     }
     try {
       const success = await passwordService.updatePassword( id, finalData);
-      console.log(password)
       if (success) {
         Swal.fire({
           title: "Completado",

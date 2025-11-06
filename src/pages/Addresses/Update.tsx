@@ -62,7 +62,6 @@ const UpdateAddress: React.FC = () => {
             longitude: coords.lng,
         };
 
-        console.log("Datos del formulario + mapa:", finalData);
         try {
             const success = await addressService.updateAddress( id, finalData);
             if (success) {

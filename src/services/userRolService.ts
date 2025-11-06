@@ -75,7 +75,6 @@ class UserRoleService {
       if (data.endAt) payload.endAt = formatDateForBackend(data.endAt);
 
       const url = `${API_URL}/user/${userId}/role/${roleId}`;
-      console.debug("[userRoleService] POST url:", url, "payload:", payload);
       const res = await api.post<UserRole>(url, payload);
       return res.data;
     } catch (error: any) {

@@ -39,7 +39,6 @@ const CreateAddress: React.FC = () => {
     };
     try {
       const success = await addressService.createAddress( id, finalData);
-      console.log(finalData)
       if (success) {
       Swal.fire({
           title: "Completado",

@@ -37,7 +37,6 @@ class UserService {
     const user = users.find(u => u.email === email);
     
     if (user) {
-      console.log("✅ Usuario encontrado:", user);
     } else {
       console.log("❌ Usuario NO encontrado en backend");
     }
@@ -53,7 +52,6 @@ async createUser(userData: Partial<User>): Promise<User | null> {
   try {
     console.log("📝 Creando usuario en backend:", userData);
     const response = await api.post(`${API_URL}/`, userData);
-    console.log("✅ Usuario creado:", response.data);
     return response.data;
   } catch (error: any) {
     console.error("❌ Error creating user:", error);
