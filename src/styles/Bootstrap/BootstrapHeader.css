@@ -1,9 +1,112 @@
 /* Personalizaciones adicionales para el header */
 .navbar-brand {
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: white !important;
+  margin: 0;
 }
 
-.btn-outline-light:hover {
+/* ✅ Botón de menú hamburguesa */
+.btn-menu {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.5rem;
+  padding: 0;
+}
+
+.btn-menu:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
   transform: translateY(-2px);
-  transition: all 0.2s ease;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-menu:active {
+  transform: translateY(0);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Estilos para botones de librería (cuadrados como la imagen) */
+.btn-library {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.1rem;
+  padding: 0;
+}
+
+.btn-library:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-library:active {
+  transform: translateY(0);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ Botón activo (librería seleccionada) */
+.btn-library.active {
+  background-color: white;
+  color: #2e7d32;
+  border-color: white;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-library.active:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+}
+
+/* ✅ Asegurar que los iconos se vean centrados */
+.btn-library svg,
+.btn-library i,
+.btn-menu svg,
+.btn-menu i {
+  width: 20px;
+  height: 20px;
+}
+
+/* ✅ Responsive: ajustar para móviles */
+@media (max-width: 768px) {
+  .navbar-brand {
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+  }
+
+  .btn-library,
+  .btn-menu {
+    width: 38px;
+    height: 38px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+  }
+
+  .btn-library svg,
+  .btn-library i,
+  .btn-menu svg,
+  .btn-menu i {
+    width: 18px;
+    height: 18px;
+  }
 }

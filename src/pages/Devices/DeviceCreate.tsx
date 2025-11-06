@@ -58,7 +58,7 @@ const CreateDevice: React.FC = () => {
     try {
       const deviceWithUser = {
         ...device,
-        userId: selectedUserId,
+        user_id: selectedUserId,
       };
 
       const createdDevice = await deviceService.createDevice(deviceWithUser);
@@ -94,7 +94,7 @@ const CreateDevice: React.FC = () => {
       <h2>Crear Dispositivo</h2>
       <Breadcrumb pageName="Devices / Crear Dispositivo" />
 
-      {/* ✅ UN SOLO COMPONENTE: Formulario con Select integrado */}
+      {/* UN SOLO COMPONENTE: Formulario con Select integrado */}
       <AppFormSelect
         mode={1}
         labels={["name", "ip", "operating_system"]}

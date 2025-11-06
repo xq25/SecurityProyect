@@ -121,3 +121,86 @@
   gap: .5rem !important;
   padding: .375rem 0 !important;
 }
+
+/* Icon inside button (ensure icons display) */
+.tailwind-crud-button .btn-icon,
+.tailwind-crud-button svg {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-right: 0.5rem !important;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  flex-shrink: 0 !important;
+  line-height: 0 !important;
+}
+
+/* === SOCIAL BUTTONS (Material-like) === */
+/* Google */
+.tailwind-crud-button-google {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.6rem 0.9rem !important;
+  border-radius: 10px !important;
+  background-color: #ffffff !important;
+  color: #202124 !important;
+  border: 1px solid #dadce0 !important;
+  box-shadow: none !important;
+  font-weight: 500 !important;
+}
+.tailwind-crud-button-google:hover {
+  background-color: #f8f9fa !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Microsoft */
+.tailwind-crud-button-microsoft {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.6rem 0.9rem !important;
+  border-radius: 10px !important;
+  background-color: #f3f2f1 !important;
+  color: #000000 !important;
+  border: 1px solid #d1d1d1 !important;
+  font-weight: 500 !important;
+}
+.tailwind-crud-button-microsoft:hover {
+  background-color: #e1e1e1 !important;
+  transform: translateY(-1px) !important;
+}
+
+/* GitHub */
+.tailwind-crud-button-github {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.6rem 0.9rem !important;
+  border-radius: 10px !important;
+  background-color: #24292e !important;
+  color: #ffffff !important;
+  border: 1px solid transparent !important;
+  font-weight: 500 !important;
+}
+.tailwind-crud-button-github:hover {
+  background-color: #3b434a !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Ensure svg/icon sizing inside material-like social buttons */
+.tailwind-crud-button-google svg,
+.tailwind-crud-button-microsoft svg,
+.tailwind-crud-button-github svg {
+  width: 20px !important;
+  height: 20px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Keep spacing consistent in actions cell */
+.tailwind-table-actions-cell .tailwind-crud-button-google,
+.tailwind-table-actions-cell .tailwind-crud-button-microsoft,
+.tailwind-table-actions-cell .tailwind-crud-button-github {
+  margin-right: 0.5rem !important;
+  padding: 0.45rem 0.7rem !important;
+}

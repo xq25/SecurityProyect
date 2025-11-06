@@ -23,3 +23,48 @@
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
+/* ============================= */
+/* 📱 Responsive para pantallas pequeñas */
+/* ============================= */
+@media (max-width: 600px) {
+  .material-form-container {
+    padding: 1rem;
+    margin: 1rem;
+    max-width: 100%;
+    box-shadow: none;
+  }
+
+  .material-form {
+    gap: 0.75rem;
+  }
+
+  .material-form-extra {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  input, select, textarea, button {
+    font-size: 0.95rem;
+  }
+}
+
+/* ============================= */
+/* 💻 Responsive para tablets y medianas */
+/* ============================= */
+@media (min-width: 601px) and (max-width: 900px) {
+  .material-form-container {
+    max-width: 90%;
+    padding: 1.5rem;
+  }
+
+  .material-form {
+    gap: 1rem;
+  }
+}
+
+/* ============================= */
+/* 🖥️ Pequeña mejora visual en hover (opcional) */
+/* ============================= */
+.material-form-container:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}

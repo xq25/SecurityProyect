@@ -89,6 +89,7 @@ const CreateUserRol: React.FC = () => {
         selectValueKey="id"            // 👈 Guardar el id del usuario
         selectPlaceholder="Seleccionar usuario..."
         selectRequired = {true}
+        disabledFields={['rol_id']}
       />
 
     </div>

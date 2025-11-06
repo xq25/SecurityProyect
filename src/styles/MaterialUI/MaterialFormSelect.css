@@ -31,3 +31,65 @@
   margin-top: 16px;
   min-width: 160px;
 }
+
+/* ============================= */
+/* 📱 Responsive: pantallas pequeñas (móviles) */
+/* ============================= */
+@media (max-width: 600px) {
+  .material-form-select-container {
+    padding: 12px;
+    margin: 1rem;
+    box-shadow: none;
+    border-radius: 8px;
+  }
+
+  .material-form-select-title {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .material-form-select-body {
+    gap: 12px;
+  }
+
+  .material-form-select {
+    margin-top: 6px;
+  }
+
+  .material-form-submit {
+    align-self: stretch;
+    width: 100%;
+    min-width: unset;
+    margin-top: 20px;
+  }
+
+  select, button {
+    font-size: 0.95rem;
+  }
+}
+
+/* ============================= */
+/* 💻 Responsive: tablets (600px - 900px) */
+/* ============================= */
+@media (min-width: 601px) and (max-width: 900px) {
+  .material-form-select-container {
+    max-width: 90%;
+    padding: 16px;
+  }
+
+  .material-form-select-body {
+    gap: 16px;
+  }
+}
+
+/* ============================= */
+/* 🖥️ Mejoras visuales opcionales */
+/* ============================= */
+.material-form-select-container:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.material-form-submit button:hover {
+  transform: scale(1.02);
+  transition: transform 0.2s ease-in-out;
+}

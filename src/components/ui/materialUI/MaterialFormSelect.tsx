@@ -28,6 +28,8 @@ export const MaterialFormSelect: React.FC<FormSelectItems> = ({
   selectValueKey = "id",
   selectPlaceholder = "Seleccionar...",
   selectRequired = false,
+  disabledFields = [],      // <-- nuevo: lista de campos a deshabilitar
+  selectDisabled = false,   // <-- opcional: deshabilitar select completo
 }) => {
   // ✅ Crear initialValues dinámicamente
   const initialValues = labels.reduce((acc, label) => {
@@ -51,6 +53,11 @@ export const MaterialFormSelect: React.FC<FormSelectItems> = ({
     onSelectChange(selectValueKey === "id" ? parseInt(value) : value);
   };
 
+  // ✅ Validación para habilitar el botón (AHORA: solo depende del select requerido)
+  const isSelectFilled = !selectRequired || (selectValue !== undefined && selectValue !== "" && selectValue !== 0);
+  // const isFormValid = formik.isValid && formik.dirty && isSelectFilled; // ...existing code...
+  const shouldDisableSubmit = (selectRequired && !isSelectFilled) || formik.isSubmitting;
+
   return (
     <Paper elevation={3} className="material-form-select-container">
       <Typography variant="h6" className="material-form-select-title" gutterBottom>
@@ -59,9 +66,12 @@ export const MaterialFormSelect: React.FC<FormSelectItems> = ({
 
       <form onSubmit={formik.handleSubmit} className="material-form-select-body">
         {/* 🔹 Campos dinámicos */}
-        {labels.map((label) => (
-          <div key={label} className="material-form-field">
-            <TextField
+        {labels.map((label) => {
+          const isDisabled = disabledFields.includes(label); // <-- aplicar lista
+
+          return (
+            <div key={label} className="material-form-field">
+              <TextField
                 fullWidth
                 id={label}
                 name={label}
@@ -71,15 +81,23 @@ export const MaterialFormSelect: React.FC<FormSelectItems> = ({
                 onBlur={formik.handleBlur}
                 error={formik.touched[label] && Boolean(formik.errors[label])}
                 helperText={
-                    formik.touched[label] && typeof formik.errors[label] === "string"
+                  formik.touched[label] && typeof formik.errors[label] === "string"
                     ? formik.errors[label]
                     : undefined
                 }
                 variant="outlined"
-            />
+                disabled={isDisabled}                       // <-- deshabilitar si está en la lista
+                InputProps={{ readOnly: isDisabled }}       // <-- readonly cuando deshabilitado
+              />
 
-          </div>
-        ))}
+              {isDisabled && (
+                <small style={{ display: "block", marginTop: 6, color: "#6c757d" }}>
+                  Este campo no puede ser modificado
+                </small>
+              )}
+            </div>
+          );
+        })}
 
         {/* 🔹 Select */}
         <FormControl
@@ -87,6 +105,7 @@ export const MaterialFormSelect: React.FC<FormSelectItems> = ({
           required={selectRequired}
           className="material-form-select"
           error={false}
+          disabled={selectDisabled}
         >
           <InputLabel>{selectLabel}</InputLabel>
           <Select
@@ -105,7 +124,7 @@ export const MaterialFormSelect: React.FC<FormSelectItems> = ({
             ))}
           </Select>
           <FormHelperText>
-            {selectRequired ? "Campo obligatorio" : "Opcional"}
+            {selectDisabled ? "Este campo no puede ser modificado" : (selectRequired ? "Campo obligatorio" : "Opcional")}
           </FormHelperText>
         </FormControl>
 
@@ -115,7 +134,7 @@ export const MaterialFormSelect: React.FC<FormSelectItems> = ({
           variant="contained"
           color="primary"
           className="material-form-submit"
-          disabled={formik.isSubmitting}
+          disabled={shouldDisableSubmit} // <-- ahora solo deshabilita si el select requerido NO está seleccionado (o está enviando)
         >
           {mode === 1 ? "CREAR" : "ACTUALIZAR"}
         </Button>

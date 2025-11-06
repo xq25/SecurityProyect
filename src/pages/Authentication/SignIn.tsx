@@ -22,12 +22,14 @@ import { setUser } from "../../store/userSlice";
 
 //Importacion de la funciones de inicio de sesion 
 import {
-  loginWithGoogle, 
-  loginWithGitHub, 
-  processMicrosoftRedirect
+  loginWithGoogle,
+  loginWithGitHub,
+  processMicrosoftRedirect,
+  // (estas funciones deben devolver { user, token } )
 } from './loginFunctions';
 
 import { auth } from "../../firebase/firebaseConfig";
+import { AppButton } from "../../components/ui/ButtonGeneric";
 
 const SignIn: React.FC = () => {
   const navigate = useNavigate();
@@ -51,7 +53,7 @@ const SignIn: React.FC = () => {
 
     checkMicrosoftRedirect();
   }, []);
-  
+
   // Manejo de login OAuth (Google, Microsoft, GitHub)
   const handleOAuthLogin = async (data: { user: User; token: string }) => {
     try {
@@ -61,17 +63,15 @@ const SignIn: React.FC = () => {
 
       // 1. Verificar/crear usuario en backend
       let backendUser = await userService.getUserByEmail(String(firebaseUser.email));
-      
+
       if (!backendUser) {
         console.log("📝 Usuario no existe, creando...");
-        
         backendUser = await userService.createUser({
           name: firebaseUser.name || String(firebaseUser.email).split('@')[0],
           email: firebaseUser.email,
-          password: 'oauth-user', // Password dummy para OAuth
+          password: 'oauth-user',
         });
-        
-        // Workaround: Si el backend no devuelve el ID, buscar de nuevo
+
         if (!backendUser || !backendUser.id) {
           await new Promise(resolve => setTimeout(resolve, 500));
           backendUser = await userService.getUserByEmail(String(firebaseUser.email));
@@ -81,8 +81,6 @@ const SignIn: React.FC = () => {
       if (!backendUser || !backendUser.id) {
         throw new Error("No se pudo obtener el usuario del backend");
       }
-
-      console.log("✅ Usuario backend:", backendUser.id);
 
       // 2. Crear objeto de usuario completo
       const userWithId = {
@@ -94,35 +92,29 @@ const SignIn: React.FC = () => {
       // 3. Guardar en Redux y localStorage
       dispatch(setUser(userWithId));
       localStorage.setItem("user", JSON.stringify(userWithId));
-      localStorage.setItem("token", token); // Token de Firebase
-      
-      // En handleOAuthLogin, después de guardar en localStorage:
+      localStorage.setItem("token", token);
 
-// ✅ Crear sesión en el backend
-try {
-  console.log("📝 Creando sesión en backend...");
-  
-  // Calcular fecha de expiración (24 horas desde ahora)
-  const expirationDate = new Date();
-  expirationDate.setHours(expirationDate.getHours() + 24);
-  
-  await sessionService.createSession(backendUser.id, {
-    userId: String(backendUser.id),
-    token: token, // Token OAuth de Firebase
-    expiration: expirationDate,
-    FACode: '', // Opcional
-    State: 'active'
-  });
-  
-  console.log("✅ Sesión creada exitosamente");
-} catch (sessionError: any) {
-  console.warn("⚠️ Error creando sesión:", sessionError.response?.data || sessionError.message);
-  // No bloquear el login si falla la sesión
-}
+      // 4. Crear sesión en backend (no bloquear si falla)
+      try {
+        console.log("📝 Creando sesión en backend...");
+        const expirationDate = new Date();
+        expirationDate.setHours(expirationDate.getHours() + 24);
+
+        await sessionService.createSession(backendUser.id, {
+          userId: String(backendUser.id),
+          token: token,
+          expiration: expirationDate,
+          FACode: '',
+          State: 'active'
+        });
+
+        console.log("✅ Sesión creada exitosamente");
+      } catch (sessionError: any) {
+        console.warn("⚠️ Error creando sesión:", sessionError.response?.data || sessionError.message);
+      }
 
       console.log("✅ Login exitoso, redirigiendo...");
       navigate("/");
-      
     } catch (error: any) {
       console.error("❌ Error en login OAuth:", error);
       alert(`Error: ${error.message}`);
@@ -171,14 +163,12 @@ try {
     }
   };
 
-  // Función unificada para manejar login
+  // Unificado: AppForm llama a esta función
   const handleLogin = async (object: User | { user: User; token: string }) => {
     if ("user" in object && "token" in object) {
-      // OAuth login
       await handleOAuthLogin(object);
     } else {
-      // Traditional login
-      await handleTraditionalLogin(object);
+      await handleTraditionalLogin(object as User);
     }
   };
 
@@ -196,17 +186,17 @@ try {
 
   const handleMicrosoftLogin = async () => {
     try {
+      // Si prefieres procesar redirect mediante processMicrosoftRedirect, aquí se invoca el popup flow:
       const { signInWithPopup } = await import('firebase/auth');
       const { microsoftProvider } = await import('../../firebase/firebaseConfig');
-      
+
       console.log('🔐 Iniciando login con Microsoft...');
-      
+
       const result = await signInWithPopup(auth, microsoftProvider);
       const user = result.user;
       const token = await user.getIdToken();
-      
+
       console.log('✅ Login exitoso con Microsoft');
-      
       await handleOAuthLogin({
         user: {
           _id: user.uid,
@@ -216,10 +206,8 @@ try {
         },
         token
       });
-      
     } catch (error: any) {
       console.error('❌ Error en Microsoft login:', error);
-      
       if (error.code === 'auth/popup-blocked') {
         alert('⚠️ Tu navegador bloqueó el popup. Permite popups para este sitio.');
       } else if (error.code === 'auth/cancelled-popup-request' || error.code === 'auth/popup-closed-by-user') {
@@ -270,55 +258,13 @@ try {
   return (
     <>
       <Breadcrumb pageName="SignIn"/>
-      
-      <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-        <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-          <h3 className="font-medium text-black dark:text-white">
-            Iniciar Sesión
-          </h3>
-        </div>
-        
-        <div className="p-6.5">
-          <AppForm 
-            labels={['email', 'password']} 
-            validationSchema={schemas} 
-            handleAction={handleLogin}  
-          />
-
-          <div className="mt-6">
-            <div className="mb-4">
-              <span className="block text-center text-sm text-gray-500 dark:text-gray-400">
-                O continúa con
-              </span>
-            </div>
-
-            <div className="flex flex-col gap-3">
-              <button
-                onClick={handleGoogleLogin}
-                className="flex items-center justify-center gap-3 w-full py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <GoogleIcon />
-                <span className="font-medium">Continuar con Google</span>
-              </button>
-              
-              <button
-                onClick={handleMicrosoftLogin}
-                className="flex items-center justify-center gap-3 w-full py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <MicrosoftIcon />
-                <span className="font-medium">Continuar con Microsoft</span>
-              </button>
-              
-              <button
-                onClick={handleGitHubLogin}
-                className="flex items-center justify-center gap-3 w-full py-3 px-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <GithubIcon />
-                <span className="font-medium">Continuar con GitHub</span>
-              </button>
-            </div>
-          </div>
-        </div>
+      <div>
+        <AppForm labels={['email', 'password']} validationSchema={schemas} handleAction={handleLogin}  />
+      </div>
+      <div className="flex gap-2 mt-4">
+        <AppButton name={'google'} icon={<GoogleIcon/>} action={handleGoogleLogin} />
+        <AppButton name={'microsoft'} icon={<MicrosoftIcon/>} action={handleMicrosoftLogin} />
+        <AppButton name={'github'} icon={<GithubIcon/>} action={handleGitHubLogin} />
       </div>
     </>
   );

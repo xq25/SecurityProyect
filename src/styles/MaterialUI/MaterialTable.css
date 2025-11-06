@@ -39,3 +39,65 @@
   padding: 20px;
   color: #777;
 }
+
+/* === 📱 RESPONSIVE STYLES === */
+
+/* 🧩 Tablets (pantallas medianas) */
+@media (max-width: 1024px) {
+  .material-table-container {
+    margin: 1rem;
+    border-radius: 12px;
+  }
+
+  .table-title {
+    font-size: 1rem;
+    padding: 12px;
+  }
+
+  .table-header-cell,
+  .table-cell {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}
+
+/* 📱 Móviles (pantallas pequeñas) */
+@media (max-width: 768px) {
+  .material-table {
+    display: block;
+    overflow-x: auto; /* Permite desplazamiento horizontal */
+    min-width: unset;
+  }
+
+  .table-title {
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  .table-header-cell,
+  .table-cell {
+    padding: 8px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+}
+
+/* 📱 Extra pequeño (teléfonos muy pequeños) */
+@media (max-width: 480px) {
+  .material-table-container {
+    margin: 0.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  }
+
+  .table-title {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .table-header-cell,
+  .table-cell {
+    padding: 6px;
+    font-size: 0.8rem;
+  }
+}

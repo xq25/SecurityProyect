@@ -1,90 +1,122 @@
-import React, { useState, useEffect } from "react";
-import { SecurityQuestion } from "../../models/SecurityQuestion";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { securityQuestionService } from "../../services/securityQuestionService";
-import Swal from "sweetalert2";
+import { SecurityQuestion } from "../../models/SecurityQuestion";
 import { AppTable } from "../../components/ui/TableGeneric";
 import { AppButton } from "../../components/ui/ButtonGeneric";
-import { useNavigate } from "react-router-dom";
+import Breadcrumb from "../../components/Breadcrumb";
+import Swal from "sweetalert2";
 
 const ListSecurityQuestions: React.FC = () => {
-  const [questions, setQuestions] = useState<SecurityQuestion[]>([]);
   const navigate = useNavigate();
+  const [securityQuestions, setSecurityQuestions] = useState<SecurityQuestion[]>([]);
 
   useEffect(() => {
-    fetchData();
+    loadSecurityQuestions();
   }, []);
 
-  const fetchData = async () => {
-    const questionsData = await securityQuestionService.getSecurityQuestions();
-    setQuestions(questionsData);
-  };
-
-  const handleAction = async (action: string, question: SecurityQuestion) => {
-    if (action === "delete") {
-      const result = await Swal.fire({
-        title: "¿Está seguro?",
-        text: `¿Desea eliminar la pregunta de seguridad "${question.name}"?`,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Sí, eliminar",
-        cancelButtonText: "Cancelar",
+  const loadSecurityQuestions = async () => {
+    try {
+      const securityQuestionsData =
+        await securityQuestionService.getSecurityQuestions();
+      setSecurityQuestions(securityQuestionsData);
+    } catch (error) {
+      console.error("Error al cargar preguntas de seguridad:", error);
+      Swal.fire({
+        title: "Error",
+        text: "No se pudieron cargar las preguntas de seguridad",
+        icon: "error",
       });
-
-      if (result.isConfirmed) {
-        const success = await securityQuestionService.deleteSecurityQuestion(question.id!);
-        if (success) {
-          Swal.fire({
-            title: "Eliminado",
-            text: "Pregunta de seguridad eliminada correctamente",
-            icon: "success",
-          });
-          fetchData();
-        } else {
-          Swal.fire({
-            title: "Error",
-            text: "No se pudo eliminar la pregunta de seguridad",
-            icon: "error",
-          });
-        }
-      }
-    } else if (action === "view") {
-      navigate(`/security-questions/${question.id}`);
-    } else if (action === "update") {
-      navigate(`/security-questions/update/${question.id}`);
-    } else if (action === "answers") {
-      navigate(`/security-questions/answers/${question.id}`);
     }
   };
 
+  const handleAction = async (action: string, securityQuestion: SecurityQuestion) => {
+    switch (action) {
+      case "view":
+        navigate(`/security-questions/${securityQuestion.id}`);
+        break;
+
+      case "update":
+        navigate(`/security-questions/update/${securityQuestion.id}`);
+        break;
+
+      case "delete":
+        const result = await Swal.fire({
+          title: "¿Estás seguro?",
+          text: "Esta acción no se puede deshacer",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#d33",
+          cancelButtonColor: "#3085d6",
+          confirmButtonText: "Sí, eliminar",
+          cancelButtonText: "Cancelar",
+        });
+
+        if (result.isConfirmed) {
+          try {
+            await securityQuestionService.deleteSecurityQuestion(
+              securityQuestion.id!
+            );
+            Swal.fire({
+              title: "¡Eliminado!",
+              text: "Pregunta de seguridad eliminada correctamente",
+              icon: "success",
+              timer: 2000,
+              showConfirmButton: false,
+            });
+            loadSecurityQuestions();
+          } catch (error: any) {
+            Swal.fire({
+              title: "Error",
+              text:
+                error.response?.data?.message ||
+                "No se pudo eliminar la pregunta de seguridad",
+              icon: "error",
+            });
+          }
+        }
+        break;
+
+      // ✅ Nueva acción para ver respuestas
+      case "answers":
+        navigate(`/answers/list?questionId=${securityQuestion.id}`);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  // ✅ Opciones de acciones (agregamos "answers")
   const baseOptions = [
     { name: "view" },
     { name: "update" },
     { name: "delete" },
-    { name: "answers" },
+    { name: "answers" }, // ✅ Nueva opción
   ];
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Listado de Preguntas de Seguridad</h2>
-        {/* ✅ Usar AppButton en lugar de AppActionButton */}
+      <h2>Preguntas de Seguridad</h2>
+      <Breadcrumb pageName="Security Questions / Lista" />
+
+      <div className="mb-3">
         <AppButton
           name="crear"
           action={() => navigate("/security-questions/create")}
         />
       </div>
 
+      {/* ✅ AppTable con header actualizado */}
       <AppTable
         name="Preguntas de Seguridad"
         header={["id", "name", "description"]}
-        items={questions}
+        items={securityQuestions}
         options={baseOptions.map((opt) => (
           <AppButton
             key={opt.name}
             name={opt.name}
-            action={(question) => handleAction(opt.name, question)}
+            action={(securityQuestion) => handleAction(opt.name, securityQuestion)}
           />
         ))}
       />

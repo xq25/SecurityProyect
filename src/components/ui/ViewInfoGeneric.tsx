@@ -4,6 +4,7 @@ import { MaterialView } from './materialUI/MaterialView';
 import { TailwindView } from './tailwind/TailwindView';
 // Importaciones de Hooks
 import { useUI } from "../../context/UIProvider";
+import { BootstrapView } from './bootstrap/BootstrapView';
 
 export interface PropsGenericView {
     title?: string;
@@ -25,7 +26,15 @@ export const AppView: React.FC<PropsGenericView> = ({ title, info, options, togg
 
     if (library === 'tailwind')
         return <TailwindView 
-            title={title} 
+            title={title}
+            info={info}
+            options={options}
+            toggleableFields={toggleableFields}
+        />
+
+    if (library === 'bootstrap')
+        return <BootstrapView
+            title={title}
             info={info}
             options={options}
             toggleableFields={toggleableFields}

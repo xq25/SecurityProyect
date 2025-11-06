@@ -2,6 +2,7 @@ import './interceptors/axiosInterceptor'; // ← IMPORTANTE: Importar antes de c
 import { useEffect, useState, Suspense, lazy } from "react";
 import { Toaster } from "react-hot-toast";
 import Loader from "./common/Loader";
+import Home from "./pages/Home";
 //Importacion de provedores
 import { UIProvider } from "./context/UIProvider"; // 👈 importa tu provider
 import { Route, Routes } from "react-router-dom";
@@ -39,7 +40,7 @@ function App() {
             {/* Rutas protegidas */}
             <Route element={<ProtectedRout />}>
               <Route element={<DefaultLayout />}>
-                <Route index element={<Loader/>} />
+                <Route index element={<Home />} />
                 {routes.map((routes, index) => {
                   const { path, component: Component } = routes;
                   return (

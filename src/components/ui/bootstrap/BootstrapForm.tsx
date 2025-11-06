@@ -76,6 +76,13 @@ export const BootstrapForm = <T extends Record<string, any>>({
                         </div>
                       )}
                     </ErrorMessage>
+
+                    {/* ✅ Texto de ayuda si el campo está deshabilitado */}
+                    {isDisabled && (
+                      <small className="form-text text-muted">
+                        Este campo no puede ser modificado
+                      </small>
+                    )}
                   </div>
                 );
               })}
