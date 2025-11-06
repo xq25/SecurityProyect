@@ -3,6 +3,7 @@ import { lazy } from 'react';
 //Home Page
 import Home from '../pages/Home';
 
+
 //Roles
 import RolesList from '../pages/Roles/List';
 import CreateRol from '../pages/Roles/Create';
@@ -60,10 +61,12 @@ const UpdatePermission = lazy(() => import('../pages/Permissions/Update'));
 const ViewPermission = lazy(() => import('../pages/Permissions/View'));
 // Importar componente de RolePermission
 const ManageRolePermissions = lazy(() => import('../pages/RolePermissions/Manage'));
+const ListRoles = lazy(() => import('../pages/Roles/List'));
 // Sessions view (detalle)
-const ViewSession = lazy(() => import('../pages/Sessions/View'));
 const ListSessions = lazy(() => import('../pages/Sessions/List'));
-
+const CreateSession = lazy(() => import('../pages/Sessions/Create'));
+const UpdateSession = lazy(() => import('../pages/Sessions/Update'));
+const ViewSession = lazy(() => import('../pages/Sessions/View'));
 
 
 
@@ -195,9 +198,31 @@ const coreRoutes = [
   // CRUDS SESSIONS ---
   // Lista de sesiones por usuario (parámetro: userId)
  // Sessions (user-focused)
-  { path: '/sessions/user/:userId', title: 'User Sessions', component: ListSessions },
-  { path: '/users/:userId/sessions', title: 'User Sessions (alt)', component: ListSessions },
-  { path: '/sessions/:sessionId', title: 'View Session', component: ViewSession },
+   {
+    path: '/sessions',              // ✅ Cambiar de /sessions/list a /sessions
+    title: 'Lista de Sessions',
+    component: ListSessions,
+  },
+  {
+    path: '/sessions/create',
+    title: 'Crear Session',
+    component: CreateSession,
+  },
+  {
+    path: '/sessions/update/:id',
+    title: 'Actualizar Session',
+    component: UpdateSession,
+  },
+  {
+    path: '/sessions/:id',
+    title: 'Ver Session',
+    component: ViewSession,
+  },
+  {
+    path: '/sessions/user/:id',     // ✅ Ruta para sessions de un usuario
+    title: 'Sessions por Usuario',
+    component: ListSessions,
+  },
   
 // CRUDS ROLES ---
   {
@@ -271,6 +296,11 @@ const coreRoutes = [
   },
   
   // ROLE PERMISSIONS (N:N) - Azul/Tailwind
+  {
+    path: '/roles',
+    title: 'Lista de Roles',
+    component: ListRoles,
+  },
   {
     path: '/roles/:id/permissions',
     title: 'Manage Role Permissions',

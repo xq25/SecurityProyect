@@ -1,174 +1,119 @@
-import axios from '../interceptors/axiosInterceptor';
-import { Session } from '../models/Session';
+import axios from "axios";
+import { Session } from "../models/Session";
 
-const API_URL = import.meta.env.VITE_API_URL || '';
-const BASE_PATH = '/sessions';
+const API_URL = import.meta.env.VITE_API_URL || "/api";
 
 class SessionService {
   /**
-   * Formatea la fecha al formato esperado por el backend
-   * Formato: "YYYY-MM-DD HH:MM:SS"
-   */
-  private formatExpiration(date: Date | string): string {
-    const d = typeof date === 'string' ? new Date(date) : date;
-    
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    const hours = String(d.getHours()).padStart(2, '0');
-    const minutes = String(d.getMinutes()).padStart(2, '0');
-    const seconds = String(d.getSeconds()).padStart(2, '0');
-    
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  }
-
-  /**
-   * Obtener todas las sesiones
+   * Get all sessions
    */
   async getSessions(): Promise<Session[]> {
     try {
-      console.log('📡 Fetching all sessions...');
-      const response = await axios.get(`${API_URL}${BASE_PATH}/`);
-      console.log('✅ Sessions received:', response.data);
+      const response = await axios.get(`${API_URL}/sessions/`);
       return response.data;
-    } catch (error: any) {
-      console.error('❌ Error fetching sessions:', error.response?.data || error.message);
+    } catch (error) {
+      console.error('Error fetching sessions:', error);
       throw error;
     }
   }
 
   /**
-   * Obtener sesión por ID
+   * Get a session by ID
    */
   async getSessionById(sessionId: string): Promise<Session> {
     try {
-      const response = await axios.get(`${API_URL}${BASE_PATH}/${sessionId}`);
+      const response = await axios.get(`${API_URL}/sessions/${sessionId}`);
       return response.data;
-    } catch (error: any) {
-      console.error(`❌ Error fetching session ${sessionId}:`, error.response?.data || error.message);
+    } catch (error) {
+      console.error(`Error fetching session ${sessionId}:`, error);
       throw error;
     }
   }
 
   /**
-   * Obtener sesiones de un usuario
+   * Get all sessions for a specific user
    */
-  async getSessionsByUserId(userId: number | string): Promise<Session[]> {
+  async getSessionsByUser(userId: string): Promise<Session[]> {
     try {
-      console.log(`📡 Fetching sessions for user ${userId}...`);
-      const response = await axios.get(`${API_URL}${BASE_PATH}/user/${userId}`);
-      
-      let sessions: Session[] = [];
-      
-      // Manejar diferentes formatos de respuesta
-      if (Array.isArray(response.data)) {
-        sessions = response.data;
-      } else if (response.data.sessions) {
-        sessions = response.data.sessions;
-      } else if (response.data.data) {
-        sessions = response.data.data;
-      }
-      
-      console.log('✅ Sessions received:', sessions);
-      return sessions;
-    } catch (error: any) {
-      console.error(`❌ Error fetching sessions for user ${userId}:`, error.response?.data || error.message);
-      return [];
-    }
-  }
-
-  /**
-   * Crear sesión para un usuario
-   */
-  async createSession(userId: number | string, sessionData: Partial<Session>): Promise<Session> {
-    try {
-      console.log(`📝 Creating session for user ${userId}...`);
-      
-      const payload: any = {
-        userId: String(userId),
-        token: sessionData.token || '',
-        FACode: sessionData.FACode || '',
-        State: sessionData.State || 'active'
-      };
-      
-      // Formatear fecha de expiración
-      if (sessionData.expiration) {
-        payload.expiration = this.formatExpiration(sessionData.expiration);
-      } else {
-        // Si no hay expiración, establecer 24 horas desde ahora
-        const defaultExpiration = new Date();
-        defaultExpiration.setHours(defaultExpiration.getHours() + 24);
-        payload.expiration = this.formatExpiration(defaultExpiration);
-      }
-      
-      console.log('📦 Payload:', payload);
-      
-      const response = await axios.post(`${API_URL}${BASE_PATH}/user/${userId}`, payload);
-      
-      console.log('✅ Session created:', response.data);
+      const response = await axios.get(`${API_URL}/sessions/user/${userId}`);
       return response.data;
-    } catch (error: any) {
-      console.error(`❌ Error creating session for user ${userId}:`, error.response?.data || error.message);
+    } catch (error) {
+      console.error(`Error fetching sessions for user ${userId}:`, error);
       throw error;
     }
   }
 
   /**
-   * Actualizar sesión
+   * Create a new session for a user
+   * Note: expiration should be formatted as "YYYY-MM-DD HH:MM:SS"
+   */
+  async createSession(userId: number, sessionData: Partial<Session>): Promise<Session> {
+    try {
+      const payload: any = { ...sessionData };
+      
+      // Format expiration date if present
+      if (payload.expiration) {
+        const date = new Date(payload.expiration);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        payload.expiration = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      }
+
+      console.log(`📝 POST: ${API_URL}/sessions/user/${userId}`, payload);
+      const response = await axios.post(`${API_URL}/sessions/user/${userId}`, payload);
+      console.log(`✅ Created:`, response.data);
+      return response.data;
+    } catch (error) {
+      console.error(`❌ Error creating session for user ${userId}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update an existing session
    */
   async updateSession(sessionId: string, sessionData: Partial<Session>): Promise<Session> {
     try {
-      const payload: any = {};
+      const payload: any = { ...sessionData };
       
-      if (sessionData.token !== undefined) payload.token = sessionData.token;
-      if (sessionData.userId !== undefined) payload.userId = sessionData.userId;
-      if (sessionData.FACode !== undefined) payload.FACode = sessionData.FACode;
-      if (sessionData.State !== undefined) payload.State = sessionData.State;
-      if (sessionData.state !== undefined) payload.state = sessionData.state;
-      
-      // Formatear fecha de expiración si existe
-      if (sessionData.expiration) {
-        payload.expiration = this.formatExpiration(sessionData.expiration);
+      // Format expiration date if present
+      if (payload.expiration) {
+        const date = new Date(payload.expiration);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        payload.expiration = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       }
-      
-      console.log('📝 Updating session:', sessionId, payload);
-      
-      const response = await axios.put(`${API_URL}${BASE_PATH}/${sessionId}`, payload);
-      
-      console.log('✅ Session updated:', response.data);
+
+      console.log(`📝 PUT: ${API_URL}/sessions/${sessionId}`, payload);
+      const response = await axios.put(`${API_URL}/sessions/${sessionId}`, payload);
+      console.log(`✅ Updated:`, response.data);
       return response.data;
-    } catch (error: any) {
-      console.error(`❌ Error updating session ${sessionId}:`, error.response?.data || error.message);
+    } catch (error) {
+      console.error(`❌ Error updating session ${sessionId}:`, error);
       throw error;
     }
   }
 
   /**
-   * Eliminar sesión
+   * Delete a session
    */
   async deleteSession(sessionId: string): Promise<boolean> {
     try {
-      console.log(`🗑️ Deleting session ${sessionId}...`);
-      await axios.delete(`${API_URL}${BASE_PATH}/${sessionId}`);
-      console.log('✅ Session deleted');
+      console.log(`🗑️ DELETE: ${API_URL}/sessions/${sessionId}`);
+      await axios.delete(`${API_URL}/sessions/${sessionId}`);
+      console.log(`✅ Deleted`);
       return true;
-    } catch (error: any) {
-      console.error(`❌ Error deleting session ${sessionId}:`, error.response?.data || error.message);
-      return false;
-    }
-  }
-
-  /**
-   * Cerrar sesión (marcar como expirada/revocada)
-   */
-  async endSession(sessionId: string): Promise<Session> {
-    try {
-      console.log(`🔒 Ending session ${sessionId}...`);
-      return await this.updateSession(sessionId, {
-        state: 'revoked'
-      });
     } catch (error) {
-      throw error;
+      console.error(`❌ Error deleting session ${sessionId}:`, error);
+      return false;
     }
   }
 }

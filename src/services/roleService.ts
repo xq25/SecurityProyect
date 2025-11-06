@@ -1,65 +1,69 @@
-
-import { Roles } from '../models/Roles' // Asegúrate de tener un modelo Roles.ts definido
+import { Roles } from '../models/Roles';
 import api from '../interceptors/axiosInterceptor';
 
-const API_URL = import.meta.env.VITE_API_URL + "/roles" || "";
+const API_URL = import.meta.env.VITE_API_URL || "";
+const BASE_PATH = "/roles";
 
 class RolesService {
-    // ✅ Obtener todos los roless
     async getRoless(): Promise<Roles[]> {
         try {
-            const response = await api.get<Roles[]>(API_URL);
-            return response.data;
-        } catch (error) {
-            console.error("Error al obtener roless:", error);
-            return [];
+            console.log(`🔍 GET: ${API_URL}${BASE_PATH}`);
+            const response = await api.get<Roles[]>(`${API_URL}${BASE_PATH}`);
+            console.log(`✅ Roles loaded:`, response.data);
+            return Array.isArray(response.data) ? response.data : [];
+        } catch (error: any) {
+            console.error("❌ Error al obtener roles:", error.response?.data || error);
+            throw error; // Lanzar error para que List.tsx lo capture
         }
     }
 
-    // ✅ Obtener un rol por ID
-    async getRolesById(id: number): Promise<Roles | null> {
+    async getRolesById(id: number | string): Promise<Roles | null> {
         try {
-            const response = await api.get<Roles>(`${API_URL}/${id}`);
+            console.log(`🔍 GET: ${API_URL}${BASE_PATH}/${id}`);
+            const response = await api.get<Roles>(`${API_URL}${BASE_PATH}/${id}`);
+            console.log(`✅ Role loaded:`, response.data);
             return response.data;
-        } catch (error) {
-            console.error(`Rol con ID ${id} no encontrado:`, error);
-            return null;
+        } catch (error: any) {
+            console.error(`❌ Rol con ID ${id} no encontrado:`, error.response?.data || error);
+            throw error;
         }
     }
 
-    // ✅ Crear un nuevo rol
     async createRoles(roles: Omit<Roles, "id">): Promise<Roles | null> {
         try {
-            const response = await api.post<Roles>(API_URL, roles);
+            console.log(`📝 POST: ${API_URL}${BASE_PATH}`, roles);
+            const response = await api.post<Roles>(`${API_URL}${BASE_PATH}`, roles);
+            console.log(`✅ Role created:`, response.data);
             return response.data;
-        } catch (error) {
-            console.error("Error al crear rol:", error);
-            return null;
+        } catch (error: any) {
+            console.error("❌ Error al crear rol:", error.response?.data || error);
+            throw error;
         }
     }
 
-    // ✅ Actualizar un rol existente
-    async updateRoles(id: number, roles: Partial<Roles>): Promise<Roles | null> {
+    async updateRoles(id: number | string, roles: Partial<Roles>): Promise<Roles | null> {
         try {
-            const response = await api.put<Roles>(`${API_URL}/${id}`, roles);
+            console.log(`📝 PUT: ${API_URL}${BASE_PATH}/${id}`, roles);
+            const response = await api.put<Roles>(`${API_URL}${BASE_PATH}/${id}`, roles);
+            console.log(`✅ Role updated:`, response.data);
             return response.data;
-        } catch (error) {
-            console.error("Error al actualizar rol:", error);
-            return null;
+        } catch (error: any) {
+            console.error("❌ Error al actualizar rol:", error.response?.data || error);
+            throw error;
         }
     }
 
-    // ✅ Eliminar un rol
-    async deleteRoles(id: number): Promise<boolean> {
+    async deleteRoles(id: number | string): Promise<boolean> {
         try {
-            await api.delete(`${API_URL}/${id}`);
+            console.log(`🗑️ DELETE: ${API_URL}${BASE_PATH}/${id}`);
+            await api.delete(`${API_URL}${BASE_PATH}/${id}`);
+            console.log(`✅ Role deleted`);
             return true;
-        } catch (error) {
-            console.error("Error al eliminar rol:", error);
-            return false;
+        } catch (error: any) {
+            console.error("❌ Error al eliminar rol:", error.response?.data || error);
+            throw error;
         }
     }
 }
 
-// Exportamos una sola instancia reutilizable
 export const rolesService = new RolesService();

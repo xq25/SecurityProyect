@@ -24,29 +24,58 @@ const ListRoles: React.FC = () => {
 
   const handleAction = async (action: string, rol: Roles) => {
     if (action === "delete") {
+      const result = await Swal.fire({
+        title: '¿Eliminar rol?',
+        html: `
+          <div style="text-align: left;">
+            <p><strong>Nombre:</strong> ${rol.name}</p>
+            <p><strong>Descripción:</strong> ${rol.description || 'N/A'}</p>
+          </div>
+        `,
+        text: 'Esta acción no se puede deshacer',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6'
+      });
+
+      if (!result.isConfirmed) return;
+
       const success = await rolesService.deleteRoles(rol.id!);
       if (success) {
         Swal.fire({
           title: "Eliminado",
-          text: "Rol General eliminado correctamente",
+          text: "Rol eliminado correctamente",
           icon: "success",
+          timer: 1500,
+          showConfirmButton: false
         });
         fetchData();
+      } else {
+        Swal.fire({
+          title: "Error",
+          text: "No se pudo eliminar el rol",
+          icon: "error",
+          confirmButtonColor: '#d33'
+        });
       }
     } else if (action === "view") {
-      navigate(`/user-rol/${rol.id}`); //Aqui cargamos todos los usuarios que tiene dicho rol. (UserRol)
+      navigate(`/user-rol/${rol.id}`); // Usuarios que tienen este rol
     } else if (action === "update") {
       navigate(`/roles/update/${rol.id}`);
-    } else if (action === 'permissions'){
-      navigate(`/`)
+    } else if (action === 'permissions') {
+      // ✅ Navegar a gestionar permisos del rol
+      navigate(`/roles/${rol.id}/permissions`);
     }
   }
 
   const baseOptions = [
     { name: "view" },
     { name: "update" },
-    { name: "delete" },
-    { name: 'permissions' }
+    { name: "permissions" }, // ✅ Botón de permisos
+    { name: "delete" }
   ];
 
   return (
