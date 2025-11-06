@@ -10,14 +10,22 @@ export const MaterialView: React.FC<PropsGenericView> = ({
   options = [],
   toggleableFields = [],
 }) => {
-    const [visibleFields, setVisibleFields] = useState<Record<string, boolean>>(
-        Object.fromEntries(toggleableFields.map((f) => [f, false]))
-    );
+  const [visibleFields, setVisibleFields] = useState<Record<string, boolean>>(
+    Object.fromEntries(toggleableFields.map((f) => [f, false]))
+  );
 
-    const toggleVisibility = (key: string) => {
-        setVisibleFields((prev) => ({ ...prev, [key]: !prev[key] }));
-    };
+  const toggleVisibility = (key: string) => {
+    setVisibleFields((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
+  // Función para obtener la URL de la foto si es solo el nombre del archivo
+  const getPhotoUrl = (value: string) => {
+    if (value.startsWith("http") || value.startsWith("data:")) return value;
+    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://127.0.0.1:5000';
+    return value.includes("profiles/")
+      ? `${baseUrl}/static/uploads/${value}`
+      : `${baseUrl}/static/uploads/profiles/${value}`;
+  };
 
   return (
     <div className="generic-view-container">
@@ -30,6 +38,41 @@ export const MaterialView: React.FC<PropsGenericView> = ({
           {Object.entries(info).map(([key, value]) => {
             const isToggleable = toggleableFields.includes(key);
             const isVisible = visibleFields[key];
+
+            // Renderizar la foto como imagen si corresponde
+            if (key === "photo" && value && value !== "Sin foto") {
+              let photoUrl = "";
+              if (typeof value === "string" && value.startsWith("http")) {
+                photoUrl = value;
+              } else if (typeof value === "string") {
+                photoUrl = getPhotoUrl(value);
+              }
+              return (
+                <div className="generic-view-row" key={key}>
+                  <div className="generic-view-label-wrapper">
+                    <strong className="generic-view-label">
+                      {key.charAt(0).toUpperCase() + key.slice(1)}:
+                    </strong>
+                  </div>
+                  <img
+                    src={photoUrl}
+                    alt="Foto de perfil"
+                    style={{
+                      width: 96,
+                      height: 96,
+                      objectFit: "cover",
+                      borderRadius: 8,
+                      border: "2px solid #ccc",
+                    }}
+                    onError={e => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        "https://via.placeholder.com/96?text=Sin+Foto";
+                    }}
+                  />
+                </div>
+              );
+            }
+
             const displayValue =
               typeof value === "object"
                 ? JSON.stringify(value)

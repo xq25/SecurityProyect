@@ -15,6 +15,15 @@ export const BootstrapView: React.FC<PropsGenericView> = ({
     setVisibleFields((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
+  // Función para obtener la URL de la foto si es solo el nombre del archivo
+  const getPhotoUrl = (value: string) => {
+    if (value.startsWith("http") || value.startsWith("data:")) return value;
+    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://127.0.0.1:5000';
+    return value.includes("profiles/")
+      ? `${baseUrl}/static/uploads/${value}`
+      : `${baseUrl}/static/uploads/profiles/${value}`;
+  };
+
   return (
     <div className="container-fluid">
       <h2 className="mb-4">{title}</h2>
@@ -24,6 +33,43 @@ export const BootstrapView: React.FC<PropsGenericView> = ({
           {Object.entries(info).map(([key, value]) => {
             const isToggleable = toggleableFields.includes(key);
             const isVisible = visibleFields[key];
+
+            // Renderizar la foto como imagen si corresponde
+            if (key === "photo" && value && value !== "Sin foto") {
+              let photoUrl = "";
+              if (typeof value === "string" && value.startsWith("http")) {
+                photoUrl = value;
+              } else if (typeof value === "string") {
+                photoUrl = getPhotoUrl(value);
+              }
+              return (
+                <div className="row mb-3 align-items-center" key={key}>
+                  <div className="col-md-3">
+                    <label className="form-label text-muted fw-bold mb-0">
+                      {key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " ")}:
+                    </label>
+                  </div>
+                  <div className="col-md-9">
+                    <img
+                      src={photoUrl}
+                      alt="Foto de perfil"
+                      style={{
+                        width: 96,
+                        height: 96,
+                        objectFit: "cover",
+                        borderRadius: 8,
+                        border: "2px solid #ccc",
+                      }}
+                      onError={e => {
+                        (e.currentTarget as HTMLImageElement).src =
+                          "https://via.placeholder.com/96?text=Sin+Foto";
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            }
+
             const displayValue =
               typeof value === "object"
                 ? JSON.stringify(value)
